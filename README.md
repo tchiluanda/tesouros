@@ -11,13 +11,13 @@ Visualizações dos dados das pessoas do Tesouro
 * Write-up: http://www.datasketch.es/april/
 * Code for beeswarm: https://bl.ocks.org/sxywu/e1f0938ce926562e8fd69b100b03e58c
 
-![]("img/split_beeswarm.png")
+![](img/split_beeswarm.png)
 
 ### ALi Torban and Sonja Kuipers
 
 https://dataviztoday.com/shownotes/28
 
-![]("img/womenofdataviz.png")
-![]("img/viz.png")
+![](img/womenofdataviz.png)
+![](img/viz.png)
 
 
