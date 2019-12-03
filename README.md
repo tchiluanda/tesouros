@@ -20,4 +20,7 @@ https://dataviztoday.com/shownotes/28
 ![](img/womenofdataviz.png)
 ![](img/viz.png)
 
+### Video Robert Kosara sobre Unit Charts / Dot Plots
+
+https://www.youtube.com/watch?v=xXOK-K2m6A0
 
