@@ -13,7 +13,14 @@ Visualizações dos dados das pessoas do Tesouro
 
 ![](img/split_beeswarm.png)
 
-### ALi Torban and Sonja Kuipers
+### Shirley, de novo, para o logo transformado em pontos
+
+* Tweet: https://twitter.com/sxywu/status/1217165438594867200
+* Project: https://t.co/JSDGpJa9lC?amp=1
+* Relevant code: https://github.com/sxywu/tweety/blob/master/scripts/components/Content.jsx#L80-L100
+* Key term: Atkinson [dithering](https://en.wikipedia.org/wiki/Dither)
+
+### Ali Torban and Sonja Kuipers
 
 https://dataviztoday.com/shownotes/28
 
