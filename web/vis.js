@@ -65,5 +65,13 @@ let t = d3.interval(function(elapsed) {
     if (elapsed > 60000) t.stop();
 }, 8000, 500)
 
+let flag = false;
+window.addEventListener('scroll', function() {
+    if (!flag) {
+        t.stop();
+        flag = true;
+    }
+});
+
 
 
