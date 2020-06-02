@@ -1,3 +1,7 @@
+:root {
+    --altura-frase: 2rem;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -50,9 +54,17 @@
     background: ghostwhite;   
 }
 
+.container-svg > svg {
+    width: 100%;
+    height: 100%;
+}
+
 /******************** vis */
 
-.container-vis p.frases {
+
+.container-svg p.frases {
     font-family: 'Esteban';
-    font-size: 2rem;
+    font-size: 1rem;
+    position: absolute;
+    max-width: 50vw;
 }
