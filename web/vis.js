@@ -75,7 +75,7 @@ function anima_frase() {
 }
 
 insere_frases();
-let duracao = 2000;
+let duracao = 3000;
 let tempo_total = (duracao * (frases.length - 1)) + (duracao * 2);
 
 anima_frase();
@@ -93,5 +93,9 @@ window.addEventListener('scroll', function() {
     }
 });
 
+
+d3.csv("./web/dados/logo.csv").then(function(grid) {
+    console.log(grid[0], grid.columns);
+})
 
 
