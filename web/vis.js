@@ -14,56 +14,76 @@ h = +h.slice(0, h.length-2);
 let w = $cont_svg.style("width");
 w = +w.slice(0, w.length-2);
 
-function desenha_frase() {
+let margin = 20;
 
-    console.log("fui chamada");
+console.log(h,w);
+
+let altura_frase, largura_frase;
+
+function insere_frases() {
 
     let $frases = $cont_svg.selectAll("p.frases").data(frases);
-
-    let altura_frase, largura_frase;
 
     $frases.enter()
     .append("p")
     .classed("frases", true)
-    .text(d => d)
     .style("opacity", 0)
-    .style("top", function(d) {
-        altura_frase = d3.select(this).style("height");
-        altura_frase = +altura_frase.slice(0, altura_frase.length-2);
-
-        largura_frase = d3.select(this).style("width");
-        largura_frase = +largura_frase.slice(0, largura_frase.length-2);
-
-        let posicao_top = Math.random() * h;
-        posicao_top = posicao_top > h - altura_frase ? h - altura_frase : posicao_top;
-
-        //console.log(altura_frase, largura_frase);
-        //console.log(posicao_top, posicao_top + "px");
-
-        return posicao_top + "px";
-    })
-    .style("left", function(d) {
-        let posicao_left = Math.random() * h;
-        posicao_left = posicao_left > w - largura_frase ? w - largura_frase : posicao_left;
-        //console.log(posicao_left, posicao_left + "px");
-        return posicao_left + "px";
-    })
-    .transition()
-    .delay((d,i) => i * 1000)
-    .duration(1000)
-    .style("opacity", 1)
-    .transition()
-    .delay((d,i) => i * 1000 + 1000)
-    .duration(1000)
-    .style("opacity", 0)
-    .remove();
+    .append("span")
+    .text(d => d);
 }
 
+function anima_frase() {
+
+    let $frases = $cont_svg.selectAll("p.frases");
+
+    $frases
+        .style("top", function(d) {
+            altura_frase = d3.select(this).style("height");
+            altura_frase = +altura_frase.slice(0, altura_frase.length-2);
+
+            largura_frase = d3.select(this).style("width");
+            largura_frase = +largura_frase.slice(0, largura_frase.length-2);
+
+            let posicao_top = Math.random() * h;
+            posicao_top = posicao_top > h - altura_frase - margin ? h - altura_frase - margin : posicao_top;
+
+            //console.log(altura_frase, largura_frase);
+            //console.log(posicao_top, posicao_top + "px");
+
+            return posicao_top + "px";
+        })
+        .style("left", function(d) {
+            let posicao_left = Math.random() * h;
+            posicao_left = posicao_left > w - largura_frase - margin ? w - largura_frase - margin : posicao_left;
+            //console.log(posicao_left, posicao_left + "px");
+            return posicao_left + "px";
+        });
+
+    console.log("fui chamada");
+
+    $frases
+        .transition()
+        .delay((d,i) => i * duracao)
+        .duration(duracao)
+        .style("opacity", 1);
+    
+    $frases
+        .transition()
+        .delay((d,i) => i * duracao + duracao)
+        .duration(duracao)
+        .style("opacity", 0);
+}
+
+insere_frases();
+let duracao = 2000;
+let tempo_total = (duracao * (frases.length - 1)) + (duracao * 2);
+
+anima_frase();
 let t = d3.interval(function(elapsed) {
     console.log(elapsed);
-    desenha_frase();
+    anima_frase();
     if (elapsed > 60000) t.stop();
-}, 8000, 500)
+}, tempo_total, 0)
 
 let flag = false;
 window.addEventListener('scroll', function() {
