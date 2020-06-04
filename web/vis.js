@@ -150,12 +150,23 @@ d3.csv("./web/dados/logo.csv").then(function(grid) {
             t.stop();
             flag = true;
         }
+
+        d3.selectAll(".frases")
+          .transition()
+          .duration(duracao)
+          .style("opacity", 0);
+
+        d3.selectAll("h1")
+          .transition()
+          .duration(duracao)
+          .style("opacity", 0);       
+
         pontos.transition()
           .duration(d => Math.random() * duracao)
           .attr("opacity", 1);
 
         pontos.transition()
-          .delay(duracao * 1.5)
+          .delay(duracao + 100)
           .duration(duracao)
           .attr("cx", d => x(d.x))
           .attr("cy", d => y(d.y));
