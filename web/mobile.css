@@ -1,0 +1,10 @@
+@media (max-width: 580px) {
+    .titulo > h1 {
+        font-size: 4rem;
+    }
+
+    .frases {
+        font-size: 1rem;
+    }
+
+}
