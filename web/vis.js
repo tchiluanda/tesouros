@@ -80,15 +80,43 @@ function anima_frase() {
 d3.csv("./web/dados/logo.csv").then(function(grid) {
     console.log(grid[0], grid.columns);
 
-    let margin = w < 580 ? 15 : 50;
+    let margin = w < 580 ? 15 : 25;
+
+    let menor_dimensao = Math.min(w, h) - 2 * margin;
+
+    let qde_y = d3.max(grid, d => +d.y); 
+    let qde_x = d3.max(grid, d => +d.x);
+    // isso vai dar a quantidade de bolinhas em cada direção
+
+    let maior_qde = Math.max(qde_x, qde_y);
+
+    let raio = menor_dimensao / (2 * maior_qde);
+
+    let w_necessario = raio * 2 * qde_x;
+    let h_necessario = raio * 2 * qde_y;
+
+    let margin_grid = {
+        "w" : (w - w_necessario)/2,
+        "h" : (h - h_necessario)/2
+    };
+
+    /* debug
+
+    $svg.append("rect")
+      .attr("x", margin_grid.w)
+      .attr("y", margin_grid.h)
+      .attr("width", menor_dimensao)
+      .attr("height", menor_dimensao)
+      .attr("stroke", "red")
+      .attr("fill", "transparent"); */
 
     let x = d3.scaleLinear()
       .domain(d3.extent(grid, d => +d.x))
-      .range([margin, w - margin]);
+      .range([margin_grid.w, w - margin_grid.w]);
 
     let y = d3.scaleLinear()
       .domain(d3.extent(grid, d => +d.y))
-      .range([margin, h - margin])
+      .range([margin_grid.h, h - margin_grid.h])
 
     let cor_inicial = d3.scaleOrdinal()
       .domain(["1", "2", "3"])
@@ -101,7 +129,8 @@ d3.csv("./web/dados/logo.csv").then(function(grid) {
       .classed("pontos", true)
       .attr("cx", d => Math.random()*(w-2*margin) + margin)
       .attr("cy", d => Math.random()*(w-2*margin) + margin)
-      .attr("r", 3)
+      .attr("r", raio)
+      .attr("fill", d => cor_inicial(d.value))
       .attr("opacity", 0);
 
     pontos = pontos.merge(pontos_enter);
