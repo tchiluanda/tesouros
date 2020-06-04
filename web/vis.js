@@ -7,6 +7,7 @@ let frases = [
 ];
 
 let $cont_svg = d3.select("div.container-svg");
+let $svg = d3.select("svg");
 
 let h = $cont_svg.style("height");
 h = +h.slice(0, h.length-2);
@@ -19,6 +20,8 @@ let margin = 20;
 console.log(h,w);
 
 let altura_frase, largura_frase;
+let duracao = 3000;
+let tempo_total = (duracao * (frases.length - 1)) + (duracao * 2);
 
 function insere_frases() {
 
@@ -74,28 +77,60 @@ function anima_frase() {
         .style("opacity", 0);
 }
 
-insere_frases();
-let duracao = 3000;
-let tempo_total = (duracao * (frases.length - 1)) + (duracao * 2);
-
-anima_frase();
-let t = d3.interval(function(elapsed) {
-    console.log(elapsed);
-    anima_frase();
-    if (elapsed > 60000) t.stop();
-}, tempo_total, 0)
-
-let flag = false;
-window.addEventListener('scroll', function() {
-    if (!flag) {
-        t.stop();
-        flag = true;
-    }
-});
-
-
 d3.csv("./web/dados/logo.csv").then(function(grid) {
     console.log(grid[0], grid.columns);
-})
+
+    let margin = w < 580 ? 15 : 50;
+
+    let x = d3.scaleLinear()
+      .domain(d3.extent(grid, d => +d.x))
+      .range([margin, w - margin]);
+
+    let y = d3.scaleLinear()
+      .domain(d3.extent(grid, d => +d.y))
+      .range([margin, h - margin])
+
+    let cor_inicial = d3.scaleOrdinal()
+      .domain(["1", "2", "3"])
+      .range(["rgb(255,213,0)", "rgb(0,74,147)", "rgb(50,156,50)"]);
+
+    let pontos = $svg.selectAll("circle.pontos").data(grid);
+
+    let pontos_enter = pontos.enter()
+      .append("circle")
+      .classed("pontos", true)
+      .attr("cx", d => Math.random()*(w-2*margin) + margin)
+      .attr("cy", d => Math.random()*(w-2*margin) + margin)
+      .attr("r", 3)
+      .attr("opacity", 0);
+
+    pontos = pontos.merge(pontos_enter);
+
+    insere_frases();
+
+    anima_frase();
+    let t = d3.interval(function(elapsed) {
+        console.log(elapsed);
+        anima_frase();
+        if (elapsed > 60000) t.stop();
+    }, tempo_total, 0)
+
+    let flag = false;
+    window.addEventListener('scroll', function() {
+        if (!flag) {
+            t.stop();
+            flag = true;
+        }
+        pontos.transition()
+          .duration(d => Math.random() * duracao)
+          .attr("opacity", 1);
+
+        pontos.transition()
+          .delay(duracao * 1.5)
+          .duration(duracao)
+          .attr("cx", d => x(d.x))
+          .attr("cy", d => y(d.y));
+    });
+    })
 
 
