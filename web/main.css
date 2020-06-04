@@ -1,5 +1,6 @@
 :root {
     --altura-frase: 2rem;
+    --w-mobile: 580px;
 }
 
 * {
