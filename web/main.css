@@ -13,13 +13,17 @@
     position: relative;
 }
 
+article {
+    background-color: transparent;
+    transform: translateY(-100vh);
+}
+
 .titulo {
     width: 100vw;
     height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: ghostwhite;
 }
 
 .titulo h1 {
@@ -38,9 +42,8 @@
     top: 0;
     width: 100vw;
     height: 100vh; 
-    background: transparent;   
-    transform: translateY(-100vh);
-    z-index: 1;
+    background: ghostwhite;   
+    z-index: -1;
 }
 
 .container-svg > svg {
