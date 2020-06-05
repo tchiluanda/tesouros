@@ -8,6 +8,14 @@ let frases = [
 
 let $cont_svg = d3.select("div.container-svg");
 let $svg = d3.select("svg");
+let $titulo = d3.select(".titulo > h1");
+
+// para detectar área do título, em que não podem ser inseridas as frases
+let h0_titulo = $titulo.node().getBoundingClientRect().top;
+let h1_titulo = $titulo.node().getBoundingClientRect().bottom;
+
+console.log(h0_titulo, h1_titulo);
+
 
 let h = $cont_svg.style("height");
 h = +h.slice(0, h.length-2);
@@ -48,7 +56,17 @@ function anima_frase() {
             largura_frase = +largura_frase.slice(0, largura_frase.length-2);
 
             let posicao_top = Math.random() * h;
-            posicao_top = posicao_top > h - altura_frase - margin ? h - altura_frase - margin : posicao_top;
+
+
+            if (posicao_top < h - altura_frase - margin) {
+                if (posicao_top + altura_frase > h0_titulo & posicao_top + altura_frase < h1_titulo) {
+                    posicao_top = h1_titulo + (h-h1_titulo)/2;
+                } else {
+                    posicao_top = posicao_top;
+                }
+            } else {
+                posicao_top = h - altura_frase - margin;
+            }
 
             //console.log(altura_frase, largura_frase);
             //console.log(posicao_top, posicao_top + "px");
