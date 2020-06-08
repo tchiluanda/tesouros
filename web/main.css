@@ -10,6 +10,10 @@
     padding: 0;
 }
 
+body {
+    overflow: hidden;
+}
+
 .container-geral {
     position: relative;
 }
@@ -17,9 +21,9 @@
 article {
     background-color: transparent;
     transform: translateY(-100vh);
-    scroll-snap-type: mandatory;
-    scroll-snap-points-y: repeat(100vh);
-    scroll-snap-type: y mandatory;
+    scroll-snap-type: block mandatory;
+    height: 100vh;
+    overflow: scroll;
 }
 
 .slide {
