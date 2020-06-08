@@ -18,9 +18,14 @@ article {
     transform: translateY(-100vh);
 }
 
-.titulo {
+.slide {
     width: 100vw;
     height: 100vh;
+
+}
+
+.titulo {
+
     display: flex;
     align-items: center;
     justify-content: center;
