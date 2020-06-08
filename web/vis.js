@@ -40,20 +40,20 @@ function insere_frases() {
     .classed("frases", true)
     .style("opacity", 0)
     .append("span")
-    .text(d => d);
+    .text(texto => "●" + ' "' + texto + '"');
 }
 
 function anima_frase() {
 
     let $frases = $cont_svg.selectAll("p.frases");
-
+    
     $frases
         .style("top", function(d) {
             altura_frase = d3.select(this).style("height");
-            altura_frase = +altura_frase.slice(0, altura_frase.length-2);
+            altura_frase = +altura_frase.slice(0, -2);
 
             largura_frase = d3.select(this).style("width");
-            largura_frase = +largura_frase.slice(0, largura_frase.length-2);
+            largura_frase = +largura_frase.slice(0, -2);
 
             let posicao_top = Math.random() * h;
 
@@ -118,6 +118,8 @@ d3.csv("./web/dados/logo.csv").then(function(grid) {
         "h" : (h - h_necessario)/2
     };
 
+    let cor_texto = d3.select(":root").style("--cor-texto");
+
     /* debug
 
     $svg.append("rect")
@@ -171,20 +173,21 @@ d3.csv("./web/dados/logo.csv").then(function(grid) {
 
         d3.selectAll(".frases")
           .transition()
-          .duration(duracao)
+          .duration(duracao/2)
           .style("opacity", 0);
 
         d3.selectAll("h1")
           .transition()
-          .duration(duracao)
+          .duration(duracao/2)
           .style("opacity", 0);       
 
         pontos.transition()
           .duration(d => Math.random() * duracao)
           .attr("opacity", 1);
+         
 
         pontos.transition()
-          .delay(duracao + 100)
+          .delay(duracao)
           .duration(duracao)
           .attr("cx", d => x(d.x))
           .attr("cy", d => y(d.y));
