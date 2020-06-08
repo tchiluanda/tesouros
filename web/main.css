@@ -1,6 +1,7 @@
 :root {
     --altura-frase: 2rem;
     --w-mobile: 580px;
+    --cor-texto: #222;
 }
 
 * {
@@ -16,11 +17,15 @@
 article {
     background-color: transparent;
     transform: translateY(-100vh);
+    scroll-snap-type: mandatory;
+    scroll-snap-points-y: repeat(100vh);
+    scroll-snap-type: y mandatory;
 }
 
 .slide {
     width: 100vw;
     height: 100vh;
+    scroll-snap-align: start;
 
 }
 
@@ -70,11 +75,11 @@ article {
 
 .container-svg p.frases span {
     background-color: ghostwhite;
-    color: #222;
+    color: var(--cor-texto);
 }
 
-.container-svg p.frases span::before,
+/*.container-svg p.frases span::before,
 .container-svg p.frases span::after {
     content: '"';
-}
+}*/
 
