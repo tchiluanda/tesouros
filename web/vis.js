@@ -164,7 +164,7 @@ d3.csv("./web/dados/logo.csv").then(function(grid) {
         if (elapsed > 60000) t.stop();
     }, tempo_total, 0)
 
-    /*let flag = false;
+    let flag = false;
     window.addEventListener('scroll', function() {
         if (!flag) {
             t.stop();
@@ -191,7 +191,7 @@ d3.csv("./web/dados/logo.csv").then(function(grid) {
           .duration(duracao)
           .attr("cx", d => x(d.x))
           .attr("cy", d => y(d.y));
-    });*/
+    });
     })
 
 
