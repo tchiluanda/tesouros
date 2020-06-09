@@ -63,22 +63,27 @@ function anima_frase() {
 
             let posicao_top = Math.random() * h;
 
+            function colisao_com_titulo(posicao) {
+                if (posicao > h0_titulo & posicao < h1_titulo) {
+                    return true;
+                }
+                else return false;
+            }
 
+            // verifica se cabe no viewport
             if (posicao_top < h - altura_frase - margin) {
-                
-                if (posicao_top + altura_frase > h0_titulo & posicao_top + altura_frase < h1_titulo) {
-                    console.log(d, " opa, colisão com título")
-                    posicao_top = h1_titulo;
+
+                // detecção de colisão com o título    
+                if (colisao_com_titulo(posicao_top)) {
+                    posicao_top = h0_titulo - altura_frase - 10;
+                } else if (colisao_com_titulo(posicao_top + altura_frase)) {
+                    posicao_top = h1_titulo + 10;
                 } else {
                     posicao_top = posicao_top;
                 }
             } else {
-                console.log(d, "opa, passou do viewport")
                 posicao_top = h - altura_frase - margin;
-            }
-
-            //console.log(altura_frase, largura_frase);
-            console.log(d, "posicao_top", posicao_top + "px");
+            };
 
             return posicao_top + "px";
         })
@@ -104,8 +109,59 @@ function anima_frase() {
         .style("opacity", 0);
 }
 
-d3.csv("./web/dados/logo.csv").then(function(grid) {
+function sumariza_dados(dados, criterio, ordena = false) {
+    // determina valores unicos
+    const sumario = [];
+
+    categorias_unicas = dados
+      .map(d => d[criterio])
+      .filter((v, i, a) => a.indexOf(v) === i);
+
+    for (cat of categorias_unicas) {
+        const cont = dados
+          .filter(d => d[criterio] === cat)
+          .length;
+
+        sumario.push({"categoria" : cat,
+                      "contagem"  : cont});                 
+    }
+
+    if (ordena) sumario.sort((a,b) => b.contagem - a.contagem);
+
+    return sumario;    
+}
+
+function prepara_dados(dados, criterio, raio, margem) {
+    // determina valores únicos
+    let dados_sumarizados = sumariza_dados(dados, criterio);
+
+    let contagem_maxima = d3.max(dados_sumarizados);
+
+    let qde_linhas_grid = Math.ceil(Math.sqrt(contagem_maxima));
+
+    let qde_colunas_grid = dados_sumarizados.map(d => Math.ceil(d.contagem/qde_linhas_grid));
+
+    let posicoes_iniciais = qde_colunas_grid.map(d => (d-1) * raio + margem);
+
+    let mini_dados = [];
+    let categorias = dados_sumarizados.map(d => d.categoria);
+    console.log("Categorias: ", categorias)
+    for (cat of categorias) {
+        dados
+          .filter(d => d[criterio] == cat)
+          .forEach((d,i) => mini_dados.push({
+              "nome" : d.nome,
+              "categoria" : d[criterio], // que é próprio cat
+              "index_relativo" : i
+          }));
+    }
+    return(mini_dados);
+}
+
+d3.csv("./web/dados/data.csv").then(function(grid) {
     console.log(grid[0], grid.columns);
+
+
 
     let margin = w < 580 ? 15 : 25;
 
@@ -118,6 +174,9 @@ d3.csv("./web/dados/logo.csv").then(function(grid) {
     let maior_qde = Math.max(qde_x, qde_y);
 
     let raio = menor_dimensao / (2 * maior_qde);
+
+    console.log(sumariza_dados(grid, "1. Idade", false));
+    console.log(prepara_dados(grid, "1. Idade", raio, margin));
 
     let w_necessario = raio * 2 * qde_x;
     let h_necessario = raio * 2 * qde_y;
@@ -184,11 +243,22 @@ d3.csv("./web/dados/logo.csv").then(function(grid) {
 
     function desenha_step1(direcao) {
         if (direcao == "descendo") {
-        } else {
+        } 
+        else {
             $titulo
               .transition()
               .duration(duracao)
               .style("opacity", 1);
+
+            pontos.transition()
+              .duration(duracao)
+              .attr("cx", d => d.x_ini)
+              .attr("cy", d => d.y_ini);
+
+            pontos.transition()
+              .delay(duracao)
+              .duration(duracao)
+              .attr("opacity", 0);          
         }
 
         anima_frase();
@@ -209,7 +279,7 @@ d3.csv("./web/dados/logo.csv").then(function(grid) {
 
         d3.selectAll("p.frases")
           .transition()
-          .duration(duracao/2)
+          .duration(duracao)
           .style("opacity", 0);
 
         d3.selectAll("h1")
