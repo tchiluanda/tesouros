@@ -11,7 +11,7 @@ let $svg = d3.select("svg");
 let $titulo = d3.select(".titulo > h1");
 const $steps = d3.selectAll(".slide");
 let flag = false;
-let t;
+let t; //, $frases;
 
 // para detectar área do título, em que não podem ser inseridas as frases
 let h0_titulo = $titulo.node().getBoundingClientRect().top;
@@ -46,7 +46,7 @@ function insere_frases() {
     .append("span")
     .text(texto => "●" + ' "' + texto + '"');
 
-    //$frases = $frases.merge($frases.enter());
+    //$frases = $cont_svg.selectAll("p.frases");
 }
 
 function anima_frase() {
@@ -162,19 +162,26 @@ d3.csv("./web/dados/logo.csv").then(function(grid) {
     pontos = pontos.merge(pontos_enter);
 
 
-    function desenha(step) {
+    function desenha(step, direcao) {
         switch (step) {
-            case 'slide1' :
-                desenha_step1();
+            case 1 :
+                desenha_step1(direcao);
                 break;
-            case 'slide2' :
-                desenha_step2();
+            case 2 :
+                desenha_step2(direcao);
                 break;
         }
     }
 
-    function desenha_step1() {
-        insere_frases();
+    function desenha_step1(direcao) {
+        if (direcao == "descendo") {
+            insere_frases();
+        } else {
+            $titulo
+              .transition()
+              .duration(duracao)
+              .style("opacity", 1);
+        }
 
         anima_frase();
         t = d3.interval(function(elapsed) {
@@ -184,16 +191,15 @@ d3.csv("./web/dados/logo.csv").then(function(grid) {
         }, tempo_total, 0)
     
         flag = false;
-
     }
 
-    function desenha_step2() {
+    function desenha_step2(direcao) {
         if (!flag) {
             t.stop();
             flag = true;
         }
 
-        d3.selectAll(".frases")
+        d3.selectAll("p.frases")
           .transition()
           .duration(duracao/2)
           .style("opacity", 0);
@@ -216,16 +222,30 @@ d3.csv("./web/dados/logo.csv").then(function(grid) {
     }
 
     // setup
+    let steps = [];
     enterView({
         selector: ".slide",
         offset: 0.5,
         enter: function(el) {
 
-            let step = el.id;
+            let step = +el.id.slice(-2);
+            // aqui não preciso me preocupar com direção, pq ele só "enter" na descida.
+            steps.push(step);
+            console.log(steps);
+            console.log("avançando");
 
-            console.log(el + el.id + " entrou.")
+            desenha(step, "voltando");
+        },
 
-            desenha(step);
+        exit: function(el) {
+
+            let step = +el.id.slice(-2) - 1;
+            // pois aqui tb não preciso me preocupar com direção, pq aparentemente só "exit" na subida 
+            steps.push(step);
+            console.log(steps);
+            console.log("voltando");
+
+            desenha(step, "voltando");
         }
     })
 
