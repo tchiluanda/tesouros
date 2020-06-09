@@ -17,7 +17,7 @@ let t; //, $frases;
 let h0_titulo = $titulo.node().getBoundingClientRect().top;
 let h1_titulo = $titulo.node().getBoundingClientRect().bottom;
 
-console.log(h0_titulo, h1_titulo);
+console.log("h0, h1", h0_titulo, h1_titulo);
 
 
 let h = $cont_svg.style("height");
@@ -40,11 +40,11 @@ function insere_frases() {
     let $frases = $cont_svg.selectAll("p.frases").data(frases);
 
     $frases.enter()
-    .append("p")
-    .classed("frases", true)
-    .style("opacity", 0)
-    .append("span")
-    .text(texto => "●" + ' "' + texto + '"');
+        .append("p")
+        .classed("frases", true)
+        .style("opacity", 0)
+        .append("span")
+        .text(texto => "●" + ' "' + texto + '"');
 
     //$frases = $cont_svg.selectAll("p.frases");
 }
@@ -65,17 +65,20 @@ function anima_frase() {
 
 
             if (posicao_top < h - altura_frase - margin) {
+                
                 if (posicao_top + altura_frase > h0_titulo & posicao_top + altura_frase < h1_titulo) {
-                    posicao_top = h1_titulo + (h-h1_titulo)/2;
+                    console.log(d, " opa, colisão com título")
+                    posicao_top = h1_titulo;
                 } else {
                     posicao_top = posicao_top;
                 }
             } else {
+                console.log(d, "opa, passou do viewport")
                 posicao_top = h - altura_frase - margin;
             }
 
             //console.log(altura_frase, largura_frase);
-            //console.log(posicao_top, posicao_top + "px");
+            console.log(d, "posicao_top", posicao_top + "px");
 
             return posicao_top + "px";
         })
@@ -124,6 +127,11 @@ d3.csv("./web/dados/logo.csv").then(function(grid) {
         "h" : (h - h_necessario)/2
     };
 
+    grid.forEach(d => {
+        d["x_ini"] = Math.random()*(w-2*margin) + margin;
+        d["y_ini"] = Math.random()*(h-2*margin) + margin;
+    });
+
     let cor_texto = d3.select(":root").style("--cor-texto");
 
     /* debug
@@ -153,14 +161,15 @@ d3.csv("./web/dados/logo.csv").then(function(grid) {
     let pontos_enter = pontos.enter()
       .append("circle")
       .classed("pontos", true)
-      .attr("cx", d => Math.random()*(w-2*margin) + margin)
-      .attr("cy", d => Math.random()*(w-2*margin) + margin)
+      .attr("cx", d => d["x_ini"])
+      .attr("cy", d => d["y_ini"])
       .attr("r", raio)
       .attr("fill", d => cor_inicial(d.value))
       .attr("opacity", 0);
 
     pontos = pontos.merge(pontos_enter);
 
+    insere_frases();
 
     function desenha(step, direcao) {
         switch (step) {
@@ -175,7 +184,6 @@ d3.csv("./web/dados/logo.csv").then(function(grid) {
 
     function desenha_step1(direcao) {
         if (direcao == "descendo") {
-            insere_frases();
         } else {
             $titulo
               .transition()
