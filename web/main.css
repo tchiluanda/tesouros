@@ -33,6 +33,13 @@ article {
 
 }
 
+.slide > p {
+    padding-top: 2rem;
+    padding-left: 2rem;
+    font-family: "Esteban";
+    font-size: 1.5rem;
+}
+
 .titulo {
 
     display: flex;
@@ -42,7 +49,7 @@ article {
 
 .titulo h1 {
     text-align: center;
-    font-size: 8rem;
+    font-size: 7rem;
     font-family: 'Esteban';
 }
 
