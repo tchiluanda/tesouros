@@ -9,6 +9,9 @@ let frases = [
 let $cont_svg = d3.select("div.container-svg");
 let $svg = d3.select("svg");
 let $titulo = d3.select(".titulo > h1");
+const $steps = d3.selectAll(".slide");
+let flag = false;
+let t;
 
 // para detectar área do título, em que não podem ser inseridas as frases
 let h0_titulo = $titulo.node().getBoundingClientRect().top;
@@ -30,6 +33,7 @@ console.log(h,w);
 let altura_frase, largura_frase;
 let duracao = 3000;
 let tempo_total = (duracao * (frases.length - 1)) + (duracao * 2);
+//let $frases;
 
 function insere_frases() {
 
@@ -41,6 +45,8 @@ function insere_frases() {
     .style("opacity", 0)
     .append("span")
     .text(texto => "●" + ' "' + texto + '"');
+
+    //$frases = $frases.merge($frases.enter());
 }
 
 function anima_frase() {
@@ -155,17 +161,33 @@ d3.csv("./web/dados/logo.csv").then(function(grid) {
 
     pontos = pontos.merge(pontos_enter);
 
-    insere_frases();
 
-    anima_frase();
-    let t = d3.interval(function(elapsed) {
-        console.log(elapsed);
+    function desenha(step) {
+        switch (step) {
+            case 'slide1' :
+                desenha_step1();
+                break;
+            case 'slide2' :
+                desenha_step2();
+                break;
+        }
+    }
+
+    function desenha_step1() {
+        insere_frases();
+
         anima_frase();
-        if (elapsed > 60000) t.stop();
-    }, tempo_total, 0)
+        t = d3.interval(function(elapsed) {
+            console.log(elapsed);
+            anima_frase();
+            if (elapsed > 60000) t.stop();
+        }, tempo_total, 0)
+    
+        flag = false;
 
-    let flag = false;
-    window.addEventListener('scroll', function() {
+    }
+
+    function desenha_step2() {
         if (!flag) {
             t.stop();
             flag = true;
@@ -191,7 +213,24 @@ d3.csv("./web/dados/logo.csv").then(function(grid) {
           .duration(duracao)
           .attr("cx", d => x(d.x))
           .attr("cy", d => y(d.y));
-    });
+    }
+
+    // setup
+    enterView({
+        selector: ".slide",
+        offset: 0.5,
+        enter: function(el) {
+
+            let step = el.id;
+
+            console.log(el + el.id + " entrou.")
+
+            desenha(step);
+        }
     })
+
+})
+
+
 
 
