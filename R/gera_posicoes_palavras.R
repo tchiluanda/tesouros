@@ -43,6 +43,7 @@ exportar <- exportar[1:825-757,] %>%
 
 ggplot(exportar, aes(x = x, y = y, color = value)) + geom_point()  + scale_y_reverse()
 write.csv(exportar, file = "web/dados/logo.csv")
+write_rds(exportar, "./R/dados/grid.rds")
 
 ## experimentos
 
