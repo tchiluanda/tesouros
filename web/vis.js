@@ -44,7 +44,7 @@ function insere_frases() {
         .classed("frases", true)
         .style("opacity", 0)
         .append("span")
-        .text(texto => '"' + texto + '"');
+        .html(texto => '&ldquo;' + texto + '&rdquo;');
         //.text(texto => "●" + ' "' + texto + '"');
 
     //$frases = $cont_svg.selectAll("p.frases");
@@ -205,7 +205,7 @@ function prepara_dados(dados, criterio, raio, margem) {
     return(mini_dados);
 }
 
-function acrescenta_rotulos(mini_dados, deslocado, quanto) {
+function acrescenta_rotulos(mini_dados, deslocados, quanto) {
 
     let $rotulos = d3.select(".container-svg")
       .selectAll("div.rotulos")
@@ -215,7 +215,8 @@ function acrescenta_rotulos(mini_dados, deslocado, quanto) {
       $rotulos
       .enter()
       .append("div")
-      .classed("rotulos", true);
+      .classed("rotulos", true)
+      .style("opacity", 0);
 
     $rotulos_enter.append("h2");
 
@@ -246,6 +247,35 @@ function acrescenta_rotulos(mini_dados, deslocado, quanto) {
         let altura_rotulo = +d3.select(this).style("height").slice(0,-2);
         return ((margem_inicial_secundario - altura_rotulo - margin) + "px");
       });
+
+    // código para deslocar algum rótulo, se for necessário
+
+    if (deslocados) {
+
+        $rotulos.each(function(d,i,nodes) {
+            console.log(this, deslocados.includes(i))
+            if (deslocados.includes(i)) {
+                let top_atual = +d3.select(this).style("top").slice(0,-2);
+                let left_atual = +d3.select(this).style("left").slice(0,-2);
+                d3.select(this)
+                  .style("top", (top_atual - quanto) + "px")
+                  .style("border-bottom", "1px solid black");
+
+                let altura_rotulo = +d3.select(this).style("height").slice(0,-2);
+
+                d3.select("svg")
+                  .append("line")
+                  .classed("rotulos", true)
+                  .attr("x1", left_atual)
+                  .attr("y1", top_atual + altura_rotulo)
+                  .attr("x2", left_atual)
+                  .attr("y2", top_atual - quanto + altura_rotulo - 1)
+                  .attr("stroke", "black")
+                  .style("opacity", 0)
+            }
+        })
+
+    }
 }
 
 d3.csv("./web/dados/data.csv").then(function(grid) {
@@ -344,12 +374,12 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
               .style("opacity", 1);
 
             pontos.transition()
-              .duration(duracao)
+              .duration(duracao/2)
               .attr("cx", d => d.x_ini)
               .attr("cy", d => d.y_ini);
 
             pontos.transition()
-              .delay(duracao)
+              .delay(duracao/2)
               .duration(duracao)
               .attr("opacity", 0);          
         }
@@ -382,12 +412,12 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
               .style("opacity", 0);       
     
             pontos.transition()
-              .duration(d => Math.random() * duracao)
+              .duration(d => Math.random() * duracao/2)
               .attr("opacity", 1);
              
     
             pontos.transition()
-              .delay(duracao)
+              .delay(duracao/2)
               .duration(duracao)
               .attr("cx", d => x(d.x))
               .attr("cy", d => y(d.y));
@@ -431,7 +461,14 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
           .attr("cy", d => d.eixo_secundario + margem_inicial_secundario)
           .attr("fill", d => cor(d.categoria)); 
           
-        acrescenta_rotulos(mini_dados);
+        acrescenta_rotulos(mini_dados, [3], 60);
+
+        let qde_rotulos = d3.selectAll(".rotulos").nodes().length
+        d3.selectAll(".rotulos")
+          .transition()
+          .delay((d,i) => duracao/2 + (duracao/2 * (i/qde_rotulos)))
+          .duration(duracao)
+          .style("opacity", 1);
     }
 
     // setup
