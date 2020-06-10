@@ -74,6 +74,11 @@ article {
 
 }
 
+.container-svg div.rotulos {
+    position: absolute;
+    font-family: 'Esteban';
+}
+
 /******************** vis */
 
 

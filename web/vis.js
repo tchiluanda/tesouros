@@ -134,7 +134,7 @@ function sumariza_dados(dados, criterio, ordena = false) {
 
 function prepara_dados(dados, criterio, raio, margem) {
     // determina valores únicos
-    let dados_sumarizados = sumariza_dados(dados, criterio);
+    let dados_sumarizados = sumariza_dados(dados, criterio, true);
 
     let contagem_maxima = d3.max(dados_sumarizados, d => d.contagem);
 
@@ -199,7 +199,48 @@ function prepara_dados(dados, criterio, raio, margem) {
         "resumo" : dados_sumarizados
     };
 
+    console.log(mini_dados);
+
     return(mini_dados);
+}
+
+function acrescenta_rotulos(mini_dados) {
+
+    let $rotulos = d3.select(".container-svg")
+      .selectAll("div.rotulos")
+      .data(mini_dados.parametros.resumo);
+
+    let $rotulos_enter = 
+      $rotulos
+      .enter()
+      .append("div")
+      .classed("rotulos", true);
+
+    $rotulos_enter.append("h2");
+
+    $rotulos_enter.append("p");
+
+    $rotulos = $rotulos.merge($rotulos_enter);
+
+    $rotulos
+      .selectAll("h2")
+      .text(d => d.categoria);
+    
+    $rotulos
+      .selectAll("p")
+      .text(d => d3.format(".000%")(d.contagem / mini_dados.dados.length));
+
+    let largura_total = mini_dados.parametros.largura_eixo_principal_total;
+    let altura_total = mini_dados.parametros.largura_eixo_secundario_total;
+
+    let margem_inicial_secundario = (h - altura_total)/2;
+
+    $rotulos
+      .style("left", (d,i) => mini_dados.parametros.posicoes_iniciais[i])
+      .style("top",  function(d) {
+        let altura_rotulo = d3.select(this).style("height");
+        return margem_inicial_secundario - altura_rotulo - margin;
+      });
 }
 
 d3.csv("./web/dados/data.csv").then(function(grid) {
@@ -383,7 +424,9 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
           .duration(duracao)
           .attr("cx", d => d.eixo_principal + margem_inicial_principal + mini_dados.parametros.posicoes_iniciais[d.categoria])
           .attr("cy", d => d.eixo_secundario + margem_inicial_secundario)
-          .attr("fill", d => cor(d.categoria));        
+          .attr("fill", d => cor(d.categoria)); 
+          
+        acrescenta_rotulos(mini_dados);
     }
 
     // setup
