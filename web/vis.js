@@ -429,6 +429,11 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
                 .attr("fill", d => cor_inicial(d.value))
                 .attr("cx", d => x(d.x))
                 .attr("cy", d => y(d.y));
+
+            d3.selectAll(".rotulos")
+                .transition()
+                .duration(duracao)
+                .style("opacity", 0);
         }       
 
     }
