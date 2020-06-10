@@ -196,7 +196,8 @@ function prepara_dados(dados, criterio, raio, margem) {
         "parametros_coluna" : parametros_colunas_grid,
         "largura_eixo_principal_total" : tamanho_necessario,
         "largura_eixo_secundario_total" : qde_linhas_grid * 3 * raio,
-        "resumo" : dados_sumarizados
+        "resumo" : dados_sumarizados,
+        "raio" : raio
     };
 
     console.log(mini_dados);
@@ -204,7 +205,7 @@ function prepara_dados(dados, criterio, raio, margem) {
     return(mini_dados);
 }
 
-function acrescenta_rotulos(mini_dados) {
+function acrescenta_rotulos(mini_dados, deslocado, quanto) {
 
     let $rotulos = d3.select(".container-svg")
       .selectAll("div.rotulos")
@@ -234,12 +235,16 @@ function acrescenta_rotulos(mini_dados) {
     let altura_total = mini_dados.parametros.largura_eixo_secundario_total;
 
     let margem_inicial_secundario = (h - altura_total)/2;
+    let margem_inicial_principal = (w - largura_total)/2;
 
     $rotulos
-      .style("left", (d,i) => mini_dados.parametros.posicoes_iniciais[i])
+      .style("left", function(d) {
+        console.log("To aqui dentro", mini_dados.parametros.posicoes_iniciais[d.categoria]);
+        return (mini_dados.parametros.posicoes_iniciais[d.categoria] + margem_inicial_principal - mini_dados.parametros.raio + "px")}
+        )
       .style("top",  function(d) {
-        let altura_rotulo = d3.select(this).style("height");
-        return margem_inicial_secundario - altura_rotulo - margin;
+        let altura_rotulo = +d3.select(this).style("height").slice(0,-2);
+        return ((margem_inicial_secundario - altura_rotulo - margin) + "px");
       });
 }
 

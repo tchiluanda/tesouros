@@ -74,10 +74,6 @@ article {
 
 }
 
-.container-svg div.rotulos {
-    position: absolute;
-    font-family: 'Esteban';
-}
 
 /******************** vis */
 
@@ -98,4 +94,17 @@ article {
 .container-svg p.frases span::after {
     content: '"';
 }*/
+
+.container-svg div.rotulos {
+    position: absolute;
+    font-family: 'Fira Code';
+}
+
+.container-svg div.rotulos h2 {
+    font-size: 0.8rem;
+}
+
+.container-svg div.rotulos p {
+    font-size: .7rem;
+}
 
