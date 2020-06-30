@@ -206,6 +206,7 @@ function prepara_dados(dados, criterio, ordena = false, vetor_ordem, raio, marge
 }
 
 function desenha_dados(dados, criterio, ordena, vetor_ordem, raio, margin, rotulos_a_deslocar, deslocamento) {
+
     let mini_dados = prepara_dados(
       dados, 
       criterio,
@@ -228,7 +229,7 @@ function desenha_dados(dados, criterio, ordena, vetor_ordem, raio, margin, rotul
     pontos = pontos
       .data(mini_dados.dados, d => d.nome);
 
-    console.log("Pontos", pontos, pontos.enter(), pontos.exit());
+    console.log("mini dados", mini_dados);
 
     pontos
       .transition()
@@ -242,13 +243,23 @@ function desenha_dados(dados, criterio, ordena, vetor_ordem, raio, margin, rotul
     let qde_rotulos = d3.selectAll(".rotulos").nodes().length
     d3.selectAll(".rotulos")
       .transition()
-      .delay((d,i) => duracao/2 + (duracao/2 * (i/qde_rotulos)))
+      .delay((d,i) => duracao/3 + (duracao/3 * (i/qde_rotulos)))
       .duration(duracao)
       .style("opacity", 1);
 
 }
 
 function acrescenta_rotulos(mini_dados, deslocados, quanto) {
+
+    //remove rótulos pré-existentes.
+    d3.selectAll("div.rotulos")
+      .transition(duracao/2)
+      .style("opacity", 0)
+      .remove();
+
+    d3.selectAll("line.rotulos").remove();
+
+    console.log("Rotulos", mini_dados);
 
     let $rotulos = d3.select(".container-svg")
       .selectAll("div.rotulos")
