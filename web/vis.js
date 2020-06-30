@@ -110,13 +110,16 @@ function anima_frase() {
         .style("opacity", 0);
 }
 
-function sumariza_dados(dados, criterio, ordena = false) {
+function sumariza_dados(dados, criterio, ordena = false, vetor_ordem) {
     // determina valores unicos
     const sumario = [];
 
-    categorias_unicas = dados
+    if (vetor_ordem) categorias_unicas = vetor_ordem;
+    else {
+      categorias_unicas = dados
       .map(d => d[criterio])
       .filter((v, i, a) => a.indexOf(v) === i);
+    }
 
     for (cat of categorias_unicas) {
         const cont = dados
@@ -132,9 +135,9 @@ function sumariza_dados(dados, criterio, ordena = false) {
     return sumario;    
 }
 
-function prepara_dados(dados, criterio, raio, margem) {
+function prepara_dados(dados, criterio, ordena = false, vetor_ordem, raio, margem) {
     // determina valores únicos
-    let dados_sumarizados = sumariza_dados(dados, criterio, true);
+    let dados_sumarizados = sumariza_dados(dados, criterio, ordena, vetor_ordem);
 
     let contagem_maxima = d3.max(dados_sumarizados, d => d.contagem);
 
@@ -164,9 +167,6 @@ function prepara_dados(dados, criterio, raio, margem) {
     });
     console.log({parametros_colunas_grid});
     
-    
-
-
     let mini_dados = {};
     mini_dados["dados"] = [];
     let categorias = dados_sumarizados.map(d => d.categoria);
@@ -203,6 +203,49 @@ function prepara_dados(dados, criterio, raio, margem) {
     console.log(mini_dados);
 
     return(mini_dados);
+}
+
+function desenha_dados(dados, criterio, ordena, vetor_ordem, raio, margin, selection) {
+    let mini_dados = prepara_dados(
+      dados, 
+      criterio,
+      ordena, 
+      vetor_ordem,
+      raio, 
+      margin);
+
+    let largura_total = mini_dados.parametros.largura_eixo_principal_total;
+    let altura_total = mini_dados.parametros.largura_eixo_secundario_total;
+
+    let margem_inicial_principal = (w - largura_total)/2;
+    let margem_inicial_secundario = (h - altura_total)/2;
+
+    let cor = d3.scaleOrdinal()
+      .domain(mini_dados.parametros.resumo.map(d => d.categoria))
+      .range(d3.schemeCategory10)
+
+    //let pontos = d3.selectAll("circle.pontos")
+    pontos = pontos
+      .data(mini_dados.dados, d => d.nome);
+
+    console.log("Pontos", pontos, pontos.enter(), pontos.exit());
+
+    pontos
+      .transition()
+      .duration(duracao)
+      .attr("cx", d => d.eixo_principal + margem_inicial_principal + mini_dados.parametros.posicoes_iniciais[d.categoria])
+      .attr("cy", d => d.eixo_secundario + margem_inicial_secundario)
+      .attr("fill", d => cor(d.categoria)); 
+      
+    acrescenta_rotulos(mini_dados, [3], 60);
+
+    let qde_rotulos = d3.selectAll(".rotulos").nodes().length
+    d3.selectAll(".rotulos")
+      .transition()
+      .delay((d,i) => duracao/2 + (duracao/2 * (i/qde_rotulos)))
+      .duration(duracao)
+      .style("opacity", 1);
+
 }
 
 function acrescenta_rotulos(mini_dados, deslocados, quanto) {
@@ -293,8 +336,13 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
 
     let raio = menor_dimensao / (2 * maior_qde);
 
-    console.log(sumariza_dados(grid, "1. Idade", false));
-    console.log(prepara_dados(grid, "1. Idade", raio, margin));
+    console.log(sumariza_dados(grid, "1. Idade", false, 
+    vetor_ordem = 
+    "De 20 a 29 anos",
+    "De 30 a 39 anos", 
+    "De 40 a 49 anos", 
+    "De 50 a 60 anos",  
+    "+ de 60"));
 
     let w_necessario = raio * 2 * qde_x;
     let h_necessario = raio * 2 * qde_y;
@@ -333,9 +381,9 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
       .domain(["1", "2", "3"])
       .range(["rgb(255,213,0)", "rgb(0,74,147)", "rgb(50,156,50)"]);
 
-    let pontos = $svg.selectAll("circle.pontos").data(grid, d => d.nome);
+    var pontos = $svg.selectAll("circle.pontos").data(grid, d => d.nome);
 
-    let pontos_enter = pontos.enter()
+    var pontos_enter = pontos.enter()
       .append("circle")
       .classed("pontos", true)
       .attr("cx", d => d["x_ini"])
@@ -441,39 +489,15 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
     function desenha_step3(direcao) {
 
         console.log("ok, tô no step 3");
-        let mini_dados = prepara_dados(grid, "1. Idade", raio, margin);
 
-        let largura_total = mini_dados.parametros.largura_eixo_principal_total;
-        let altura_total = mini_dados.parametros.largura_eixo_secundario_total;
+        desenha_dados(
+          dados = grid, 
+          criterio = "1. Idade", 
+          ordena = false, 
+          vetor_ordem = ["De 20 a 29 anos", "De 30 a 39 anos", "De 40 a 49 anos", "De 50 a 60 anos", "+ de 60"], 
+          raio, 
+          margin);
 
-        let margem_inicial_principal = (w - largura_total)/2;
-        let margem_inicial_secundario = (h - altura_total)/2;
-
-        let cor = d3.scaleOrdinal()
-          .domain(mini_dados.parametros.resumo.map(d => d.categoria))
-          .range(d3.schemeCategory10)
-
-        //let pontos = d3.selectAll("circle.pontos")
-        pontos = pontos
-          .data(mini_dados.dados, d => d.nome);
-
-        console.log("Pontos", pontos, pontos.enter(), pontos.exit());
-
-        pontos
-          .transition()
-          .duration(duracao)
-          .attr("cx", d => d.eixo_principal + margem_inicial_principal + mini_dados.parametros.posicoes_iniciais[d.categoria])
-          .attr("cy", d => d.eixo_secundario + margem_inicial_secundario)
-          .attr("fill", d => cor(d.categoria)); 
-          
-        acrescenta_rotulos(mini_dados, [3], 60);
-
-        let qde_rotulos = d3.selectAll(".rotulos").nodes().length
-        d3.selectAll(".rotulos")
-          .transition()
-          .delay((d,i) => duracao/2 + (duracao/2 * (i/qde_rotulos)))
-          .duration(duracao)
-          .style("opacity", 1);
     }
 
     // setup
