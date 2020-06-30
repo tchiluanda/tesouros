@@ -205,7 +205,7 @@ function prepara_dados(dados, criterio, ordena = false, vetor_ordem, raio, marge
     return(mini_dados);
 }
 
-function desenha_dados(dados, criterio, ordena, vetor_ordem, raio, margin, selection) {
+function desenha_dados(dados, criterio, ordena, vetor_ordem, raio, margin, rotulos_a_deslocar, deslocamento) {
     let mini_dados = prepara_dados(
       dados, 
       criterio,
@@ -224,7 +224,7 @@ function desenha_dados(dados, criterio, ordena, vetor_ordem, raio, margin, selec
       .domain(mini_dados.parametros.resumo.map(d => d.categoria))
       .range(d3.schemeCategory10)
 
-    //let pontos = d3.selectAll("circle.pontos")
+    let pontos = d3.selectAll("circle.pontos")
     pontos = pontos
       .data(mini_dados.dados, d => d.nome);
 
@@ -237,7 +237,7 @@ function desenha_dados(dados, criterio, ordena, vetor_ordem, raio, margin, selec
       .attr("cy", d => d.eixo_secundario + margem_inicial_secundario)
       .attr("fill", d => cor(d.categoria)); 
       
-    acrescenta_rotulos(mini_dados, [3], 60);
+    acrescenta_rotulos(mini_dados, rotulos_a_deslocar, deslocamento);
 
     let qde_rotulos = d3.selectAll(".rotulos").nodes().length
     d3.selectAll(".rotulos")
@@ -381,9 +381,9 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
       .domain(["1", "2", "3"])
       .range(["rgb(255,213,0)", "rgb(0,74,147)", "rgb(50,156,50)"]);
 
-    var pontos = $svg.selectAll("circle.pontos").data(grid, d => d.nome);
+    let pontos = $svg.selectAll("circle.pontos").data(grid, d => d.nome);
 
-    var pontos_enter = pontos.enter()
+    let pontos_enter = pontos.enter()
       .append("circle")
       .classed("pontos", true)
       .attr("cx", d => d["x_ini"])
@@ -408,7 +408,10 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
                 break;
             case 3 :
                 desenha_step3(direcao);
-                break;                
+                break;   
+            case 4 :
+              desenha_step4(direcao);
+              break;               
         }
     }
 
@@ -496,9 +499,27 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
           ordena = false, 
           vetor_ordem = ["De 20 a 29 anos", "De 30 a 39 anos", "De 40 a 49 anos", "De 50 a 60 anos", "+ de 60"], 
           raio, 
-          margin);
+          margin,
+          rotulos_a_deslocar = [0],
+          deslocamento = 60);
 
     }
+
+    function desenha_step4(direcao) {
+
+      console.log("ok, tô no step 3");
+
+      desenha_dados(
+        dados = grid, 
+        criterio = "2. Sexo", 
+        ordena = false, 
+        vetor_ordem = false, 
+        raio, 
+        margin,
+        rotulos_a_deslocar = false,
+        deslocamento = 0);
+
+  }
 
     // setup
     let steps = [];
