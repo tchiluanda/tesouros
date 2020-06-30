@@ -300,10 +300,11 @@ function acrescenta_rotulos(mini_dados, deslocados, quanto) {
         $rotulos.each(function(d,i,nodes) {
             //console.log(this, deslocados.includes(i))
             if (deslocados.includes(i)) {
+              deslocamento = deslocados.length == 1 ? quanto : quanto[i]
                 let top_atual = +d3.select(this).style("top").slice(0,-2);
                 let left_atual = +d3.select(this).style("left").slice(0,-2);
                 d3.select(this)
-                  .style("top", (top_atual - quanto) + "px")
+                  .style("top", (top_atual - deslocamento) + "px")
                   .style("border-bottom", "1px solid black");
 
                 let altura_rotulo = +d3.select(this).style("height").slice(0,-2);
@@ -314,7 +315,7 @@ function acrescenta_rotulos(mini_dados, deslocados, quanto) {
                   .attr("x1", left_atual)
                   .attr("y1", top_atual + altura_rotulo)
                   .attr("x2", left_atual)
-                  .attr("y2", top_atual - quanto + altura_rotulo - 1)
+                  .attr("y2", top_atual - deslocamento + altura_rotulo - 1)
                   .attr("stroke", "black")
                   .style("opacity", 0)
             }
@@ -543,8 +544,8 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
       vetor_ordem = ["Não", "Possivelmente não", "Sinto-me indiferente", "Basicamente sim", "Sim"], 
       raio, 
       margin,
-      rotulos_a_deslocar = false,
-      deslocamento = 0);
+      rotulos_a_deslocar = [1,2],
+      deslocamento = {1:80, 2:40});
   }
 
     // setup
