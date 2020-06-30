@@ -263,20 +263,16 @@ function acrescenta_rotulos(mini_dados, deslocados, quanto) {
 
     let $rotulos = d3.select(".container-svg")
       .selectAll("div.rotulos")
-      .data(mini_dados.parametros.resumo);
-
-    let $rotulos_enter = 
-      $rotulos
-      .enter()
-      .append("div")
+      .data(mini_dados.parametros.resumo, d => d.categoria)
+      .join("div")
       .classed("rotulos", true)
       .style("opacity", 0);
 
-    $rotulos_enter.append("h2");
+    $rotulos.append("h2");
 
-    $rotulos_enter.append("p");
+    $rotulos.append("p");
 
-    $rotulos = $rotulos.merge($rotulos_enter);
+    //$rotulos = $rotulos.merge($rotulos_enter);
 
     $rotulos
       .selectAll("h2")
