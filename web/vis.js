@@ -31,7 +31,7 @@ let margin = 20;
 console.log(h,w);
 
 let altura_frase, largura_frase;
-let duracao = 3000;
+let duracao = 2000;
 let tempo_total = (duracao * (frases.length - 1)) + (duracao * 2);
 //let $frases;
 
@@ -165,7 +165,6 @@ function prepara_dados(dados, criterio, ordena = false, vetor_ordem, raio, marge
 
         posicoes_iniciais[d.categoria] = d.pos_inicial;
     });
-    console.log({parametros_colunas_grid});
     
     let mini_dados = {};
     mini_dados["dados"] = [];
@@ -200,7 +199,7 @@ function prepara_dados(dados, criterio, ordena = false, vetor_ordem, raio, marge
         "raio" : raio
     };
 
-    console.log(mini_dados);
+    console.log("Mini dados", mini_dados);
 
     return(mini_dados);
 }
@@ -229,8 +228,6 @@ function desenha_dados(dados, criterio, ordena, vetor_ordem, raio, margin, rotul
     pontos = pontos
       .data(mini_dados.dados, d => d.nome);
 
-    console.log("mini dados", mini_dados);
-
     pontos
       .transition()
       .duration(duracao)
@@ -258,8 +255,6 @@ function acrescenta_rotulos(mini_dados, deslocados, quanto) {
       .remove();
 
     d3.selectAll("line.rotulos").remove();
-
-    console.log("Rotulos", mini_dados);
 
     let $rotulos = d3.select(".container-svg")
       .selectAll("div.rotulos")
@@ -303,7 +298,7 @@ function acrescenta_rotulos(mini_dados, deslocados, quanto) {
     if (deslocados) {
 
         $rotulos.each(function(d,i,nodes) {
-            console.log(this, deslocados.includes(i))
+            //console.log(this, deslocados.includes(i))
             if (deslocados.includes(i)) {
                 let top_atual = +d3.select(this).style("top").slice(0,-2);
                 let left_atual = +d3.select(this).style("left").slice(0,-2);
@@ -329,8 +324,7 @@ function acrescenta_rotulos(mini_dados, deslocados, quanto) {
 }
 
 d3.csv("./web/dados/data.csv").then(function(grid) {
-    console.log(grid[0], grid.columns);
-
+    
     let margin = w < 580 ? 15 : 25;
 
     let menor_dimensao = Math.min(w, h) - 2 * margin;
@@ -343,13 +337,13 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
 
     let raio = menor_dimensao / (2 * maior_qde);
 
-    console.log(sumariza_dados(grid, "1. Idade", false, 
-    vetor_ordem = 
-    "De 20 a 29 anos",
-    "De 30 a 39 anos", 
-    "De 40 a 49 anos", 
-    "De 50 a 60 anos",  
-    "+ de 60"));
+    // console.log(sumariza_dados(grid, "1. Idade", false, 
+    // vetor_ordem = 
+    // "De 20 a 29 anos",
+    // "De 30 a 39 anos", 
+    // "De 40 a 49 anos", 
+    // "De 50 a 60 anos",  
+    // "+ de 60"));
 
     let w_necessario = raio * 2 * qde_x;
     let h_necessario = raio * 2 * qde_y;
@@ -418,7 +412,13 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
                 break;   
             case 4 :
               desenha_step4(direcao);
-              break;               
+              break;  
+            case 5 :
+              desenha_step5(direcao);
+              break; 
+            case 6 :
+              desenha_step6(direcao);
+              break;                            
         }
     }
 
@@ -498,8 +498,6 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
 
     function desenha_step3(direcao) {
 
-        console.log("ok, tô no step 3");
-
         desenha_dados(
           dados = grid, 
           criterio = "1. Idade", 
@@ -513,9 +511,6 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
     }
 
     function desenha_step4(direcao) {
-
-      console.log("ok, tô no step 3");
-
       desenha_dados(
         dados = grid, 
         criterio = "2. Sexo", 
@@ -525,7 +520,31 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
         margin,
         rotulos_a_deslocar = false,
         deslocamento = 0);
+    }
 
+  function desenha_step5(direcao) {
+    desenha_dados(
+      dados = grid, 
+      criterio = "3. Escolaridade", 
+      ordena = false, 
+      vetor_ordem = ["Nível fundamental ou médio", "Graduação", "Especialização", "Mestrado", 
+      "Doutorado"], 
+      raio, 
+      margin,
+      rotulos_a_deslocar = [0],
+      deslocamento = 60);
+  }
+
+  function desenha_step6(direcao) {
+    desenha_dados(
+      dados = grid, 
+      criterio = "1. Você está satisfeito com a sua situação atual no Tesouro?", 
+      ordena = false, 
+      vetor_ordem = ["Não", "Possivelmente não", "Sinto-me indiferente", "Basicamente sim", "Sim"], 
+      raio, 
+      margin,
+      rotulos_a_deslocar = false,
+      deslocamento = 0);
   }
 
     // setup
