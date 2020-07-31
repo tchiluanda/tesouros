@@ -40,6 +40,15 @@ article {
     /*font-size: 1.5rem;*/
 }
 
+.slide > h2.titulo {
+    width: 100%;
+    text-align: center;
+}
+
+.slide > h2.subtitulo {
+    opacity: 0;
+}
+
 .slide > h2 > span {
     padding-bottom: .5rem;
     border-bottom: 5px solid var(--cor-texto);
@@ -54,7 +63,7 @@ article {
 
 .titulo h1 {
     text-align: center;
-    font-size: 7rem;
+    font-size: 5.5rem;
     font-family: 'Esteban';
 }
 
@@ -85,7 +94,7 @@ article {
 
 .container-svg p.frases {
     font-family: 'Esteban';
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     position: absolute;
     max-width: 50vw;
 }
