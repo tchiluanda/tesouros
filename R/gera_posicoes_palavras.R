@@ -41,7 +41,11 @@ exportar <- bind_rows(exportar, exportar_copy)
 exportar <- exportar[1:825-757,] %>%
   mutate(nome = paste("bolha", row_number()))
 
-ggplot(exportar, aes(x = x, y = y, color = value)) + geom_point()  + scale_y_reverse()
+ggplot(exportar, aes(x = x, y = y, color = factor(value))) + 
+  geom_point(size = 3)  + 
+  scale_color_manual(values = c("1" = "yellow", "2" = "darkblue", "3" = "forestgreen")) +
+  scale_y_reverse() +
+  
 write.csv(exportar, file = "web/dados/logo.csv")
 write_rds(exportar, "./R/dados/grid.rds")
 
