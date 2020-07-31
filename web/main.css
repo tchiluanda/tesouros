@@ -41,12 +41,14 @@ article {
 }
 
 .slide > h2.titulo {
-    width: 100%;
+    /*width: 100%;*/
     text-align: center;
 }
 
 .slide > h2.subtitulo {
     opacity: 0;
+    max-width: 50%;
+    margin: 0 auto;
 }
 
 .slide > h2 > span {

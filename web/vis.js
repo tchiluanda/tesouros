@@ -407,7 +407,7 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
                 break;
             case 2 :
                 desenha_step2(direcao);
-                d3.select("h2.subtitulo").transition().duration(duracao*2).style("opacity", 1);
+                d3.select("h2.subtitulo").transition().duration(duracao*3).style("opacity", 1);
                 break;
             case 3 :
                 desenha_step3(direcao);
