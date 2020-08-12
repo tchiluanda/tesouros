@@ -3,7 +3,8 @@ library(readxl)
 #library(skimr)
 library(colorspace)
 
-dados_raw <- read_excel("./R/dados/Diálogos estratégicos Final 0806.xlsx", skip = 1)
+dados_raw <- read_excel("./R/dados/Diálogos estratégicos Final 0806.xlsx", skip = 1) %>%
+  mutate(id = row_number())
 
 grid <- read_rds("./R/dados/grid.rds")
 
@@ -30,6 +31,9 @@ tab_unidades <- data.frame(
     "Fora do Tesouro")
 )
 
+
+# tratamento das colunas de satisfação ------------------------------------
+
 colunas_sat <- c(
   "1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Chefia]", 
   "1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Tipo de trabalho]", 
@@ -47,32 +51,54 @@ colunas_insat <- c(
   "1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Outros]"
 )
 
-colunas <- colunas_sat
+processa_sat_insat <- function(colunas) {
+  #colunas <- colunas_sat
+  
+  posicoes_ini <- str_locate(colunas, "\\[")[, "end"]
+  posicoes_fin <- str_locate(colunas, "\\]")[, "end"]
+  razoes <- str_sub(colunas, posicoes_ini + 1, posicoes_fin - 1)
+  tab_aux <- data.frame("pergunta" = colunas, razoes)
+  tab_aux_hierarquia <- data.frame(
+    ranking_pre = c(
+      "Primeira opção;Segunda opção;Terceira opção",
+      "Primeira opção;Segunda opção",
+      "Primeira opção",
+      "Segunda opção;Terceira opção",
+      "Segunda opção",
+      "Terceira opção"),
+    ranking = c(
+      "Primeira opção",
+      "Primeira opção",
+      "Primeira opção",
+      "Segunda opção",
+      "Segunda opção",
+      "Terceira opção") 
+  )
+  
+  dados_sat_insat <- dados_raw %>%
+    select(id, all_of(colunas)) %>%
+    gather(-id, key = "pergunta", value = "ranking_pre") %>%
+    left_join(tab_aux) %>%
+    left_join(tab_aux_hierarquia) %>%
+    select(-pergunta, -ranking_pre) %>%
+    filter(!is.na(ranking)) %>%
+    spread(key = ranking, value = razoes) %>%
+    select(id, sat1= `Primeira opção`, sat2 = `Segunda opção`, sat3 = `Terceira opção`) %>%
+    filter(!is.na(sat1)) %>%
+    mutate_if(is.factor, ~as.character(.))
+  
+  # t <- data.frame("sat" = c(dados_sat$sat1, dados_sat$sat2),
+  #                 "rnk" = c(rep("primeiro", length(dados_sat$sat1)), rep("segundo", length(dados_sat$sat1)))
+  #                 ) %>% 
+  #   group_by(rnk) %>%
+  #   count(sat) %>% arrange(desc(n))
+  return(dados_sat_insat)
+}
 
-posicoes_ini <- str_locate(colunas, "\\[")[, "end"]
-posicoes_fin <- str_locate(colunas, "\\]")[, "end"]
-razoes <- str_sub(colunas, posicoes_ini + 1, posicoes_fin - 1)
-tab_aux <- data.frame("pergunta" = colunas, razoes)
+dados_sat <- processa_sat_insat(colunas_sat)
+dados_insat <- processa_sat_insat(colunas_insat)
 
-dados_sat <- dados_raw %>%
-  select(all_of(colunas)) %>%
-  mutate(id = row_number()) %>%
-  gather(-id, key = "pergunta", value = "ranking") %>%
-  left_join(tab_aux) %>%
-  select(-pergunta) %>%
-  filter(!is.na(ranking)) %>%
-  spread(key = ranking, value = razoes) %>%
-  select(id, sat1= `Primeira opção`, sat2 = `Segunda opção`, sat3 = `Terceira opção`) %>%
-  filter(!is.na(sat1)) %>%
-  mutate_if(is.factor, ~as.character(.))
-
-t <- data.frame("sat" = c(dados_sat$sat1, dados_sat$sat2),
-                "rnk" = c(rep("primeiro", length(dados_sat$sat1)), rep("segundo", length(dados_sat$sat1)))
-                ) %>% 
-  group_by(rnk) %>%
-  count(sat) %>% arrange(desc(n))
-
-ggplot(t, aes(x = n, y = sat, fill = rnk)) + geom_col(position = position_dodge())
+#ggplot(t, aes(x = n, y = sat, fill = rnk)) + geom_col(position = position_dodge())
 
 dados <- dados_raw %>%
   select(
@@ -100,6 +126,8 @@ dados <- dados_raw %>%
     satisfacao = factor(satisfacao, levels = rev(c("Não", "Possivelmente não", "Sinto-me indiferente", "Basicamente sim", "Sim")), ordered = T),
     insatisfeita = satisfacao %in% c("Não", "Possivelmente não")) %>%
   left_join(tab_unidades) %>%
+  left_join(dados_sat) %>%
+  left_join(dados_insat) %>%
   bind_cols(grid)
 
 
