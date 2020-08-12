@@ -30,6 +30,50 @@ tab_unidades <- data.frame(
     "Fora do Tesouro")
 )
 
+colunas_sat <- c(
+  "1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Chefia]", 
+  "1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Tipo de trabalho]", 
+  "1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Salário]", 
+  "1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Ambiente]", 
+  "1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Colegas]", 
+  "1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Outros]")
+
+colunas_insat <- c(
+  "1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Chefia]", 
+  "1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Tipo de trabalho]", 
+  "1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Salário]", 
+  "1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Ambiente]", 
+  "1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Colegas]", 
+  "1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Outros]"
+)
+
+colunas <- colunas_sat
+
+posicoes_ini <- str_locate(colunas, "\\[")[, "end"]
+posicoes_fin <- str_locate(colunas, "\\]")[, "end"]
+razoes <- str_sub(colunas, posicoes_ini + 1, posicoes_fin - 1)
+tab_aux <- data.frame("pergunta" = colunas, razoes)
+
+dados_sat <- dados_raw %>%
+  select(all_of(colunas)) %>%
+  mutate(id = row_number()) %>%
+  gather(-id, key = "pergunta", value = "ranking") %>%
+  left_join(tab_aux) %>%
+  select(-pergunta) %>%
+  filter(!is.na(ranking)) %>%
+  spread(key = ranking, value = razoes) %>%
+  select(id, sat1= `Primeira opção`, sat2 = `Segunda opção`, sat3 = `Terceira opção`) %>%
+  filter(!is.na(sat1)) %>%
+  mutate_if(is.factor, ~as.character(.))
+
+t <- data.frame("sat" = c(dados_sat$sat1, dados_sat$sat2),
+                "rnk" = c(rep("primeiro", length(dados_sat$sat1)), rep("segundo", length(dados_sat$sat1)))
+                ) %>% 
+  group_by(rnk) %>%
+  count(sat) %>% arrange(desc(n))
+
+ggplot(t, aes(x = n, y = sat, fill = rnk)) + geom_col(position = position_dodge())
+
 dados <- dados_raw %>%
   select(
     "idade" = `1. Idade`,
@@ -37,13 +81,31 @@ dados <- dados_raw %>%
     "escolaridade" = `3. Escolaridade`,
     "tempo_tesouro" = `6. Tempo total no Tesouro`,
     "unidade" = `9. Qual a sua unidade de lotação atual?`,
-    "satisfacao" = `1. Você está satisfeito com a sua situação atual no Tesouro?`
+    "funcao" = `10. Qual a sua função atual?`,
+    "satisfacao" = `1. Você está satisfeito com a sua situação atual no Tesouro?`,
+    "razoes_sat_chefia" = `1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Chefia]`, 
+    "razoes_sat_tipo_trabalho" = `1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Tipo de trabalho]`, 
+    "razoes_sat_salario" = `1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Salário]`,
+    "razoes_sat_ambiente" = `1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Ambiente]`, 
+    "razoes_sat_colegas" = `1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Colegas]`, 
+    "razoes_sat_outros" = `1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Outros]`,
+    "razoes_insat_chefia" = `1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Chefia]`, 
+    "razoes_insat_tipo_trabalho" = `1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Tipo de trabalho]`, 
+    "razoes_insat_salario" = `1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Salário]`, 
+    "razoes_insat_tipo_ambiente" = `1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Ambiente]`, 
+    "razoes_insat_colegas" = `1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Colegas]`, 
+    "razoes_insat_outras" = `1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Outros]`
   ) %>% 
-  mutate(satisfacao = factor(satisfacao, levels = rev(c("Não", "Possivelmente não", "Sinto-me indiferente", "Basicamente sim", "Sim")), ordered = T)) %>%
+  mutate(
+    satisfacao = factor(satisfacao, levels = rev(c("Não", "Possivelmente não", "Sinto-me indiferente", "Basicamente sim", "Sim")), ordered = T),
+    insatisfeita = satisfacao %in% c("Não", "Possivelmente não")) %>%
   left_join(tab_unidades) %>%
   bind_cols(grid)
 
-ggplot(dados, aes(y = unidade, fill = satisfacao)) + 
+
+
+
+ggplot(dados, aes(y = funcao, fill = satisfacao)) + 
   geom_bar(position = position_fill()) +
   scale_fill_discrete_diverging()
 
@@ -51,7 +113,17 @@ ggplot(dados, aes(y = subsec, fill = satisfacao)) +
   geom_bar(position = position_fill()) +
   scale_fill_discrete_diverging()
 
+ggplot(dados, aes(y = subsec, fill = satisfacao)) + 
+  geom_bar() +
+  scale_fill_discrete_diverging()
+
+# quantidade respondentes por subsec
 ggplot(dados %>% count(subsec), aes(y = reorder(subsec, n), x = n)) + 
+  geom_col() +
+  geom_text(aes(label = n), nudge_x = 2)
+
+# quantidade respondentes por funcao
+ggplot(dados %>% count(funcao), aes(y = reorder(funcao, n), x = n)) + 
   geom_col() +
   geom_text(aes(label = n), nudge_x = 2)
 
