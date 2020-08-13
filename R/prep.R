@@ -6,8 +6,6 @@ library(colorspace)
 dados_raw <- read_excel("./R/dados/Diálogos estratégicos Final 0806.xlsx", skip = 1) %>%
   mutate(id = row_number())
 
-grid <- read_rds("./R/dados/grid.rds")
-
 tab_unidades <- data.frame(
   "unidade" = c(
     "ASSEC", "Gabinete",
@@ -103,6 +101,8 @@ dados_insat <- processa_sat_insat(colunas_insat)
 
 # prepara tabela principal ------------------------------------------------
 
+grid <- read_rds("./R/dados/grid.rds")
+
 dados <- dados_raw %>%
   select(
     id,
@@ -135,6 +135,9 @@ dados <- dados_raw %>%
   left_join(dados_sat) %>%
   left_join(dados_insat, by = "id", suffix = c(".sat", ".insat")) %>%
   bind_cols(grid)
+
+
+# explorações -------------------------------------------------------------
 
 dados %>% filter(insatisfeita) %>% group_by(genero) %>% count(primeira.insat)
 
@@ -192,6 +195,10 @@ ggplot(dados %>% count(funcao), aes(y = reorder(funcao, n), x = n)) +
 # dados <- dados_raw %>% 
 #   select(1:12) %>% 
 #   bind_cols(grid)
+
+
+
+# exporta os dados --------------------------------------------------------
 
 dados %>% write.csv(file = "./web/dados/data.csv", fileEncoding = "UTF-8")
 
