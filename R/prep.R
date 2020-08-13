@@ -83,8 +83,8 @@ processa_sat_insat <- function(colunas) {
     select(-pergunta, -ranking_pre) %>%
     filter(!is.na(ranking)) %>%
     spread(key = ranking, value = razoes) %>%
-    select(id, sat1= `Primeira opção`, sat2 = `Segunda opção`, sat3 = `Terceira opção`) %>%
-    filter(!is.na(sat1)) %>%
+    select(id, primeira= `Primeira opção`, segunda = `Segunda opção`, terceira = `Terceira opção`) %>%
+    filter(!is.na(primeira)) %>%
     mutate_if(is.factor, ~as.character(.))
   
   # t <- data.frame("sat" = c(dados_sat$sat1, dados_sat$sat2),
@@ -100,8 +100,12 @@ dados_insat <- processa_sat_insat(colunas_insat)
 
 #ggplot(t, aes(x = n, y = sat, fill = rnk)) + geom_col(position = position_dodge())
 
+
+# prepara tabela principal ------------------------------------------------
+
 dados <- dados_raw %>%
   select(
+    id,
     "idade" = `1. Idade`,
     "genero" = `2. Sexo`,
     "escolaridade" = `3. Escolaridade`,
@@ -109,29 +113,40 @@ dados <- dados_raw %>%
     "unidade" = `9. Qual a sua unidade de lotação atual?`,
     "funcao" = `10. Qual a sua função atual?`,
     "satisfacao" = `1. Você está satisfeito com a sua situação atual no Tesouro?`,
-    "razoes_sat_chefia" = `1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Chefia]`, 
-    "razoes_sat_tipo_trabalho" = `1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Tipo de trabalho]`, 
-    "razoes_sat_salario" = `1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Salário]`,
-    "razoes_sat_ambiente" = `1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Ambiente]`, 
-    "razoes_sat_colegas" = `1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Colegas]`, 
-    "razoes_sat_outros" = `1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Outros]`,
-    "razoes_insat_chefia" = `1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Chefia]`, 
-    "razoes_insat_tipo_trabalho" = `1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Tipo de trabalho]`, 
-    "razoes_insat_salario" = `1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Salário]`, 
-    "razoes_insat_tipo_ambiente" = `1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Ambiente]`, 
-    "razoes_insat_colegas" = `1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Colegas]`, 
-    "razoes_insat_outras" = `1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Outros]`
+    # "razoes_sat_chefia" = `1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Chefia]`, 
+    # "razoes_sat_tipo_trabalho" = `1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Tipo de trabalho]`, 
+    # "razoes_sat_salario" = `1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Salário]`,
+    # "razoes_sat_ambiente" = `1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Ambiente]`, 
+    # "razoes_sat_colegas" = `1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Colegas]`, 
+    # "razoes_sat_outros" = `1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Outros]`,
+    # "razoes_insat_chefia" = `1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Chefia]`, 
+    # "razoes_insat_tipo_trabalho" = `1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Tipo de trabalho]`, 
+    # "razoes_insat_salario" = `1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Salário]`, 
+    # "razoes_insat_tipo_ambiente" = `1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Ambiente]`, 
+    # "razoes_insat_colegas" = `1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Colegas]`, 
+    # "razoes_insat_outras" = `1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Outros]`
   ) %>% 
   mutate(
+    tempo_tesouro = factor(tempo_tesouro, levels = c("Até 5 anos", "De 6 a 10 anos", "De 11 a 20 anos", "De 21 a 30 anos", 
+                           "Mais de 30 anos"), ordered = TRUE),
     satisfacao = factor(satisfacao, levels = rev(c("Não", "Possivelmente não", "Sinto-me indiferente", "Basicamente sim", "Sim")), ordered = T),
     insatisfeita = satisfacao %in% c("Não", "Possivelmente não")) %>%
   left_join(tab_unidades) %>%
   left_join(dados_sat) %>%
-  left_join(dados_insat) %>%
+  left_join(dados_insat, by = "id", suffix = c(".sat", ".insat")) %>%
   bind_cols(grid)
 
+dados %>% filter(insatisfeita) %>% group_by(genero) %>% count(primeira.insat)
 
+dados %>% filter(insatisfeita) %>% group_by(funcao) %>% count(primeira.insat)
 
+insat_tempo <- dados %>% filter(insatisfeita, !is.na(primeira.insat)) %>% group_by(tempo_tesouro) %>% count(primeira.insat)
+insat_genero <- dados %>% filter(insatisfeita, !is.na(primeira.insat)) %>% group_by(genero) %>% count(primeira.insat)
+insat_subsec <- dados %>% filter(insatisfeita, !is.na(primeira.insat)) %>% group_by(subsec) %>% count(primeira.insat)
+
+ggplot(insat_tempo, aes(x = n, y = primeira.insat)) + geom_col() + facet_wrap(~tempo_tesouro, scales = "free") + labs("title" = "Com o que são insatisfeitos os insatisfeiros?")
+ggplot(insat_genero, aes(x = n, y = primeira.insat)) + geom_col() + facet_wrap(~genero, scales = "free") + labs("title" = "Com o que são insatisfeitos os insatisfeiros?")
+ggplot(insat_subsec, aes(x = n, y = primeira.insat)) + geom_col() + facet_wrap(~subsec, scales = "free", repeat.tick.labels = TRUE) + labs("title" = "Com o que são insatisfeitos os insatisfeiros?")
 
 ggplot(dados, aes(y = funcao, fill = satisfacao)) + 
   geom_bar(position = position_fill()) +
