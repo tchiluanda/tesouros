@@ -86,12 +86,18 @@ function generates_stacks_for_variable(obj, variable) {
 
 // parametros barras
 let bar_height = 15;
+let colors = ["#8E063B", "#CA9CA4", "#E2E2E2", "#A1A6C8", "#023FA5"]
 
 // // escalas
 // cor
 let fill = d3.scaleOrdinal()
-  .range(d3.schemeRdGy[5])
+  .range(colors)
   .domain(ordem_satisfacao)
+
+// x e larguras
+let x = d3.scaleLinear()
+   .range([0,500])
+   .domain([0,1]);
 
 function draw_bars(cat) {
     //let mini_data = stacks[cat];
@@ -101,13 +107,26 @@ function draw_bars(cat) {
       .selectAll("g")
       .data(mini_data, d => d.label)
       .join("g")
-      .attr("transform", (d,i) => "translate(0," + i*3*bar_height + ")")
+        .attr("transform", (d,i) => "translate(0," + i*3*bar_height + ")");
+
+    bars
       .selectAll("rect")
       .data(d => d.stack)
       .join("rect")
-      .attr("height", bar_height)
-      .attr("width", 50)
-      .attr("x", (d,i) => i * 55)
-      .attr("y", 0)
-      .attr("fill", d => fill(d.label))
+        .attr("height", bar_height)
+        .attr("width", 100)
+        .attr("x", (d,i) => i * 100)
+        .attr("y", 0)
+        .attr("fill", d => fill(d.label))
+
+    bars
+        .selectAll("text")
+        .data(d => d.stack)
+        .join("text")
+            .attr("height", bar_height)
+            .attr("width", 100)
+            .attr("x", (d,i) => i * 100)
+            .attr("y", 25)
+            .text(d => (d.label))
+            .attr("font-size", 10)
 }
