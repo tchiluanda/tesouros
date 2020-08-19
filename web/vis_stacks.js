@@ -24,7 +24,9 @@ d3.csv("./dados/data.csv").then(function(grid) {
 
     draw_bars(categorias_Tempo);
 
-    desloca_barras(categorias_Tempo, "desloc_otimista");
+    //desloca_barras("desloc_otimista");
+
+    //desloca_barras("desloc_pessimista");
 
 
 
@@ -165,28 +167,51 @@ function draw_bars(cat) {
             .attr("font-size", 10)
 }
 
-function desloca_barras(cat, otimista_pessimista) {
+function desloca_barras(otimista_pessimista) {
     let bars = d3.select("svg").selectAll("g.stacked-bars")
 
-    // console.log("hi", bars)
+    console.log("hi", bars)
 
-    // bars.each((d,i) => {
-    //     console.log(d3.select(this).attr("transform"))
-    // })
-      .data(cat, d => d.label)
-      .transition()
-      .duration(500)
-      .attr("transform", function(d,i) {
+    bars.each(function(d,i,nodes) {
 
-        console.log(otimista_pessimista, x(d[otimista_pessimista]));
+        console.log(d3.select(this))
 
-        return(
+        let transf = d3.select(this).attr("transform");
+
+        console.log(transf)
+
+        let ini = transf.indexOf(",");
+        let fim = transf.indexOf(")")
+        let translateY = +transf.slice(ini+1, fim);
+        console.log(translateY);
+        console.log(d3.select(this).attr("transform"))
+        
+        d3.select(this)
+          .transition()
+          .duration(500)
+          .attr("transform",
             "translate(" + 
             x(d[otimista_pessimista]) + 
             "," + 
-            i*3*bar_height + 
+            translateY + 
             ")"
-        );
+          );
 
-      })
+    })
+    //   .data(cat, d => d.label)
+    //   .transition()
+    //   .duration(500)
+    //   .attr("transform", function(d,i) {
+
+    //     console.log(otimista_pessimista, x(d[otimista_pessimista]));
+
+    //     return(
+    //         "translate(" + 
+    //         x(d[otimista_pessimista]) + 
+    //         "," + 
+    //         i*3*bar_height + 
+    //         ")"
+    //     );
+
+    //   })
 }
