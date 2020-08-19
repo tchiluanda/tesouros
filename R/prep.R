@@ -234,3 +234,6 @@ tab_unidades <- data.frame(
   )
 
 #load("./R/dados/data_luke.RData")
+
+
+dput(rev(colorspace::diverging_hcl(5, palette = "Blue-Red")))
