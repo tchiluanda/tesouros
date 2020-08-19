@@ -11,7 +11,20 @@ d3.csv("./dados/data.csv").then(function(grid) {
 
     console.log(categorias_Tempo);
 
+    let deslocs_otimista = generates_deslocs(categorias_Tempo, "Sinto-me indiferente");
+
+    let deslocs_pessimista = generates_deslocs(categorias_Tempo, "Basicamente sim");
+
+    categorias_Tempo.forEach((d,i) => {
+        categorias_Tempo[i]["desloc_otimista"] = deslocs_otimista[i];
+        categorias_Tempo[i]["desloc_pessimista"] = deslocs_pessimista[i];
+    })
+
+    //console.log(categorias_Tempo);
+
     draw_bars(categorias_Tempo);
+
+
 
 
 });
@@ -57,7 +70,7 @@ function stack_na_ordem(obj, col, vetor_ordem) {
 
     let stack = vetor_ordem.map(d => {
         let current_start_pos = start_pos;
-        start_pos += count_obj[d];
+        start_pos = count_obj[d] ? start_pos+count_obj[d] : start_pos;
         return {
             'label' : d,
             'count' : count_obj[d],
@@ -72,16 +85,34 @@ function generates_stacks_for_variable(obj, variable) {
     let var_categories = unique(obj, variable);
 
     let stacks = var_categories.map(cat => {
+
         let mini_dataset = obj.filter(d => d[variable] == cat);
+
+        let stack = stack_na_ordem(mini_dataset, 'satisfacao', ordem_satisfacao);
+
         return(
             {
                 'label' : cat,
-                'stack' : stack_na_ordem(mini_dataset, 'satisfacao', ordem_satisfacao)
+                'stack' : stack,
             }
         )
     });
 
     return stacks;
+}
+
+function generates_deslocs(objeto, tipo) {
+  let starts = objeto
+    .map(d => d.stack.filter(d => d.label == tipo))
+    .map(d => d[0].start);
+
+  let max_desloc = starts
+    .reduce((max, valor_atual) => Math.max(max, valor_atual));
+  //let max_desloc_otimista = Math.max(...starts_otimista);
+
+  let deslocs = starts.map(d => max_desloc - d);
+
+  return(deslocs);
 }
 
 // parametros barras
@@ -105,6 +136,7 @@ function draw_bars(cat) {
 
     let bars = d3.select("svg")
       .selectAll("g")
+      .classed("stacked-bars", true)
       .data(mini_data, d => d.label)
       .join("g")
         .attr("transform", (d,i) => "translate(0," + i*3*bar_height + ")");
@@ -114,8 +146,8 @@ function draw_bars(cat) {
       .data(d => d.stack)
       .join("rect")
         .attr("height", bar_height)
-        .attr("width", 100)
-        .attr("x", (d,i) => i * 100)
+        .attr("width", d => x(d.count))
+        .attr("x", d => x(d.start))
         .attr("y", 0)
         .attr("fill", d => fill(d.label))
 
@@ -129,4 +161,14 @@ function draw_bars(cat) {
             .attr("y", 25)
             .text(d => (d.label))
             .attr("font-size", 10)
+}
+
+function desloca_barras(vetor_deslocamento) {
+    let bars = d3.select("svg").selectAll("g.stacked-bars");
+
+    bars.each
+
+      .transition()
+      .duration(500)
+      .attr("transform", d => "translateX("+x(d))
 }
