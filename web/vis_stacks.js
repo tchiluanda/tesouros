@@ -24,6 +24,8 @@ d3.csv("./dados/data.csv").then(function(grid) {
 
     draw_bars(categorias_Tempo);
 
+    desloca_barras(categorias_Tempo, "desloc_otimista");
+
 
 
 
@@ -163,12 +165,22 @@ function draw_bars(cat) {
             .attr("font-size", 10)
 }
 
-function desloca_barras(vetor_deslocamento) {
-    let bars = d3.select("svg").selectAll("g.stacked-bars");
-
-    bars.each
-
+function desloca_barras(cat, otimista_pessimista) {
+    let bars = d3.select("svg").selectAll("g.stacked-bars")
+      .data(cat, d => d.label)
       .transition()
       .duration(500)
-      .attr("transform", d => "translateX("+x(d))
+      .attr("transform", function(d,i) {
+
+        console.log(otimista_pessimista, x(d[otimista_pessimista]));
+
+        return(
+            "translate(" + 
+            x(d[otimista_pessimista]) + 
+            "," + 
+            i*3*bar_height + 
+            ")"
+        );
+
+      })
 }
