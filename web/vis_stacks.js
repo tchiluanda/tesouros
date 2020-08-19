@@ -138,9 +138,9 @@ function draw_bars(cat) {
 
     let bars = d3.select("svg")
       .selectAll("g")
-      .classed("stacked-bars", true)
       .data(mini_data, d => d.label)
       .join("g")
+        .classed("stacked-bars", true)
         .attr("transform", (d,i) => "translate(0," + i*3*bar_height + ")");
 
     bars
@@ -167,6 +167,12 @@ function draw_bars(cat) {
 
 function desloca_barras(cat, otimista_pessimista) {
     let bars = d3.select("svg").selectAll("g.stacked-bars")
+
+    // console.log("hi", bars)
+
+    // bars.each((d,i) => {
+    //     console.log(d3.select(this).attr("transform"))
+    // })
       .data(cat, d => d.label)
       .transition()
       .duration(500)
