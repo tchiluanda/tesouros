@@ -20,6 +20,8 @@ d3.csv("./dados/data.csv").then(function(grid) {
         categorias_Tempo[i]["desloc_pessimista"] = deslocs_pessimista[i];
     })
 
+    console.log("MAX", get_max_desloc(categorias_Tempo));
+
     //console.log(categorias_Tempo);
 
     draw_bars(categorias_Tempo);
@@ -105,14 +107,31 @@ function generates_stacks_for_variable(obj, variable) {
     return stacks;
 }
 
+function get_max_desloc(objeto) {
+
+    let max_deslocs = [];
+
+    for (tipo of ["Sinto-me indiferente", "Basicamente sim"]) {
+        let starts = objeto
+        .map(d => d.stack.filter(d => d.label == tipo))
+        .map(d => d[0].start);
+
+        let max_desloc_tipo = starts
+        .reduce((max, valor_atual) => Math.max(max, valor_atual));
+          //let max_desloc_tipo = Math.max(...starts_otimista);
+
+        max_deslocs.push(max_desloc_tipo);
+    }
+
+    return(Math.max(max_deslocs[0], max_deslocs[1]))
+}
+
 function generates_deslocs(objeto, tipo) {
   let starts = objeto
     .map(d => d.stack.filter(d => d.label == tipo))
     .map(d => d[0].start);
 
-  let max_desloc = starts
-    .reduce((max, valor_atual) => Math.max(max, valor_atual));
-  //let max_desloc_otimista = Math.max(...starts_otimista);
+  let max_desloc = get_max_desloc(objeto)
 
   let deslocs = starts.map(d => max_desloc - d);
 
