@@ -9,11 +9,11 @@ d3.csv("./dados/data.csv").then(function(grid) {
 
     let categorias_Tempo = generates_stacks_for_variable(grid, "tempo_tesouro");
 
-    console.log(categorias_Tempo);
+    let max_desloc = get_max_desloc(categorias_Tempo);
 
-    let deslocs_otimista = generates_deslocs(categorias_Tempo, "Sinto-me indiferente");
+    let deslocs_otimista = generates_deslocs(categorias_Tempo, "Sinto-me indiferente", max_desloc);
 
-    let deslocs_pessimista = generates_deslocs(categorias_Tempo, "Basicamente sim");
+    let deslocs_pessimista = generates_deslocs(categorias_Tempo, "Basicamente sim", max_desloc);
 
     categorias_Tempo.forEach((d,i) => {
         categorias_Tempo[i]["desloc_otimista"] = deslocs_otimista[i];
@@ -90,11 +90,11 @@ function get_max_desloc(objeto) {
 
     for (tipo of ["Sinto-me indiferente", "Basicamente sim"]) {
         let starts = objeto
-        .map(d => d.stack.filter(d => d.label == tipo))
-        .map(d => d[0].start);
+          .map(d => d.stack.filter(d => d.label == tipo))
+          .map(d => d[0].start);
 
         let max_desloc_tipo = starts
-        .reduce((max, valor_atual) => Math.max(max, valor_atual));
+          .reduce((max, valor_atual) => Math.max(max, valor_atual));
           //let max_desloc_tipo = Math.max(...starts_otimista);
 
         max_deslocs.push(max_desloc_tipo);
@@ -103,12 +103,12 @@ function get_max_desloc(objeto) {
     return(Math.max(max_deslocs[0], max_deslocs[1]))
 }
 
-function generates_deslocs(objeto, tipo) {
+function generates_deslocs(objeto, tipo, max_desloc) {
   let starts = objeto
     .map(d => d.stack.filter(d => d.label == tipo))
     .map(d => d[0].start);
 
-  let max_desloc = get_max_desloc(objeto)
+  //let max_desloc = get_max_desloc(objeto)
 
   let deslocs = starts.map(d => max_desloc - d);
 
