@@ -37,30 +37,7 @@ d3.csv("./dados/data.csv").then(function(grid) {
 
 let ordem_satisfacao = ["Não", "Possivelmente não", "Sinto-me indiferente", "Basicamente sim", "Sim"];
 
-// gera object
-// function stack_na_ordem(obj, col, vetor_ordem) {
-//     let count = group_and_count(obj, col, percent = true);
-//     let count_obj = {};
-    
-//     count.forEach(d => {
-//         count_obj[d.cat] = d.count 
-//     });
 
-//     let stack = {};
-//     let start_pos = 0;
-
-//     if (!vetor_ordem) vetor_ordem = unique(obj, col);
-
-//     vetor_ordem.forEach(d => {
-//         stack[d] = {
-//             'count' : count_obj[d],
-//             'start' : start_pos
-//         }
-//         start_pos += count_obj[d];
-//     });
-
-//     return(stack);
-// }
 
 function stack_na_ordem(obj, col, vetor_ordem) {
     let count = group_and_count(obj, col, percent = true);
