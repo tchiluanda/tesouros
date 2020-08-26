@@ -2,6 +2,7 @@
     --altura-frase: 2rem;
     --w-mobile: 580px;
     --cor-texto: #222;
+    font-family: "Merriweather"
 }
 
 * {
@@ -151,5 +152,13 @@ div.controle-stacked button.selected {
 
 div.controle-stacked button:hover {
     background-color: lightgrey;
+
+}
+
+select#controle-otim-pess {
+    display: inline;
+    font-family: inherit;
+    font-size: 1em;
+    border: 1px solid grey;
 
 }
