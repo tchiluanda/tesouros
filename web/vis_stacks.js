@@ -1,4 +1,5 @@
 let grid_data;
+let visao_stacked = "desloc_otimista";
 
 d3.csv("./dados/data.csv").then(function(grid) {
     console.log(grid.columns);
@@ -11,9 +12,11 @@ d3.csv("./dados/data.csv").then(function(grid) {
     //console.log(group_and_count(grid, "satisfacao", percent = true))
 
     desenha_stack("subsec");
-    monitora_botoes();
+    desloca_barras(visao_stacked);
 
-    //desloca_barras("desloc_otimista");
+    monitora_botoes();
+    monitora_opcao_otim_pessi()
+
 
     //desloca_barras("desloc_pessimista");
 
@@ -33,8 +36,20 @@ function monitora_botoes() {
     botoes.classed("selected", false);
     d3.select(this).classed("selected", true);
     desenha_stack(opcao);
+    desloca_barras(visao_stacked);
     
     console.log(opcao);
+  })
+}
+
+function monitora_opcao_otim_pessi() {
+  let dropdown = d3.select("select#controle-otim-pess");
+  
+  dropdown.on("change", function() {
+    visao_stacked = dropdown.property("value");
+    desloca_barras(visao_stacked);
+    
+    console.log(visao_stacked);
   })
 }
 
