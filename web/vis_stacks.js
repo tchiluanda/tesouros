@@ -1,3 +1,10 @@
+let stacked_params = {
+  constantes : {
+    variaveis : ["subsec", "genero", "tempo_tesouro"]
+  }
+  
+};
+
 let grid_data;
 let visao_stacked = "desloc_otimista";
 
@@ -11,14 +18,9 @@ d3.csv("./dados/data.csv").then(function(grid) {
 
     //console.log(group_and_count(grid, "satisfacao", percent = true))
 
-    desenha_stack("subsec");
-    desloca_barras(visao_stacked);
-
-    monitora_botoes();
-    monitora_opcao_otim_pessi()
-
-
     //desloca_barras("desloc_pessimista");
+
+    init();
 
 
 
@@ -26,6 +28,15 @@ d3.csv("./dados/data.csv").then(function(grid) {
 });
 
 let ordem_satisfacao = ["Não", "Possivelmente não", "Sinto-me indiferente", "Basicamente sim", "Sim"];
+
+function init() {
+  desenha_stack("subsec");
+  desloca_barras(visao_stacked);
+
+  monitora_botoes();
+  monitora_opcao_otim_pessi()
+
+}
 
 function monitora_botoes() {
 

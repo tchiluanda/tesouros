@@ -1,8 +1,7 @@
 library(tidyverse)
 library(readxl)
 
-
-# pega dados planilhas escolaridade ---------------------------------------
+# pega dados planilha escolaridade ---------------------------------------
 
 dados_serv_escolaridade_raw <- read_excel("./R/dados/Servidores_STN.xls", 
                                       sheet = "Escolaridade", skip = 6)
