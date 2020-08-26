@@ -1,5 +1,8 @@
+let grid_data;
+
 d3.csv("./dados/data.csv").then(function(grid) {
     console.log(grid.columns);
+    grid_data = grid;
 
     //console.log(unique(grid, "satisfacao"))
 
@@ -7,26 +10,8 @@ d3.csv("./dados/data.csv").then(function(grid) {
 
     //console.log(group_and_count(grid, "satisfacao", percent = true))
 
-    let categorias_Tempo = generates_stacks_for_variable(grid, "tempo_tesouro");
-
-    let max_desloc = get_max_desloc(categorias_Tempo);
-
-    let deslocs_otimista = generates_deslocs(categorias_Tempo, "Sinto-me indiferente", max_desloc);
-
-    let deslocs_pessimista = generates_deslocs(categorias_Tempo, "Basicamente sim", max_desloc);
-
-    categorias_Tempo.forEach((d,i) => {
-        categorias_Tempo[i]["desloc_otimista"] = deslocs_otimista[i];
-        categorias_Tempo[i]["desloc_pessimista"] = deslocs_pessimista[i];
-    })
-
-    console.log("MAX", get_max_desloc(categorias_Tempo));
-
-    //console.log(categorias_Tempo);
-
-    draw_bars(categorias_Tempo);
-
-    inicia_stack();
+    desenha_stack("subsec");
+    monitora_botoes();
 
     //desloca_barras("desloc_otimista");
 
@@ -39,16 +24,41 @@ d3.csv("./dados/data.csv").then(function(grid) {
 
 let ordem_satisfacao = ["Não", "Possivelmente não", "Sinto-me indiferente", "Basicamente sim", "Sim"];
 
-function inicia_stack() {
+function monitora_botoes() {
 
   let botoes = d3.selectAll(".controle-stacked > button");
+  
   botoes.on("click", function() {
     let opcao = this.id;
     botoes.classed("selected", false);
     d3.select(this).classed("selected", true);
+    desenha_stack(opcao);
     
     console.log(opcao);
   })
+}
+
+function desenha_stack(selecao, grid) {
+  let categorias = generates_stacks_for_variable(grid_data, selecao);
+  console.log({categorias})
+
+  let max_desloc = get_max_desloc(categorias);
+
+  let deslocs_otimista = generates_deslocs(categorias, "Sinto-me indiferente", max_desloc);
+
+  let deslocs_pessimista = generates_deslocs(categorias, "Basicamente sim", max_desloc);
+
+  categorias.forEach((d,i) => {
+      categorias[i]["desloc_otimista"] = deslocs_otimista[i];
+      categorias[i]["desloc_pessimista"] = deslocs_pessimista[i];
+  })
+
+  console.log("MAX", get_max_desloc(categorias));
+
+  //console.log(categorias_Tempo);
+
+  draw_bars(categorias);
+
 }
 
 
