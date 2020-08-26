@@ -217,20 +217,4 @@ function desloca_barras(otimista_pessimista) {
           );
 
     })
-    //   .data(cat, d => d.label)
-    //   .transition()
-    //   .duration(500)
-    //   .attr("transform", function(d,i) {
-
-    //     console.log(otimista_pessimista, x(d[otimista_pessimista]));
-
-    //     return(
-    //         "translate(" + 
-    //         x(d[otimista_pessimista]) + 
-    //         "," + 
-    //         i*3*bar_height + 
-    //         ")"
-    //     );
-
-    //   })
 }
