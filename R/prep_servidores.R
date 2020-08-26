@@ -51,9 +51,10 @@ dados_serv_incomp <- dados_serv_raw %>%
     "funcao" = `Cargo`,
   ) %>%
   mutate(
-    subsec = str_sub(dados_serv$unidade, 12, 16),
+    subsec = str_sub(unidade, 12, 16),
     subsec = ifelse(subsec == "", "GABIN", subsec),
-    tempo_tesouro_cat = cut(tempo_tesouro, breaks = c(0, 6, 11, 21, 31, Inf),
+    coord = ifelse(str_sub(unidade, 18, 22) == "", subsec, str_sub(unidade, 18, 22)),
+    tempo_tesouro = cut(tempo_tesouro, breaks = c(0, 6, 11, 21, 31, Inf),
                         labels = c("Até 5 anos", "De 6 a 10 anos", 
                                    "De 11 a 20 anos", "De 21 a 30 anos", "Mais de 30 anos"))
   )
@@ -65,11 +66,7 @@ dados_serv <- dados_serv_incomp %>%
   left_join(dados_serv_escolaridade)
 
 
-dados_serv %>% count(escolaridade)
-
-# ad-hoc ------------------------------------------------------------------
-
-dados_serv_escolaridade_raw$Nível %>% unique() %>% dput()
+# participação por subsec -------------------------------------------------
 
 por_area_pesquisa <- dados %>% 
   count(subsec) %>%
@@ -88,5 +85,58 @@ por_area_servidores <- dados_serv %>% count(subsec) %>%
   left_join(por_area_pesquisa) %>%
   mutate(participacao = scales::percent(pesquisa / servidores))
 
+# participação por coordenação --------------------------------------------
+
+por_coord_pesquisa <- dados %>% 
+  count(unidade) %>%
+  ungroup() %>%
+  rename(pesquisa = n)
+
+por_coord_servidores <- dados_serv %>% 
+  mutate(unidade = case_when(
+    coord == "GABIN" ~ "Gabinete",
+    subsec == "ASSEC" ~ "ASSEC",
+    TRUE ~ coord)) %>%
+  group_by(unidade) %>%
+  summarise(servidores = n()) %>%
+  ungroup() %>%
+  left_join(por_coord_pesquisa) %>%
+  mutate(participacao = scales::percent(pesquisa / servidores))
+
+
+# participação por gênero -------------------------------------------------
+
+## aqui caberia uma função para não repetir tanto código, né...
+por_genero_pesquisa <- dados %>% 
+  count(genero) %>%
+  ungroup() %>%
+  rename(pesquisa = n)
+
+por_genero_servidores <- dados_serv %>%
+  group_by(genero) %>%
+  summarise(servidores = n()) %>%
+  ungroup() %>%
+  left_join(por_genero_pesquisa) %>%
+  mutate(participacao = scales::percent(pesquisa / servidores))
+
+
+# participação por tempo de serviço ---------------------------------------
+
+por_tempo_pesquisa <- dados %>% 
+  count(tempo_tesouro) %>%
+  ungroup() %>%
+  rename(pesquisa = n)
+
+por_tempo_servidores <- dados_serv %>%
+  group_by(tempo_tesouro) %>%
+  summarise(servidores = n()) %>%
+  ungroup() %>%
+  left_join(por_tempo_pesquisa) %>%
+  mutate(participacao = scales::percent(pesquisa / servidores))
+
+# consultas ad hoc --------------------------------------------------------
+
+dados_serv_escolaridade_raw$Nível %>% unique() %>% dput()
+dados_serv %>% count(escolaridade)
 
 
