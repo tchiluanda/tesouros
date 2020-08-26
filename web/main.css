@@ -124,3 +124,32 @@ article {
     font-size: .7rem;
 }
 
+/***************** stacked bar charts */
+
+div.controle-stacked {
+    display: flex;
+    margin: 1em 0;
+}
+
+
+div.controle-stacked button {
+    padding: 0.4em 0.5em;
+    margin-right: 0.5em;
+    border: 2px solid var(--cor-texto);
+    background-color: ghostwhite;
+    font-family: "Merriweather Sans", sans-serif;
+    color: var(--cor-texto);
+    border-radius: 8px;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+div.controle-stacked button.selected {
+    background-color: var(--cor-texto);
+    color: ghostwhite;
+}
+
+div.controle-stacked button:hover {
+    background-color: lightgrey;
+
+}

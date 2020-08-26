@@ -26,6 +26,8 @@ d3.csv("./dados/data.csv").then(function(grid) {
 
     draw_bars(categorias_Tempo);
 
+    inicia_stack();
+
     //desloca_barras("desloc_otimista");
 
     //desloca_barras("desloc_pessimista");
@@ -37,6 +39,17 @@ d3.csv("./dados/data.csv").then(function(grid) {
 
 let ordem_satisfacao = ["Não", "Possivelmente não", "Sinto-me indiferente", "Basicamente sim", "Sim"];
 
+function inicia_stack() {
+
+  let botoes = d3.selectAll(".controle-stacked > button");
+  botoes.on("click", function() {
+    let opcao = this.id;
+    botoes.classed("selected", false);
+    d3.select(this).classed("selected", true);
+    
+    console.log(opcao);
+  })
+}
 
 
 function stack_na_ordem(obj, col, vetor_ordem) {
