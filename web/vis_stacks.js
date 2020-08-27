@@ -6,6 +6,12 @@ let stacked_params = {
 
   },
 
+  parametros_visuais : {
+    bar_height : 15,
+    colors : ["#8E063B", "#CA9CA4", "#E2E2E2", "#A1A6C8", "#023FA5"]
+
+  },
+
   dados : {
     grid_data : null,
     categorias : {},
@@ -16,15 +22,15 @@ let stacked_params = {
     x : {
       range : null,
       domain : null
-    }
+    },
+
+    fill : null
   },
 
   estado : {
     opcao_visao : "desloc_otimista",
     opcao_variavel : "subsec"
   }
-
-  
 };
 
 d3.csv("./dados/data.csv").then(function(grid) {
@@ -54,6 +60,11 @@ function init() {
 
   stacked_params.escalas.x.range = [0,500];
   stacked_params.escalas.x.domain = [0,1+stacked_params.dados.max_desloc];
+
+  stacked_params.escalas.fill = d3
+    .scaleOrdinal()
+    .range(stacked_params.parametros_visuais.colors)
+    .domain(stacked_params.parametros.ordem_satisfacao)
 
   desenha_stack(stacked_params.estado.opcao_variavel);
   desloca_barras(stacked_params.estado.opcao_visao);
@@ -205,21 +216,12 @@ function generates_deslocs(objeto, tipo, max_desloc) {
   return(deslocs);
 }
 
-// parametros barras
-let bar_height = 15;
-let colors = ["#8E063B", "#CA9CA4", "#E2E2E2", "#A1A6C8", "#023FA5"]
-
-// // escalas
-// cor
-let fill = d3.scaleOrdinal()
-  .range(colors)
-  .domain(stacked_params.parametros.ordem_satisfacao)
-
-// x e larguras
-
 
 function draw_bars(cat) {
     //let mini_data = stacks[cat];
+    let bar_height = stacked_params.parametros_visuais.bar_height;
+
+
     let mini_data = cat;
 
     let x = d3.scaleLinear()
@@ -241,7 +243,7 @@ function draw_bars(cat) {
         .attr("width", d => x(d.count))
         .attr("x", d => x(d.start))
         .attr("y", 0)
-        .attr("fill", d => fill(d.label))
+        .attr("fill", d => stacked_params.escalas.fill(d.label))
 
     bars
         .selectAll("text")
