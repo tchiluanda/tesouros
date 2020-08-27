@@ -1,41 +1,49 @@
-let stacked_params = {
+let config = {
+  
   parametros : {
-    variaveis_interesse : ["subsec", "genero", "tempo_tesouro"],
 
+    variaveis_interesse : ["subsec", "genero", "tempo_tesouro"],
     ordem_satisfacao : ["Não", "Possivelmente não", "Sinto-me indiferente", "Basicamente sim", "Sim"]
 
   },
 
   parametros_visuais : {
+
     bar_height : 15,
     colors : ["#8E063B", "#CA9CA4", "#E2E2E2", "#A1A6C8", "#023FA5"]
 
   },
 
   dados : {
+
     grid_data : null,
     categorias : {},
     max_desloc : null
+
   },
 
   escalas : {
+
     x : {
       range : null,
       domain : null
     },
 
     fill : null
+
   },
 
   estado : {
+
     opcao_visao : "desloc_otimista",
     opcao_variavel : "subsec"
+
   }
 };
 
 d3.csv("./dados/data.csv").then(function(grid) {
     console.log(grid.columns);
-    stacked_params["grid_data"] = grid;
+    config["grid_data"] = grid;
 
     //console.log(unique(grid, "satisfacao"))
 
@@ -51,23 +59,23 @@ d3.csv("./dados/data.csv").then(function(grid) {
 
 function init() {
 
-  stacked_params.parametros.variaveis_interesse
+  config.parametros.variaveis_interesse
     .forEach(d => {
-      stacked_params.dados.categorias[d] = generates_stacks_for_variable(stacked_params["grid_data"], d)
+      config.dados.categorias[d] = generates_stacks_for_variable(config["grid_data"], d)
     });
 
-  stacked_params.dados.max_desloc = get_overall_max_desloc(...stacked_params.parametros.variaveis_interesse);
+  config.dados.max_desloc = get_overall_max_desloc(...config.parametros.variaveis_interesse);
 
-  stacked_params.escalas.x.range = [0,500];
-  stacked_params.escalas.x.domain = [0,1+stacked_params.dados.max_desloc];
+  config.escalas.x.range = [0,500];
+  config.escalas.x.domain = [0,1+config.dados.max_desloc];
 
-  stacked_params.escalas.fill = d3
+  config.escalas.fill = d3
     .scaleOrdinal()
-    .range(stacked_params.parametros_visuais.colors)
-    .domain(stacked_params.parametros.ordem_satisfacao)
+    .range(config.parametros_visuais.colors)
+    .domain(config.parametros.ordem_satisfacao)
 
-  desenha_stack(stacked_params.estado.opcao_variavel);
-  desloca_barras(stacked_params.estado.opcao_visao);
+  desenha_stack(config.estado.opcao_variavel);
+  desloca_barras(config.estado.opcao_visao);
 
   monitora_botoes();
   monitora_opcao_otim_pessi()
@@ -83,7 +91,7 @@ function monitora_botoes() {
     botoes.classed("selected", false);
     d3.select(this).classed("selected", true);
     desenha_stack(opcao);
-    desloca_barras(stacked_params.estado.opcao_visao);
+    desloca_barras(config.estado.opcao_visao);
     
     console.log(opcao);
   })
@@ -93,23 +101,23 @@ function monitora_opcao_otim_pessi() {
   let dropdown = d3.select("select#controle-otim-pess");
   
   dropdown.on("change", function() {
-    stacked_params.estado.opcao_visao = dropdown.property("value");
-    desloca_barras(stacked_params.estado.opcao_visao);
+    config.estado.opcao_visao = dropdown.property("value");
+    desloca_barras(config.estado.opcao_visao);
     
-    console.log(stacked_params.estado.opcao_visao);
+    console.log(config.estado.opcao_visao);
   })
 }
 
 function desenha_stack(selecao, grid) {
-  let categorias = stacked_params.dados.categorias[selecao];
+  let categorias = config.dados.categorias[selecao];
   
   console.log({categorias})
 
   let max_desloc = get_max_desloc(categorias);
 
-  let deslocs_otimista = generates_deslocs(categorias, "Sinto-me indiferente", stacked_params.dados.max_desloc);
+  let deslocs_otimista = generates_deslocs(categorias, "Sinto-me indiferente", config.dados.max_desloc);
 
-  let deslocs_pessimista = generates_deslocs(categorias, "Basicamente sim", stacked_params.dados.max_desloc);
+  let deslocs_pessimista = generates_deslocs(categorias, "Basicamente sim", config.dados.max_desloc);
 
   categorias.forEach((d,i) => {
       categorias[i]["desloc_otimista"] = deslocs_otimista[i];
@@ -157,7 +165,7 @@ function generates_stacks_for_variable(obj, variable) {
 
         let mini_dataset = obj.filter(d => d[variable] == cat);
 
-        let stack = stack_na_ordem(mini_dataset, 'satisfacao', stacked_params.parametros.ordem_satisfacao);
+        let stack = stack_na_ordem(mini_dataset, 'satisfacao', config.parametros.ordem_satisfacao);
 
         return(
             {
@@ -195,8 +203,8 @@ function get_overall_max_desloc(...categorias) {
   console.log(categorias);
 
   for (categoria of categorias) {
-    console.log(stacked_params.dados.categorias[categoria]);
-    let current_max = get_max_desloc(stacked_params.dados.categorias[categoria]);
+    console.log(config.dados.categorias[categoria]);
+    let current_max = get_max_desloc(config.dados.categorias[categoria]);
     console.log("overall", categoria, current_max)
     overall_max = Math.max(current_max, overall_max);
   }
@@ -219,14 +227,14 @@ function generates_deslocs(objeto, tipo, max_desloc) {
 
 function draw_bars(cat) {
     //let mini_data = stacks[cat];
-    let bar_height = stacked_params.parametros_visuais.bar_height;
+    let bar_height = config.parametros_visuais.bar_height;
 
 
     let mini_data = cat;
 
     let x = d3.scaleLinear()
-      .range(stacked_params.escalas.x.range)
-      .domain(stacked_params.escalas.x.domain);
+      .range(config.escalas.x.range)
+      .domain(config.escalas.x.domain);
 
     let bars = d3.select("svg")
       .selectAll("g")
@@ -243,7 +251,7 @@ function draw_bars(cat) {
         .attr("width", d => x(d.count))
         .attr("x", d => x(d.start))
         .attr("y", 0)
-        .attr("fill", d => stacked_params.escalas.fill(d.label))
+        .attr("fill", d => config.escalas.fill(d.label))
 
     bars
         .selectAll("text")
@@ -261,8 +269,8 @@ function desloca_barras(otimista_pessimista) {
     let bars = d3.select("svg").selectAll("g.stacked-bars");
 
     let x = d3.scaleLinear()
-      .range(stacked_params.escalas.x.range)
-      .domain(stacked_params.escalas.x.domain);
+      .range(config.escalas.x.range)
+      .domain(config.escalas.x.domain);
 
     console.log("hi", bars)
 
