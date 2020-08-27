@@ -8,7 +8,8 @@ let stacked_params = {
 
   dados : {
     grid_data : null,
-    categorias : {}
+    categorias : {},
+    max_desloc : null
   },
 
   estado : {
@@ -41,6 +42,8 @@ function init() {
     .forEach(d => {
       stacked_params.dados.categorias[d] = generates_stacks_for_variable(stacked_params["grid_data"], d)
     });
+
+  stacked_params.dados.max_desloc = get_overall_max_desloc(...stacked_params.parametros.variaveis_interesse);
 
   desenha_stack(stacked_params.estado.opcao_variavel);
   desloca_barras(stacked_params.estado.opcao_visao);
@@ -83,9 +86,9 @@ function desenha_stack(selecao, grid) {
 
   let max_desloc = get_max_desloc(categorias);
 
-  let deslocs_otimista = generates_deslocs(categorias, "Sinto-me indiferente", max_desloc);
+  let deslocs_otimista = generates_deslocs(categorias, "Sinto-me indiferente", stacked_params.dados.max_desloc);
 
-  let deslocs_pessimista = generates_deslocs(categorias, "Basicamente sim", max_desloc);
+  let deslocs_pessimista = generates_deslocs(categorias, "Basicamente sim", stacked_params.dados.max_desloc);
 
   categorias.forEach((d,i) => {
       categorias[i]["desloc_otimista"] = deslocs_otimista[i];
@@ -163,6 +166,21 @@ function get_max_desloc(objeto) {
     }
 
     return(Math.max(max_deslocs[0], max_deslocs[1]))
+}
+
+function get_overall_max_desloc(...categorias) {
+  let overall_max = 0;
+
+  console.log(categorias);
+
+  for (categoria of categorias) {
+    console.log(stacked_params.dados.categorias[categoria]);
+    let current_max = get_max_desloc(stacked_params.dados.categorias[categoria]);
+    console.log("overall", categoria, current_max)
+    overall_max = Math.max(current_max, overall_max);
+  }
+
+  return overall_max;
 }
 
 function generates_deslocs(objeto, tipo, max_desloc) {
