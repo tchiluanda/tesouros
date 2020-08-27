@@ -12,6 +12,13 @@ let stacked_params = {
     max_desloc : null
   },
 
+  escalas : {
+    x : {
+      range : null,
+      domain : null
+    }
+  },
+
   estado : {
     opcao_visao : "desloc_otimista",
     opcao_variavel : "subsec"
@@ -44,6 +51,9 @@ function init() {
     });
 
   stacked_params.dados.max_desloc = get_overall_max_desloc(...stacked_params.parametros.variaveis_interesse);
+
+  stacked_params.escalas.x.range = [0,500];
+  stacked_params.escalas.x.domain = [0,1+stacked_params.dados.max_desloc];
 
   desenha_stack(stacked_params.estado.opcao_variavel);
   desloca_barras(stacked_params.estado.opcao_visao);
@@ -206,13 +216,15 @@ let fill = d3.scaleOrdinal()
   .domain(stacked_params.parametros.ordem_satisfacao)
 
 // x e larguras
-let x = d3.scaleLinear()
-   .range([0,500])
-   .domain([0,1]);
+
 
 function draw_bars(cat) {
     //let mini_data = stacks[cat];
     let mini_data = cat;
+
+    let x = d3.scaleLinear()
+      .range(stacked_params.escalas.x.range)
+      .domain(stacked_params.escalas.x.domain);
 
     let bars = d3.select("svg")
       .selectAll("g")
@@ -244,7 +256,11 @@ function draw_bars(cat) {
 }
 
 function desloca_barras(otimista_pessimista) {
-    let bars = d3.select("svg").selectAll("g.stacked-bars")
+    let bars = d3.select("svg").selectAll("g.stacked-bars");
+
+    let x = d3.scaleLinear()
+      .range(stacked_params.escalas.x.range)
+      .domain(stacked_params.escalas.x.domain);
 
     console.log("hi", bars)
 
@@ -263,8 +279,8 @@ function desloca_barras(otimista_pessimista) {
         console.log(d3.select(this).attr("transform"))
         
         d3.select(this)
-          .transition()
-          .duration(500)
+          //.transition()
+          //.duration(500)
           .attr("transform",
             "translate(" + 
             x(d[otimista_pessimista]) + 
