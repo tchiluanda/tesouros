@@ -2,10 +2,13 @@ let stacked_params = {
   parametros : {
     variaveis_interesse : ["subsec", "genero", "tempo_tesouro"],
 
+    ordem_satisfacao : ["Não", "Possivelmente não", "Sinto-me indiferente", "Basicamente sim", "Sim"]
+
   },
 
   dados : {
-
+    grid_data : null,
+    categorias : {}
   },
 
   estado : {
@@ -30,14 +33,15 @@ d3.csv("./dados/data.csv").then(function(grid) {
 
     init();
 
-
-
-
 });
 
-let ordem_satisfacao = ["Não", "Possivelmente não", "Sinto-me indiferente", "Basicamente sim", "Sim"];
-
 function init() {
+
+  stacked_params.parametros.variaveis_interesse
+    .forEach(d => {
+      stacked_params.dados.categorias[d] = generates_stacks_for_variable(stacked_params["grid_data"], d)
+    });
+
   desenha_stack(stacked_params.estado.opcao_variavel);
   desloca_barras(stacked_params.estado.opcao_visao);
 
@@ -73,7 +77,8 @@ function monitora_opcao_otim_pessi() {
 }
 
 function desenha_stack(selecao, grid) {
-  let categorias = generates_stacks_for_variable(stacked_params["grid_data"], selecao);
+  let categorias = stacked_params.dados.categorias[selecao];
+  
   console.log({categorias})
 
   let max_desloc = get_max_desloc(categorias);
@@ -128,7 +133,7 @@ function generates_stacks_for_variable(obj, variable) {
 
         let mini_dataset = obj.filter(d => d[variable] == cat);
 
-        let stack = stack_na_ordem(mini_dataset, 'satisfacao', ordem_satisfacao);
+        let stack = stack_na_ordem(mini_dataset, 'satisfacao', stacked_params.parametros.ordem_satisfacao);
 
         return(
             {
@@ -180,7 +185,7 @@ let colors = ["#8E063B", "#CA9CA4", "#E2E2E2", "#A1A6C8", "#023FA5"]
 // cor
 let fill = d3.scaleOrdinal()
   .range(colors)
-  .domain(ordem_satisfacao)
+  .domain(stacked_params.parametros.ordem_satisfacao)
 
 // x e larguras
 let x = d3.scaleLinear()
