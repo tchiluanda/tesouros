@@ -1,16 +1,24 @@
 let stacked_params = {
-  constantes : {
-    variaveis : ["subsec", "genero", "tempo_tesouro"]
+  parametros : {
+    variaveis_interesse : ["subsec", "genero", "tempo_tesouro"],
+
+  },
+
+  dados : {
+
+  },
+
+  estado : {
+    opcao_visao : "desloc_otimista",
+    opcao_variavel : "subsec"
   }
+
   
 };
 
-let grid_data;
-let visao_stacked = "desloc_otimista";
-
 d3.csv("./dados/data.csv").then(function(grid) {
     console.log(grid.columns);
-    grid_data = grid;
+    stacked_params["grid_data"] = grid;
 
     //console.log(unique(grid, "satisfacao"))
 
@@ -30,8 +38,8 @@ d3.csv("./dados/data.csv").then(function(grid) {
 let ordem_satisfacao = ["Não", "Possivelmente não", "Sinto-me indiferente", "Basicamente sim", "Sim"];
 
 function init() {
-  desenha_stack("subsec");
-  desloca_barras(visao_stacked);
+  desenha_stack(stacked_params.estado.opcao_variavel);
+  desloca_barras(stacked_params.estado.opcao_visao);
 
   monitora_botoes();
   monitora_opcao_otim_pessi()
@@ -47,7 +55,7 @@ function monitora_botoes() {
     botoes.classed("selected", false);
     d3.select(this).classed("selected", true);
     desenha_stack(opcao);
-    desloca_barras(visao_stacked);
+    desloca_barras(stacked_params.estado.opcao_visao);
     
     console.log(opcao);
   })
@@ -57,15 +65,15 @@ function monitora_opcao_otim_pessi() {
   let dropdown = d3.select("select#controle-otim-pess");
   
   dropdown.on("change", function() {
-    visao_stacked = dropdown.property("value");
-    desloca_barras(visao_stacked);
+    stacked_params.estado.opcao_visao = dropdown.property("value");
+    desloca_barras(stacked_params.estado.opcao_visao);
     
-    console.log(visao_stacked);
+    console.log(stacked_params.estado.opcao_visao);
   })
 }
 
 function desenha_stack(selecao, grid) {
-  let categorias = generates_stacks_for_variable(grid_data, selecao);
+  let categorias = generates_stacks_for_variable(stacked_params["grid_data"], selecao);
   console.log({categorias})
 
   let max_desloc = get_max_desloc(categorias);
