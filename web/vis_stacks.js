@@ -1,5 +1,5 @@
 let config = {
-  
+
   parametros : {
 
     variaveis_interesse : ["subsec", "genero", "tempo_tesouro"],
@@ -74,12 +74,18 @@ function init() {
     .range(config.parametros_visuais.colors)
     .domain(config.parametros.ordem_satisfacao)
 
-  desenha_stack(config.estado.opcao_variavel);
-  desloca_barras(config.estado.opcao_visao);
+  desenha_estado(
+    config.estado.opcao_variavel, 
+    config.estado.opcao_visao);
 
   monitora_botoes();
   monitora_opcao_otim_pessi()
 
+}
+
+function desenha_estado(variavel, visao) {
+  desenha_stack(variavel);
+  desloca_barras(visao);
 }
 
 function monitora_botoes() {
@@ -90,9 +96,7 @@ function monitora_botoes() {
     let opcao = this.id;
     botoes.classed("selected", false);
     d3.select(this).classed("selected", true);
-    desenha_stack(opcao);
-    desloca_barras(config.estado.opcao_visao);
-    
+    desenha_estado(opcao, config.estado.opcao_visao);    
     console.log(opcao);
   })
 }
@@ -300,4 +304,8 @@ function desloca_barras(otimista_pessimista) {
           );
 
     })
+}
+
+function desenha_linha_referencia(visao) {
+
 }
