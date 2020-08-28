@@ -36,7 +36,8 @@ let config = {
   estado : {
 
     opcao_visao : "desloc_otimista",
-    opcao_variavel : "subsec"
+    opcao_variavel : "subsec",
+    iniciado : false
 
   }
 };
@@ -96,6 +97,7 @@ function monitora_botoes() {
     let opcao = this.id;
     botoes.classed("selected", false);
     d3.select(this).classed("selected", true);
+    config.estado.iniciado = false;
     desenha_estado(opcao, config.estado.opcao_visao);    
     console.log(opcao);
   })
@@ -106,6 +108,7 @@ function monitora_opcao_otim_pessi() {
   
   dropdown.on("change", function() {
     config.estado.opcao_visao = dropdown.property("value");
+    config.estado.iniciado = true;
     desloca_barras(config.estado.opcao_visao);
     
     console.log(config.estado.opcao_visao);
@@ -291,10 +294,16 @@ function desloca_barras(otimista_pessimista) {
         let translateY = +transf.slice(ini+1, fim);
         console.log(translateY);
         console.log(d3.select(this).attr("transform"))
+
+        let barras = d3.select(this);
         
-        d3.select(this)
-          //.transition()
-          //.duration(500)
+        if (config.estado.iniciado) {
+          barras = barras
+            .transition()
+            .duration(500)
+        }
+        
+        barras
           .attr("transform",
             "translate(" + 
             x(d[otimista_pessimista]) + 
