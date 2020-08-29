@@ -79,6 +79,8 @@ function init() {
     config.estado.opcao_variavel, 
     config.estado.opcao_visao);
 
+  desenha_linha_referencia();
+
   monitora_botoes();
   monitora_opcao_otim_pessi()
 
@@ -315,6 +317,27 @@ function desloca_barras(otimista_pessimista) {
     })
 }
 
-function desenha_linha_referencia(visao) {
+function desenha_linha_referencia() {
+  let x = d3.scaleLinear()
+    .range(config.escalas.x.range)
+    .domain(config.escalas.x.domain);
 
+  d3.select("svg")
+    .append("line")
+    .attr("y1", 0)
+    .attr("y2", 800)
+    .attr("x1", x(config.dados.max_desloc))
+    .attr("x2", x(config.dados.max_desloc))
+    .attr("stroke", "grey")
+    .attr("stroke-width", 1)
+    .attr("stroke-dasharray", 2);
 }
+
+/* ideia para filtrar valores de uma lista 
+
+var arr = [{n: 1, p: "n"},{n: 2, p: "s"},{n: 3, p: "n"},{n: 4, p: "s"},{n: 4, p: "s"}],
+    brr = [2,4],
+    res = arr.filter(f => brr.includes(f.n));
+console.log(res);
+
+*/
