@@ -193,3 +193,12 @@ const debounce = function(func, wait, immediate) {
 		if (callNow) func.apply(context, args);
 	};
 };
+
+/* ideia para filtrar valores de uma lista 
+
+var arr = [{n: 1, p: "n"},{n: 2, p: "s"},{n: 3, p: "n"},{n: 4, p: "s"},{n: 4, p: "s"}],
+    brr = [2,4],
+    res = arr.filter(f => brr.includes(f.n));
+console.log(res);
+
+*/
