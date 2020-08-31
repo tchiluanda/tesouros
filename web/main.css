@@ -162,3 +162,12 @@ select#controle-otim-pess {
     border: 1px solid grey;
 
 }
+
+div.envelope-svg-satisfacao {
+    position: relative;
+}
+
+div.envelope-svg-satisfacao > p.labels-eixo-y {
+    position: absolute;
+    font-family: "Merriweather Sans", sans-serif;
+}

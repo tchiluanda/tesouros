@@ -3,14 +3,24 @@ let config = {
   parametros : {
 
     variaveis_interesse : ["subsec", "genero", "tempo_tesouro", "ascender"],
-    ordem_satisfacao : ["Não", "Possivelmente não", "Sinto-me indiferente", "Basicamente sim", "Sim"]
+    ordem_satisfacao : ["Não", "Possivelmente não", "Sinto-me indiferente", "Basicamente sim", "Sim"],
+    svg : "svg.svg-satisfacao",
+    envelope : "div.envelope-svg-satisfacao"
 
   },
 
   parametros_visuais : {
 
     bar_height : 15,
-    colors : ["#8E063B", "#CA9CA4", "#E2E2E2", "#A1A6C8", "#023FA5"]
+    colors : ["#8E063B", "#CA9CA4", "#E2E2E2", "#A1A6C8", "#023FA5"],
+    margens : {
+      left : 100,
+      right : 50
+    },
+    dimensoes_svg : {
+      height : null,
+      width : null
+    }
 
   },
 
@@ -27,6 +37,11 @@ let config = {
     x : {
       range : null,
       domain : null
+    },
+
+    width : {
+      range: null,
+      domain: null
     },
 
     fill : null
@@ -67,8 +82,13 @@ function init() {
 
   config.dados.max_desloc = get_overall_max_desloc(...config.parametros.variaveis_interesse);
 
-  config.escalas.x.range = [0,500];
+  // configura dimensões
+  dimensiona();
+
+  config.escalas.x.range = [0,config.parametros_visuais.dimensoes_svg.width];
   config.escalas.x.domain = [0,1+config.dados.max_desloc];
+
+  d3.select(config.parametros.svg).style("margin-left", config.parametros_visuais.margens.left + "px");
 
   config.escalas.fill = d3
     .scaleOrdinal()
@@ -84,6 +104,21 @@ function init() {
   monitora_botoes();
   monitora_opcao_otim_pessi()
 
+}
+
+function dimensiona() {
+  let envelope = d3.select(config.parametros.envelope);
+  let svg = d3.select(config.parametros.svg);
+
+  let width = envelope.node().getBoundingClientRect().width
+  let height = envelope.node().getBoundingClientRect().height
+
+  //console.log(width, height);
+
+  config.parametros_visuais.dimensoes_svg.width = 
+    width 
+    - config.parametros_visuais.margens.left
+    - config.parametros_visuais.margens.right;    
 }
 
 function desenha_estado(variavel, visao) {
