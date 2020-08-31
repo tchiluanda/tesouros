@@ -113,6 +113,7 @@ dados <- dados_raw %>%
     "unidade" = `9. Qual a sua unidade de lotação atual?`,
     "funcao" = `10. Qual a sua função atual?`,
     "satisfacao" = `1. Você está satisfeito com a sua situação atual no Tesouro?`,
+    "ascender" = `2. Você pretende ou espera ascender dentro do Tesouro?`,
     # "razoes_sat_chefia" = `1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Chefia]`, 
     # "razoes_sat_tipo_trabalho" = `1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Tipo de trabalho]`, 
     # "razoes_sat_salario" = `1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Salário]`,
