@@ -4,6 +4,10 @@ let config = {
 
     variaveis_interesse : ["subsec", "genero", "tempo_tesouro", "ascender"],
     ordem_satisfacao : ["Não", "Possivelmente não", "Sinto-me indiferente", "Basicamente sim", "Sim"],
+    ordens_variaveis : {
+      "ascender" : ["Sim", "Provavelmente sim", "Não sei", "Provavelmente não", "Não"],
+      "tempo_tesouro" : ["Até 5 anos", "De 6 a 10 anos", "De 11 a 20 anos", "De 21 a 30 anos", "Mais de 30 anos"]
+    },
     svg : "svg.svg-satisfacao",
     envelope : "div.envelope-svg-satisfacao"
 
@@ -205,20 +209,26 @@ function stack_na_ordem(obj, col, vetor_ordem) {
 }
 
 function generates_stacks_for_variable(obj, variable) {
-    let var_categories = unique(obj, variable);
+    
+  let var_categories = 
+    config.parametros.ordens_variaveis[variable] ? 
+    config.parametros.ordens_variaveis[variable] : 
+    unique(obj, variable);
 
-    let stacks = var_categories.map(cat => {
+    // o que ele faz ali acima é verificar se foi definida uma ordem pré-estabelecida lá no config, caso contrário ele gera um array com os valores únicos
 
-        let mini_dataset = obj.filter(d => d[variable] == cat);
+  let stacks = var_categories.map(cat => {
 
-        let stack = stack_na_ordem(mini_dataset, 'satisfacao', config.parametros.ordem_satisfacao);
+      let mini_dataset = obj.filter(d => d[variable] == cat);
 
-        return(
-            {
-                'label' : cat,
-                'stack' : stack,
-            }
-        )
+      let stack = stack_na_ordem(mini_dataset, 'satisfacao', config.parametros.ordem_satisfacao);
+
+      return(
+          {
+              'label' : cat,
+              'stack' : stack,
+          }
+      )
     });
 
     return stacks;
