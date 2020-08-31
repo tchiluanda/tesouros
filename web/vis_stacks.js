@@ -90,6 +90,8 @@ function init() {
 
   d3.select(config.parametros.svg).style("margin-left", config.parametros_visuais.margens.left + "px");
 
+  // config escala fill
+
   config.escalas.fill = d3
     .scaleOrdinal()
     .range(config.parametros_visuais.colors)
@@ -295,18 +297,20 @@ function draw_bars(cat) {
         .attr("width", d => x(d.count))
         .attr("x", d => x(d.start))
         .attr("y", 0)
-        .attr("fill", d => config.escalas.fill(d.label))
+        .attr("fill", d => config.escalas.fill(d.label));
 
-    bars
-        .selectAll("text")
-        .data(d => d.stack)
-        .join("text")
-            .attr("height", bar_height)
-            .attr("width", 100)
-            .attr("x", (d,i) => i * 100)
-            .attr("y", 25)
-            .text(d => (d.label))
-            .attr("font-size", 10)
+    desenha_labels_eixo(mini_data);
+
+    // bars
+    //     .selectAll("text")
+    //     .data(d => d.stack)
+    //     .join("text")
+    //         .attr("height", bar_height)
+    //         .attr("width", 100)
+    //         .attr("x", (d,i) => i * 100)
+    //         .attr("y", 25)
+    //         .text(d => (d.label))
+    //         .attr("font-size", 10)
 }
 
 function desloca_barras(otimista_pessimista) {
@@ -350,6 +354,25 @@ function desloca_barras(otimista_pessimista) {
           );
 
     })
+}
+
+function desenha_labels_eixo(mini_data) {
+  let envelope = d3.select(config.parametros.envelope);
+
+  console.log(mini_data);
+
+  let labels = envelope
+    .selectAll("p")
+    .data(mini_data, d => d.label)
+    .join("p")
+    .classed("labels-eixo-y", true)
+    .style("top", (d,i) => i*3*config.parametros_visuais.bar_height + "px")
+    .style("width", (config.parametros_visuais.margens.left - 10) + "px")
+    .style("left", 0)
+    .style("text-align", "right")
+    .style("line-height", config.parametros_visuais.bar_height + "px")
+    .text(d => d.label);
+
 }
 
 function desenha_linha_referencia() {

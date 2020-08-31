@@ -168,6 +168,7 @@ div.envelope-svg-satisfacao {
 }
 
 div.envelope-svg-satisfacao > p.labels-eixo-y {
-    position: absolute;
-    font-family: "Merriweather Sans", sans-serif;
+    position : absolute;
+    font-family : "Merriweather Sans", sans-serif;
+    font-size : 0.7em;
 }
