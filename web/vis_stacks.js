@@ -1,3 +1,15 @@
+// para parametrizar:
+
+// generates_stacks_for_variable(obj, variable)
+
+// transformar variaveis_interesse em objeto {'satisfacao' : ..., 'ascender': ...}
+// mesma coisa para ordem_satisfacao, "estado"
+
+// resize: dimensiona() e desenha_estado();
+
+// usar config como prototype e new config?
+
+
 let config = {
 
   parametros : {
@@ -64,14 +76,6 @@ let config = {
 d3.csv("./dados/data.csv").then(function(grid) {
     console.log(grid.columns);
     config["grid_data"] = grid;
-
-    //console.log(unique(grid, "satisfacao"))
-
-    //console.log(group_and_count(grid, "satisfacao"))
-
-    //console.log(group_and_count(grid, "satisfacao", percent = true))
-
-    //desloca_barras("desloc_pessimista");
 
     init();
 
@@ -304,10 +308,25 @@ function draw_bars(cat) {
       .data(d => d.stack)
       .join("rect")
         .attr("height", bar_height)
-        .attr("width", d => x(d.count))
-        .attr("x", d => x(d.start))
+        // .attr("x", function(d) {
+        //   let transform = d3.select(this).node();
+        //   console.log(d3.select(this).node(), transform.parentNode);
+        //   let ini = transform.indexOf("(");
+        //   let fim = transform.indexOf(",")
+        //   let translateX = +transform.slice(ini+1, fim);
+        //   return (x(config.dados.max_desloc) + translateX)
+        // })
         .attr("y", 0)
-        .attr("fill", d => config.escalas.fill(d.label));
+        .attr("fill", d => config.escalas.fill(d.label))
+        .attr("width", 0)
+        .attr("x", 0)
+        //.attr("width", d => x(d.count))
+        .transition()
+        .duration(1500)
+        .attr("x", d => x(d.start))
+        .attr("width", d => x(d.count));
+
+
 
     desenha_labels_eixo(mini_data);
 
