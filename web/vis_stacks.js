@@ -27,6 +27,7 @@ let config = {
 
   parametros_visuais : {
 
+    qde_max_categorias : null,
     bar_height : 15,
     colors : ["#8E063B", "#CA9CA4", "#E2E2E2", "#A1A6C8", "#023FA5"],
     margens : {
@@ -83,11 +84,19 @@ d3.csv("./dados/data.csv").then(function(grid) {
 
 function init() {
 
+  // gera objetos das categorias (devia ter chamado de variaveis, mas tudo bem), calcula a quantidade máxima de categorias em cada variável, e o máximo deslocamento necessário
+  let qde_max_categorias = 0;
+
   config.parametros.variaveis_interesse
     .forEach(d => {
       config.dados.categorias[d] = generates_stacks_for_variable(config["grid_data"], d)
+      if (config.dados.categorias[d].length > qde_max_categorias) {
+        qde_max_categorias = config.dados.categorias[d].length;
+      }
     });
 
+  
+  config.parametros_visuais.qde_max_categorias = qde_max_categorias;
   config.dados.max_desloc = get_overall_max_desloc(...config.parametros.variaveis_interesse);
 
   // configura dimensões
