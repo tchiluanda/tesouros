@@ -31,8 +31,10 @@ let config = {
     bar_height : 15,
     colors : ["#8E063B", "#CA9CA4", "#E2E2E2", "#A1A6C8", "#023FA5"],
     margens : {
+      top: 20,
       left : 100,
-      right : 50
+      right : 50,
+      bottom: 20
     },
     dimensoes_svg : {
       height : null,
@@ -81,6 +83,8 @@ d3.csv("./dados/data.csv").then(function(grid) {
     init();
 
 });
+
+const altura_barras = (h_numerico - margem.bottom - margem.top) / (classe_svg === "auxiliar2" ? segunda_maior_quantidade : max_quantidade);
 
 function init() {
 
