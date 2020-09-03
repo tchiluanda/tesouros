@@ -141,15 +141,19 @@ function dimensiona() {
 
   //console.log(width, height);
 
-  config.parametros_visuais.dimensoes_svg.width = 
+  let temp_width =  
     width 
     - config.parametros_visuais.margens.left
     - config.parametros_visuais.margens.right;  
     
   let temp_height = 
-    height  = height
+    height
     - config.parametros_visuais.margens.bottom
     - config.parametros_visuais.margens.top;
+
+  // põe um máximo na altura e na largura
+  config.parametros_visuais.dimensoes_svg.width = 
+  temp_width >= 900 ? 900 : temp_width;
 
   config.parametros_visuais.dimensoes_svg.height = temp_height >= 450 ? 450 : temp_height;
 
@@ -459,24 +463,32 @@ function desenha_titulo() {
 
     let envelope = d3.select(config.parametros.envelope);
 
-    let titulos = ["Insatisfeitos", "Satisfeitos"]
+    let pad = 10;
   
     envelope
       .append("p")
       .classed("titulos", true)
-      .style("right", config.parametros_visuais.dimensoes_svg.width - x(config.dados.max_desloc) + "px")
       .style("top", 0)
       .style("text-align", "right")
+      .style("color", "firebrick")
       .append("em")
-      .text("Insatisfeitos");
+      .html("&#8592; Insatisfeitos");
+
+    // para posicionar a caixa após já saber o tamanho, usando "left". Por algum motivo não consegui usar "right", pq ele começa a contar lá do raio que o parta, apesar de a largura do envelope ser o svg + margem.
+    envelope.select("p.titulos")
+      .style("left", function() {
+        let largura = +d3.select(this).style("width").slice(0,-2);
+        return (config.parametros_visuais.margens.left + x(config.dados.max_desloc) - largura - pad) + "px"
+      });
 
     envelope
       .append("p")
       .classed("titulos", true)
-      .style("left", config.parametros_visuais.margens.left + x(config.dados.max_desloc) + "px")
+      .style("left", config.parametros_visuais.margens.left + x(config.dados.max_desloc) + pad + "px")
       .style("top", 0)
+      .style("color", "dodgerblue")
       .append("em")
-      .text("Satisfeitos");
+      .html("Satisfeitos &#8594;");
 }
 
 /* ideia para filtrar valores de uma lista 
