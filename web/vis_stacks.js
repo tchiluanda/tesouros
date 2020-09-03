@@ -427,7 +427,7 @@ function desenha_labels_eixo(mini_data) {
   console.log(mini_data);
 
   let labels = envelope
-    .selectAll("p")
+    .selectAll("p.labels-eixo-y")
     .data(mini_data, d => d.label)
     .join("p")
     .classed("labels-eixo-y", true)
