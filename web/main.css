@@ -167,7 +167,8 @@ div.envelope-svg-satisfacao {
     position: relative;
 }
 
-div.envelope-svg-satisfacao > p.labels-eixo-y {
+div.envelope-svg-satisfacao > p.labels-eixo-y,
+div.envelope-svg-satisfacao > p.titulos {
     position : absolute;
     font-family : "Merriweather Sans", sans-serif;
     font-size : 0.7em;

@@ -9,6 +9,8 @@
 
 // usar config como prototype e new config?
 
+// levar escala x para ser um método de config?
+
 
 let config = {
 
@@ -34,7 +36,7 @@ let config = {
       top: 20,
       left : 100,
       right : 50,
-      bottom: 20
+      bottom: 0
     },
     dimensoes_svg : {
       height : null,
@@ -84,8 +86,6 @@ d3.csv("./dados/data.csv").then(function(grid) {
 
 });
 
-const altura_barras = (h_numerico - margem.bottom - margem.top) / (classe_svg === "auxiliar2" ? segunda_maior_quantidade : max_quantidade);
-
 function init() {
 
   // gera objetos das categorias (devia ter chamado de variaveis, mas tudo bem), calcula a quantidade máxima de categorias em cada variável, e o máximo deslocamento necessário
@@ -109,7 +109,9 @@ function init() {
   config.escalas.x.range = [0,config.parametros_visuais.dimensoes_svg.width];
   config.escalas.x.domain = [0,1+config.dados.max_desloc];
 
-  d3.select(config.parametros.svg).style("margin-left", config.parametros_visuais.margens.left + "px");
+  d3.select(config.parametros.svg)
+    .style("margin-left", config.parametros_visuais.margens.left + "px")
+    .style("margin-top", config.parametros_visuais.margens.top + "px");
 
   // config escala fill
 
@@ -123,6 +125,7 @@ function init() {
     config.estado.opcao_visao);
 
   desenha_linha_referencia();
+  desenha_titulo();
 
   monitora_botoes();
   monitora_opcao_otim_pessi()
@@ -133,15 +136,31 @@ function dimensiona() {
   let envelope = d3.select(config.parametros.envelope);
   let svg = d3.select(config.parametros.svg);
 
-  let width = envelope.node().getBoundingClientRect().width
-  let height = envelope.node().getBoundingClientRect().height
+  let width = envelope.node().getBoundingClientRect().width;
+  let height = envelope.node().getBoundingClientRect().height;
 
   //console.log(width, height);
 
   config.parametros_visuais.dimensoes_svg.width = 
     width 
     - config.parametros_visuais.margens.left
-    - config.parametros_visuais.margens.right;    
+    - config.parametros_visuais.margens.right;  
+    
+  let temp_height = 
+    height  = height
+    - config.parametros_visuais.margens.bottom
+    - config.parametros_visuais.margens.top;
+
+  config.parametros_visuais.dimensoes_svg.height = temp_height >= 450 ? 450 : temp_height;
+
+  config.parametros_visuais.bar_height = 
+    config.parametros_visuais.dimensoes_svg.height
+    / (3*(config.parametros_visuais.qde_max_categorias+1));
+
+  d3.select(config.parametros.svg)
+    .attr("width", config.parametros_visuais.dimensoes_svg.width)
+    .attr("height", config.parametros_visuais.dimensoes_svg.height);
+
 }
 
 function desenha_estado(variavel, visao) {
@@ -314,7 +333,7 @@ function draw_bars(cat) {
       .data(mini_data, d => d.label)
       .join("g")
         .classed("stacked-bars", true)
-        .attr("transform", (d,i) => "translate(0," + i*3*bar_height + ")");
+        .attr("transform", (d,i) => "translate(0," + (i+1)*3*bar_height + ")");
 
     bars
       .selectAll("rect")
@@ -408,7 +427,7 @@ function desenha_labels_eixo(mini_data) {
     .data(mini_data, d => d.label)
     .join("p")
     .classed("labels-eixo-y", true)
-    .style("top", (d,i) => i*3*config.parametros_visuais.bar_height + "px")
+    .style("top", (d,i) => (i+1)*3*config.parametros_visuais.bar_height + config.parametros_visuais.margens.top + "px")
     .style("width", (config.parametros_visuais.margens.left - 10) + "px")
     .style("left", 0)
     .style("text-align", "right")
@@ -425,12 +444,39 @@ function desenha_linha_referencia() {
   d3.select("svg")
     .append("line")
     .attr("y1", 0)
-    .attr("y2", 800)
+    .attr("y2", config.parametros_visuais.dimensoes_svg.height)
     .attr("x1", x(config.dados.max_desloc))
     .attr("x2", x(config.dados.max_desloc))
     .attr("stroke", "grey")
     .attr("stroke-width", 1)
     .attr("stroke-dasharray", 2);
+}
+
+function desenha_titulo() {
+  let x = d3.scaleLinear()
+    .range(config.escalas.x.range)
+    .domain(config.escalas.x.domain);
+
+    let envelope = d3.select(config.parametros.envelope);
+
+    let titulos = ["Insatisfeitos", "Satisfeitos"]
+  
+    envelope
+      .append("p")
+      .classed("titulos", true)
+      .style("right", config.parametros_visuais.dimensoes_svg.width - x(config.dados.max_desloc) + "px")
+      .style("top", 0)
+      .style("text-align", "right")
+      .append("em")
+      .text("Insatisfeitos");
+
+    envelope
+      .append("p")
+      .classed("titulos", true)
+      .style("left", config.parametros_visuais.margens.left + x(config.dados.max_desloc) + "px")
+      .style("top", 0)
+      .append("em")
+      .text("Satisfeitos");
 }
 
 /* ideia para filtrar valores de uma lista 
