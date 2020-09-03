@@ -18,6 +18,7 @@ let config = {
 
     variaveis_interesse : ["subsec", "genero", "tempo_tesouro", "ascender"],
     ordem_satisfacao : ["Não", "Possivelmente não", "Sinto-me indiferente", "Basicamente sim", "Sim"],
+    label_indiferente: "Sinto-me indiferente",
     ordens_variaveis : {
       "ascender" : ["Sim", "Provavelmente sim", "Não sei", "Provavelmente não", "Não"],
       "tempo_tesouro" : ["Até 5 anos", "De 6 a 10 anos", "De 11 a 20 anos", "De 21 a 30 anos", "Mais de 30 anos"]
@@ -480,18 +481,41 @@ function desenha_titulo() {
     let envelope = d3.select(config.parametros.envelope);
 
     let pad = 10;
-  
+
+    let mini_dados = [
+      { 
+        "class"  : "primeira-linha",
+        "label1" : "&#8592; Insatisfeitos",
+        "label2" : "Satisfeitos &#8594;",
+        "top"   : 0,
+        "element" : "strong"
+    },
+
+    { 
+      "class"  : "segunda-linha",
+      "label1" : "(principal razão) % total",
+      "label2" : "% total (principal razão)",
+      "top"   : "15px",
+      "element" : "em"
+  }];
+
+  for (entry of mini_dados) {
+
+    console.log(entry);
+
     envelope
       .append("p")
       .classed("titulos", true)
-      .style("top", 0)
+      .classed(entry.class, true)
+      .classed("esquerda", true)
+      .style("top", entry.top)
       .style("text-align", "right")
-      .style("color", "firebrick")
-      .append("em")
-      .html("&#8592; Insatisfeitos");
+      .style("color", config.parametros_visuais.colors[0])
+      .append(entry.element)
+      .html(entry.label1);
 
     // para posicionar a caixa após já saber o tamanho, usando "left". Por algum motivo não consegui usar "right", pq ele começa a contar lá do raio que o parta, apesar de a largura do envelope ser o svg + margem.
-    envelope.select("p.titulos")
+    envelope.select("p.titulos." + entry.class + ".esquerda")
       .style("left", function() {
         let largura = +d3.select(this).style("width").slice(0,-2);
         return (config.parametros_visuais.margens.left + x(config.dados.max_desloc) - largura - pad) + "px"
@@ -500,11 +524,14 @@ function desenha_titulo() {
     envelope
       .append("p")
       .classed("titulos", true)
+      .classed(entry.class, true)
       .style("left", config.parametros_visuais.margens.left + x(config.dados.max_desloc) + pad + "px")
-      .style("top", 0)
-      .style("color", "dodgerblue")
-      .append("em")
-      .html("Satisfeitos &#8594;");
+      .style("top", entry.top)
+      .style("color", config.parametros_visuais.colors[4])
+      .append(entry.element)
+      .html(entry.label2);
+
+  }
 }
 
 /* ideia para filtrar valores de uma lista 

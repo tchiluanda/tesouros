@@ -173,3 +173,7 @@ div.envelope-svg-satisfacao > p.titulos {
     font-family : "Merriweather Sans", sans-serif;
     font-size : 0.7em;
 }
+
+div.envelope-svg-satisfacao > p.titulos.segunda-linha {
+    font-size : 0.6em
+}
