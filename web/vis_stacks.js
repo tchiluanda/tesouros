@@ -31,7 +31,11 @@ let config = {
 
     qde_max_categorias : null,
     bar_height : 15,
-    colors : ["#8E063B", "#CA9CA4", "#E2E2E2", "#A1A6C8", "#023FA5"],
+    colors : ["#b2182b","#ef8a62","#f7f7f7","#67a9cf","#2166ac"],
+    color_indif : {
+      "desloc_pessimista" : "#fddbc7",
+      "desloc_otimista"   : "#d1e5f0",
+    },
     margens : {
       top: 20,
       left : 100,
@@ -170,6 +174,7 @@ function dimensiona() {
 function desenha_estado(variavel, visao) {
   desenha_stack(variavel);
   desloca_barras(visao);
+  muda_cor_indiferente(visao);
 }
 
 function monitora_botoes() {
@@ -193,6 +198,7 @@ function monitora_opcao_otim_pessi() {
     config.estado.opcao_visao = dropdown.property("value");
     config.estado.iniciado = true;
     desloca_barras(config.estado.opcao_visao);
+    muda_cor_indiferente(config.estado.opcao_visao);
     
     console.log(config.estado.opcao_visao);
   })
@@ -343,6 +349,7 @@ function draw_bars(cat) {
       .selectAll("rect")
       .data(d => d.stack)
       .join("rect")
+        .classed("indiferente", d => d.label == "Sinto-me indiferente")
         .attr("height", bar_height)
         // .attr("x", function(d) {
         //   let transform = d3.select(this).node();
@@ -358,7 +365,7 @@ function draw_bars(cat) {
         .attr("x", 0)
         //.attr("width", d => x(d.count))
         .transition()
-        .duration(1500)
+        .duration(500)
         .attr("x", d => x(d.start))
         .attr("width", d => x(d.count));
 
@@ -378,6 +385,20 @@ function draw_bars(cat) {
     //         .attr("font-size", 10)
 }
 
+function muda_cor_indiferente(visao) {
+    //altera cor para corresponder à seleção
+    let rects = d3.selectAll("rect.indiferente");
+
+    console.log(config.parametros_visuais.color_indif[visao])
+
+    rects
+      .transition()
+      .delay(500)
+      .duration(500)
+      .attr("fill", config.parametros_visuais.color_indif[visao]);
+
+}
+
 function desloca_barras(otimista_pessimista) {
     let bars = d3.select("svg").selectAll("g.stacked-bars");
 
@@ -385,21 +406,17 @@ function desloca_barras(otimista_pessimista) {
       .range(config.escalas.x.range)
       .domain(config.escalas.x.domain);
 
-    console.log("hi", bars)
+    console.log({otimista_pessimista})
 
     bars.each(function(d,i,nodes) {
 
-        console.log(d3.select(this))
+        //console.log(d3.select(this))
 
         let transf = d3.select(this).attr("transform");
-
-        console.log(transf)
 
         let ini = transf.indexOf(",");
         let fim = transf.indexOf(")")
         let translateY = +transf.slice(ini+1, fim);
-        console.log(translateY);
-        console.log(d3.select(this).attr("transform"))
 
         let barras = d3.select(this);
         
@@ -417,7 +434,6 @@ function desloca_barras(otimista_pessimista) {
             translateY + 
             ")"
           );
-
     })
 }
 
