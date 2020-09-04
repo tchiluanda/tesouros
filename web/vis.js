@@ -502,7 +502,7 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
 
         desenha_dados(
           dados = grid, 
-          criterio = "1. Idade", 
+          criterio = "idade", 
           ordena = false, 
           vetor_ordem = ["De 20 a 29 anos", "De 30 a 39 anos", "De 40 a 49 anos", "De 50 a 60 anos", "+ de 60"], 
           raio, 
@@ -515,7 +515,7 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
     function desenha_step4(direcao) {
       desenha_dados(
         dados = grid, 
-        criterio = "2. Sexo", 
+        criterio = "genero", 
         ordena = false, 
         vetor_ordem = false, 
         raio, 
@@ -527,7 +527,7 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
   function desenha_step5(direcao) {
     desenha_dados(
       dados = grid, 
-      criterio = "3. Escolaridade", 
+      criterio = "escolaridade", 
       ordena = false, 
       vetor_ordem = ["Nível fundamental ou médio", "Graduação", "Especialização", "Mestrado", 
       "Doutorado"], 
@@ -540,7 +540,7 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
   function desenha_step6(direcao) {
     desenha_dados(
       dados = grid, 
-      criterio = "1. Você está satisfeito com a sua situação atual no Tesouro?", 
+      criterio = "satisfacao", 
       ordena = false, 
       vetor_ordem = ["Não", "Possivelmente não", "Sinto-me indiferente", "Basicamente sim", "Sim"], 
       raio, 
