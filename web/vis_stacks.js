@@ -276,9 +276,13 @@ function computa_principal_sat_insat(dados_filtrados_categoria, satisfacao, visa
     'percentual'      : ''
   }
 
-  let contagem_principal_satisfacao = group_and_count(dados_desejados, "primeira.sat", percent = true);
+  let coluna = satisfacao ? "primeira.sat" : "primeira.insat"
+
+  let contagem_principal_satisfacao = group_and_count(dados_desejados, coluna, percent = true);
 
   let contagem_ordenada = contagem_principal_satisfacao.sort((a,b) => b.count - a.count)
+
+  console.log("Computando principais insat", dados_desejados.map(d => ({"satisfacao" : d.satisfacao, "primeira insat" : d["primeira.insat"], "primeira sat" : d["primeira.sat"]})), contagem_ordenada);
 
   let principal_razao = contagem_ordenada[0];
 
