@@ -18,6 +18,10 @@ let config = {
 
     variaveis_interesse : ["subsec", "genero", "tempo_tesouro", "ascender"],
     ordem_satisfacao : ["Não", "Possivelmente não", "Sinto-me indiferente", "Basicamente sim", "Sim"],
+    categorias_satisfacao : {
+      "otimista" : ["Sinto-me indiferente", "Basicamente sim", "Sim"],
+      "pessimista" : ["Basicamente sim", "Sim"]
+    },
     label_indiferente: "Sinto-me indiferente",
     ordens_variaveis : {
       "ascender" : ["Sim", "Provavelmente sim", "Não sei", "Provavelmente não", "Não"],
@@ -85,7 +89,7 @@ let config = {
 
 d3.csv("./dados/data.csv").then(function(grid) {
     console.log(grid.columns);
-    config["grid_data"] = grid;
+    config.dados["grid_data"] = grid;
 
     init();
 
@@ -98,7 +102,7 @@ function init() {
 
   config.parametros.variaveis_interesse
     .forEach(d => {
-      config.dados.categorias[d] = generates_stacks_for_variable(config["grid_data"], d)
+      config.dados.categorias[d] = generates_stacks_for_variable(config.dados["grid_data"], d)
       if (config.dados.categorias[d].length > qde_max_categorias) {
         qde_max_categorias = config.dados.categorias[d].length;
       }
@@ -255,6 +259,12 @@ function stack_na_ordem(obj, col, vetor_ordem) {
     return(stack);
 }
 
+function computes_summaries_for_variable(cat, variable) {
+
+
+
+}
+
 function generates_stacks_for_variable(obj, variable) {
     
   let var_categories = 
@@ -270,10 +280,26 @@ function generates_stacks_for_variable(obj, variable) {
 
       let stack = stack_na_ordem(mini_dataset, 'satisfacao', config.parametros.ordem_satisfacao);
 
+      // criar função para fazer esse cálculo?
+      let pct_sat_otimista = 
+        stack
+          .filter(d => config.parametros.categorias_satisfacao["otimista"].includes(d.label)) // filtra elementos de "stack" que possuam label igual a algum dos elementos presentes na lista config.parametros...
+          .map(d => d.count) // pega atributo "count" da array resultante
+          .reduce((soma_acum, valor_total) => soma_acum + valor_total); //soma
+
+      let pct_sat_pessimista =
+        stack
+          .filter(d => config.parametros.categorias_satisfacao["pessimista"].includes(d.label)) // filtra elementos de "stack" que possuam label igual a algum dos elementos presentes na lista config.parametros...
+          .map(d => d.count) // pega atributo "count" da array resultante
+          .reduce((soma_acum, valor_total) => soma_acum + valor_total); //soma
+
       return(
           {
               'label' : cat,
               'stack' : stack,
+              'pct_sat_otimista' : pct_sat_otimista,
+              'pct_sat_pessimista' : pct_sat_pessimista
+
           }
       )
     });
