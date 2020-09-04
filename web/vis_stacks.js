@@ -259,10 +259,25 @@ function stack_na_ordem(obj, col, vetor_ordem) {
     return(stack);
 }
 
-function computes_summaries_for_variable(cat, variable) {
+function computa_principal_sat_insat(cat, variable) {
 
 
 
+
+
+}
+
+function calcula_pct_satisfacao(dados_satisfacao_sumarizados, visao) {
+  let categorias_satisfacao = config.parametros.categorias_satisfacao[visao]; // se visao otimista, inclui indiferentes, caso contrário pega só categorias "Sim" e "Possivelmente Sim" da variável satisfacação
+
+  // esses dados sumarizados da variavel são os "stack", com os percentuais de respostas para cada categoria da variável satisfacao, no formato { label, count}
+
+  let pct = dados_satisfacao_sumarizados
+    .filter(d => categorias_satisfacao.includes(d.label)) // filtra elementos de "stack" que possuam label igual a algum dos elementos presentes na lista config.parametros...
+    .map(d => d.count) // pega atributo "count" da array resultante
+    .reduce((soma_acum, valor_total) => soma_acum + valor_total); //soma
+
+  return pct;
 }
 
 function generates_stacks_for_variable(obj, variable) {
@@ -280,18 +295,17 @@ function generates_stacks_for_variable(obj, variable) {
 
       let stack = stack_na_ordem(mini_dataset, 'satisfacao', config.parametros.ordem_satisfacao);
 
+      // calcula percentuais totais de satisfação, na visão otimista e na pessimista
       // criar função para fazer esse cálculo?
-      let pct_sat_otimista = 
-        stack
-          .filter(d => config.parametros.categorias_satisfacao["otimista"].includes(d.label)) // filtra elementos de "stack" que possuam label igual a algum dos elementos presentes na lista config.parametros...
-          .map(d => d.count) // pega atributo "count" da array resultante
-          .reduce((soma_acum, valor_total) => soma_acum + valor_total); //soma
+      let pct_sat_otimista = calcula_pct_satisfacao(
+        dados_satisfacao_sumarizados = stack, 
+        visao = "otimista"
+      );
 
-      let pct_sat_pessimista =
-        stack
-          .filter(d => config.parametros.categorias_satisfacao["pessimista"].includes(d.label)) // filtra elementos de "stack" que possuam label igual a algum dos elementos presentes na lista config.parametros...
-          .map(d => d.count) // pega atributo "count" da array resultante
-          .reduce((soma_acum, valor_total) => soma_acum + valor_total); //soma
+      let pct_sat_pessimista = calcula_pct_satisfacao(
+        dados_satisfacao_sumarizados = stack, 
+        visao = "pessimista"
+      );
 
       return(
           {
@@ -299,7 +313,6 @@ function generates_stacks_for_variable(obj, variable) {
               'stack' : stack,
               'pct_sat_otimista' : pct_sat_otimista,
               'pct_sat_pessimista' : pct_sat_pessimista
-
           }
       )
     });
@@ -455,7 +468,8 @@ function desloca_barras(otimista_pessimista) {
         
         barras
           .attr("transform",
-            "translate(" + 
+
+          "translate(" + 
             x(d[otimista_pessimista]) + 
             "," + 
             translateY + 
