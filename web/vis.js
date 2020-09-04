@@ -204,7 +204,7 @@ function prepara_dados(dados, criterio, ordena = false, vetor_ordem, raio, marge
     return(mini_dados);
 }
 
-function desenha_dados(dados, criterio, ordena, vetor_ordem, raio, margin, rotulos_a_deslocar, deslocamento) {
+function desenha_dados(dados, criterio, ordena, vetor_ordem, raio, margin, rotulos_a_deslocar, deslocamento, vetor_cor) {
 
     let mini_dados = prepara_dados(
       dados, 
@@ -222,7 +222,7 @@ function desenha_dados(dados, criterio, ordena, vetor_ordem, raio, margin, rotul
 
     let cor = d3.scaleOrdinal()
       .domain(mini_dados.parametros.resumo.map(d => d.categoria))
-      .range(d3.schemeCategory10)
+      .range(vetor_cor ? vetor_cor : d3.schemeCategory10)
 
     let pontos = d3.selectAll("circle.pontos")
     pontos = pontos
@@ -546,7 +546,8 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
       raio, 
       margin,
       rotulos_a_deslocar = [1,2],
-      deslocamento = {1:80, 2:40});
+      deslocamento = {1:80, 2:40},
+      vetor_cor = ["#b2182b","#ef8a62","silver","#67a9cf","#2166ac"]);
   }
 
     // setup
