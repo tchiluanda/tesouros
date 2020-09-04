@@ -284,7 +284,7 @@ function computa_principal_sat_insat(dados_filtrados_categoria, satisfacao, visa
 
   return {
     'principal_razao' : principal_razao.cat,
-    'percentual'      : d3.format(".0%")(principal_razao.count)
+    'percentual'      : formataPct(principal_razao.count)
   }
 
 }
@@ -353,8 +353,10 @@ function generates_stacks_for_variable(obj, variable) {
           {
               'label' : cat,
               'stack' : stack,
-              'pct_sat_otimista' : pct_sat_otimista,
-              'pct_sat_pessimista' : pct_sat_pessimista,
+              'pct_sat' : {
+                'desloc_otimista'  : pct_sat_otimista,
+                'desloc_pessimista' : pct_sat_pessimista
+              },
               'principal_sat' : {
                 'desloc_otimista'   : principal_sat_otimista,
                 'desloc_pessimista' : principal_sat_pessimista
@@ -625,8 +627,8 @@ function desenha_titulo() {
 }
 
 function desenha_labels(variavel, visao) {
-  //let mini_data = stacks[cat];
-  let bar_height = config.parametros_visuais.bar_height;
+
+  // os textos que alimentam o mini_data abaixo e que serão usados como labels foram gerados em generates_stacks_for_variable() e suas funções auxiliares
 
   let mini_data = config.dados.categorias[variavel];
 
@@ -636,34 +638,74 @@ function desenha_labels(variavel, visao) {
 
   let envelope = d3.select(config.parametros.envelope);
 
-  let pad = 10;
+  let stacked_bars = d3.selectAll("g.stacked-bars");
 
-  envelope
+  let pad = {
+    'bottom' : 5,
+    'lateral' : 10
+  };
+
+  // primeiro remove os labels anteriores
+  envelope.selectAll("p.labels-insat,p.labels-sat").remove();
+
+  // acrescenta labels insat sem posicioná-los ainda : serão posicionados mais abaixo de acordo com a posição das barras
+
+  let labels_insat = envelope
     .selectAll("p.labels-insat")
     .data(mini_data, d => d.label)
     .join("p")
-      .classed("labels-sat-insat", true)
-      .style("top", (d,i) => (i+1)*3*bar_height + "px")
+      .classed("labels-insat", true)
       .style("text-align", "right")
-      .style("color", config.parametros_visuais.colors[0])
+      .style("color", config.parametros_visuais.colors[0]);
+  
+  labels_insat
       .append("em")
-      .text(d => "(" + d.principal_insat[visao].principal_razao + ") " + d.principal_insat[visao].principal_razao.percentual)
-      .style("left", function() {
-        let largura = +d3.select(this).style("width").slice(0,-2);
-        return (config.parametros_visuais.margens.left + x(config.dados.max_desloc) - largura - pad) + "px"
-      });
+      .text(d => "(" + d.principal_insat[visao].principal_razao + ") " + formataPct(1 - d.pct_sat[visao]));
 
-  envelope
+  // acrescenta labels sat sem posicioná-los ainda : serão posicionados mais abaixo de acordo com a posição das barras
+
+  let labels_sat = envelope
     .selectAll("p.labels-sat")
     .data(mini_data, d => d.label)
     .join("p")
       .classed("labels-sat", true)
-      .style("top", (d,i) => (i+1)*3*bar_height + "px")
       .style("text-align", "right")
-      .style("color", config.parametros_visuais.colors[0])
+      .style("color", config.parametros_visuais.colors[4]);
+  
+  labels_sat
       .append("em")
-      .text(d => d.principal_sat[visao].principal_razao.percentual + " (" + d.principal_sat[visao].principal_razao + ") ")
-      .style("left", config.parametros_visuais.margens.left + x(config.dados.max_desloc) + pad + "px");
+      .text(d => formataPct(d.pct_sat[visao]) + " (" + d.principal_sat[visao].principal_razao + ") ");
+
+  // agora sim, vamos posicioná-los de acordo com as posições da barra
+
+  let posicao_svg = envelope.node().getBoundingClientRect().top;
+  
+  stacked_bars.each(function(d,i) {
+    let barra_atual = d3.select(this).node();
+
+    let posicao_top_barra = barra_atual.getBoundingClientRect().top - posicao_svg;
+    console.log();
+
+    let label_insat_dim = labels_insat.nodes()[i].getBoundingClientRect();
+    
+    let label_sat_dim   = labels_sat.nodes()[i].getBoundingClientRect();
+
+    //insat
+
+    let label_insat = d3.select(labels_insat.nodes()[i]);
+    label_insat
+      .style("top", (posicao_top_barra - label_insat_dim.height - pad.bottom) + "px")
+      .style("left", (config.parametros_visuais.margens.left + x(config.dados.max_desloc) - label_insat_dim.width - pad.lateral) + "px");
+
+    // sat
+
+    let label_sat = d3.select(labels_sat.nodes()[i]);
+    label_sat
+      .style("top", (posicao_top_barra - label_sat_dim.height - pad.bottom) + "px")
+      .style("left", (config.parametros_visuais.margens.left + x(config.dados.max_desloc) + pad.lateral) + "px");
+
+    console.log(posicao_top_barra, label_insat_dim, label_sat_dim);
+  });
 }
 
 /* ideia para filtrar valores de uma lista 
