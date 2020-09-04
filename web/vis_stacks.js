@@ -182,6 +182,7 @@ function desenha_estado(variavel, visao) {
   desenha_stack(variavel);
   desloca_barras(visao);
   muda_cor_indiferente(visao);
+  desenha_labels(variavel, visao)
 }
 
 function monitora_botoes() {
@@ -206,6 +207,7 @@ function monitora_opcao_otim_pessi() {
     config.estado.iniciado = true;
     desloca_barras(config.estado.opcao_visao);
     muda_cor_indiferente(config.estado.opcao_visao);
+    desenha_labels(config.estado.opcao_variavel, config.estado.opcao_visao)
     
     console.log(config.estado.opcao_visao);
   })
@@ -264,7 +266,15 @@ function stack_na_ordem(obj, col, vetor_ordem) {
 function computa_principal_sat_insat(dados_filtrados_categoria, satisfacao, visao) {
   let categorias_satisfacao = config.parametros.categorias_satisfacao[visao]; // se visao otimista, inclui indiferentes, caso contrário pega só categorias "Sim" e "Possivelmente Sim" da variável satisfacação
 
-  let dados_desejados = dados_filtrados_categoria.filter(d => categorias_satisfacao.includes(d.satisfacao));
+  let dados_desejados = dados_filtrados_categoria.filter(
+    d => satisfacao ? 
+    categorias_satisfacao.includes(d.satisfacao) :
+    !categorias_satisfacao.includes(d.satisfacao));
+
+  if (dados_desejados.length == 0) return {
+    'principal_razao' : '',
+    'percentual'      : ''
+  }
 
   let contagem_principal_satisfacao = group_and_count(dados_desejados, "primeira.sat", percent = true);
 
@@ -319,17 +329,40 @@ function generates_stacks_for_variable(obj, variable) {
         visao = "pessimista"
       );
 
-      console.log(computa_principal_sat_insat(
+      let principal_sat_otimista = computa_principal_sat_insat(
         dados_filtrados_categoria = mini_dataset, 
         satisfacao = true, 
-        visao = "otimista"));
+        visao = "otimista");
+
+      let principal_sat_pessimista = computa_principal_sat_insat(
+        dados_filtrados_categoria = mini_dataset, 
+        satisfacao = true, 
+        visao = "pessimista");
+
+      let principal_insat_otimista = computa_principal_sat_insat(
+        dados_filtrados_categoria = mini_dataset, 
+        satisfacao = false, 
+        visao = "otimista");
+
+      let principal_insat_pessimista = computa_principal_sat_insat(
+        dados_filtrados_categoria = mini_dataset, 
+        satisfacao = false, 
+        visao = "pessimista");
 
       return(
           {
               'label' : cat,
               'stack' : stack,
               'pct_sat_otimista' : pct_sat_otimista,
-              'pct_sat_pessimista' : pct_sat_pessimista
+              'pct_sat_pessimista' : pct_sat_pessimista,
+              'principal_sat' : {
+                'desloc_otimista'   : principal_sat_otimista,
+                'desloc_pessimista' : principal_sat_pessimista
+              },
+              'principal_insat' : {
+                'desloc_otimista'   : principal_insat_otimista,
+                'desloc_pessimista' : principal_insat_pessimista
+              }
           }
       )
     });
@@ -589,6 +622,48 @@ function desenha_titulo() {
       .html(entry.label2);
 
   }
+}
+
+function desenha_labels(variavel, visao) {
+  //let mini_data = stacks[cat];
+  let bar_height = config.parametros_visuais.bar_height;
+
+  let mini_data = config.dados.categorias[variavel];
+
+  let x = d3.scaleLinear()
+    .range(config.escalas.x.range)
+    .domain(config.escalas.x.domain);
+
+  let envelope = d3.select(config.parametros.envelope);
+
+  let pad = 10;
+
+  envelope
+    .selectAll("p.labels-insat")
+    .data(mini_data, d => d.label)
+    .join("p")
+      .classed("labels-sat-insat", true)
+      .style("top", (d,i) => (i+1)*3*bar_height + "px")
+      .style("text-align", "right")
+      .style("color", config.parametros_visuais.colors[0])
+      .append("em")
+      .text(d => "(" + d.principal_insat[visao].principal_razao + ") " + d.principal_insat[visao].principal_razao.percentual)
+      .style("left", function() {
+        let largura = +d3.select(this).style("width").slice(0,-2);
+        return (config.parametros_visuais.margens.left + x(config.dados.max_desloc) - largura - pad) + "px"
+      });
+
+  envelope
+    .selectAll("p.labels-sat")
+    .data(mini_data, d => d.label)
+    .join("p")
+      .classed("labels-sat", true)
+      .style("top", (d,i) => (i+1)*3*bar_height + "px")
+      .style("text-align", "right")
+      .style("color", config.parametros_visuais.colors[0])
+      .append("em")
+      .text(d => d.principal_sat[visao].principal_razao.percentual + " (" + d.principal_sat[visao].principal_razao + ") ")
+      .style("left", config.parametros_visuais.margens.left + x(config.dados.max_desloc) + pad + "px");
 }
 
 /* ideia para filtrar valores de uma lista 

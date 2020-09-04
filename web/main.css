@@ -168,12 +168,16 @@ div.envelope-svg-satisfacao {
 }
 
 div.envelope-svg-satisfacao > p.labels-eixo-y,
-div.envelope-svg-satisfacao > p.titulos {
+div.envelope-svg-satisfacao > p.titulos,
+div.envelope-svg-satisfacao > p.labels-sat,
+div.envelope-svg-satisfacao > p.labels-insat {
     position : absolute;
     font-family : "Merriweather Sans", sans-serif;
     font-size : 0.7em;
 }
 
-div.envelope-svg-satisfacao > p.titulos.segunda-linha {
+div.envelope-svg-satisfacao > p.titulos.segunda-linha,
+div.envelope-svg-satisfacao > p.labels-sat,
+div.envelope-svg-satisfacao > p.labels-insat {
     font-size : 0.6em
 }
