@@ -20,6 +20,7 @@ const localeDataBrasil = {
 
 const formataBR   = d3.formatDefaultLocale(localeBrasil).format(",.0f");
 const formataBR_1 = d3.formatDefaultLocale(localeBrasil).format(",.1f");
+const formataPct = d3.format(".0%")
 
 const multiplos = [1, 1e3, 1e6, 1e9, 1e12];
 const sufixo    = ["", "mil", "mi", "bi", "tri"];
