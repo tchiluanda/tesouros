@@ -11,6 +11,8 @@
 
 // levar escala x para ser um método de config?
 
+// melhorar coerência nomenclaturas "categoria" x "variavel"
+
 
 let config = {
 
@@ -259,11 +261,21 @@ function stack_na_ordem(obj, col, vetor_ordem) {
     return(stack);
 }
 
-function computa_principal_sat_insat(cat, variable) {
+function computa_principal_sat_insat(dados_filtrados_categoria, satisfacao, visao) {
+  let categorias_satisfacao = config.parametros.categorias_satisfacao[visao]; // se visao otimista, inclui indiferentes, caso contrário pega só categorias "Sim" e "Possivelmente Sim" da variável satisfacação
 
+  let dados_desejados = dados_filtrados_categoria.filter(d => categorias_satisfacao.includes(d.satisfacao));
 
+  let contagem_principal_satisfacao = group_and_count(dados_desejados, "primeira.sat", percent = true);
 
+  let contagem_ordenada = contagem_principal_satisfacao.sort((a,b) => b.count - a.count)
 
+  let principal_razao = contagem_ordenada[0];
+
+  return {
+    'principal_razao' : principal_razao.cat,
+    'percentual'      : d3.format(".0%")(principal_razao.count)
+  }
 
 }
 
@@ -306,6 +318,11 @@ function generates_stacks_for_variable(obj, variable) {
         dados_satisfacao_sumarizados = stack, 
         visao = "pessimista"
       );
+
+      console.log(computa_principal_sat_insat(
+        dados_filtrados_categoria = mini_dataset, 
+        satisfacao = true, 
+        visao = "otimista"));
 
       return(
           {
