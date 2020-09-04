@@ -144,6 +144,8 @@ dados %>% filter(insatisfeita) %>% group_by(genero) %>% count(primeira.insat)
 
 dados %>% filter(insatisfeita) %>% group_by(funcao) %>% count(primeira.insat)
 
+dados %>% filter(!insatisfeita) %>% group_by(unidade) %>% count(primeira.sat) %>% arrange(desc(n))
+
 insat_tempo <- dados %>% filter(insatisfeita, !is.na(primeira.insat)) %>% group_by(tempo_tesouro) %>% count(primeira.insat)
 insat_genero <- dados %>% filter(insatisfeita, !is.na(primeira.insat)) %>% group_by(genero) %>% count(primeira.insat)
 insat_subsec <- dados %>% filter(insatisfeita, !is.na(primeira.insat)) %>% group_by(subsec) %>% count(primeira.insat)
