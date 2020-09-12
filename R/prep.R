@@ -144,7 +144,69 @@ dados %>% filter(insatisfeita) %>% group_by(genero) %>% count(primeira.insat)
 
 dados %>% filter(insatisfeita) %>% group_by(funcao) %>% count(primeira.insat)
 
-dados %>% filter(!insatisfeita) %>% group_by(unidade) %>% count(primeira.sat) %>% arrange(desc(n))
+principal_razao_sat <- function(sat, criterio) {
+  
+  quo_crit <- sym(criterio) # transforma "criterio", que é string, num símbolo
+  
+  if (sat) {
+    princ <- dados %>% 
+      filter(!insatisfeita) %>%
+      group_by(!! quo_crit) %>% 
+      count(primeira.sat) %>% 
+      arrange(desc(n)) %>%
+      summarise(primeira = first(primeira.sat))
+  } else {
+    princ <- dados %>% 
+      filter(insatisfeita) %>%
+      group_by(!! quo_crit) %>% 
+      count(primeira.insat) %>% 
+      arrange(desc(n)) %>%
+      summarise(primeira = first(primeira.insat))
+  }
+  
+  # princ %>%
+  #   mutate(maximo = max(n)) %>%
+  #   ungroup() %>%
+  #   filter(n == maximo)
+  
+  return(princ)
+}
+
+dados %>% filter(insatisfeita) %>%
+  ggplot(aes(x = subsec, fill = primeira.insat)) + geom_bar(position = "dodge")
+
+dados %>% filter(!insatisfeita) %>%
+  ggplot(aes(x = subsec, fill = primeira.sat)) + geom_bar(position = "dodge")
+
+principal_razao_sat(sat = TRUE, "subsec")
+principal_razao_sat(sat = FALSE, "subsec")
+principal_razao_sat(sat = TRUE,  "genero")
+principal_razao_sat(sat = FALSE, "genero")
+
+sat_otim <- c("Sim", "Basicamente sim", "Sinto-me indiferente")
+insat_pessim <- c("Não", "Possivelmente não", "Sinto-me indiferente")
+
+dados %>% filter(!(satisfacao %in% sat_otim)) %>%
+  ggplot(aes(x = genero, fill = primeira.insat)) + geom_bar(position = "dodge")
+
+dados %>% filter(satisfacao %in% sat_otim) %>%
+  ggplot(aes(x = genero, fill = primeira.sat)) + geom_bar(position = "dodge")
+
+
+dados %>% filter(!(satisfacao %in% sat_otim)) %>%
+  ggplot(aes(x = tempo_tesouro, fill = primeira.insat)) + geom_bar(position = "dodge")
+
+dados %>% filter(satisfacao %in% sat_otim) %>%
+  ggplot(aes(x = tempo_tesouro, fill = primeira.sat)) + geom_bar(position = "dodge")
+
+
+dados %>% filter(!(satisfacao %in% sat_otim)) %>%
+  ggplot(aes(x = ascender, fill = primeira.insat)) + geom_bar(position = "dodge")
+
+dados %>% filter(satisfacao %in% sat_otim) %>%
+  ggplot(aes(x = ascender, fill = primeira.sat)) + geom_bar(position = "dodge")
+
+
 
 insat_tempo <- dados %>% filter(insatisfeita, !is.na(primeira.insat)) %>% group_by(tempo_tesouro) %>% count(primeira.insat)
 insat_genero <- dados %>% filter(insatisfeita, !is.na(primeira.insat)) %>% group_by(genero) %>% count(primeira.insat)
