@@ -184,57 +184,6 @@ principal_razao_sat(sat = TRUE,  "genero")
 principal_razao_sat(sat = FALSE, "genero")
 
 
-
-# aqui sim, resultados sumarizados para comparar com vis
-
-sat_otim <- c("Sim", "Basicamente sim", "Sinto-me indiferente")
-insat_pessim <- c("Não", "Possivelmente não", "Sinto-me indiferente")
-
-sumario <- function(criterio) {
-  quo_crit <- sym(criterio) # transforma "criterio", que é string, num símbolo
-  
-  df1 <- dados %>% 
-    filter(satisfacao %in% sat_otim) %>%
-    group_by(!! quo_crit) %>% 
-    count(primeira.sat) %>% 
-    arrange(desc(n)) %>%
-    summarise(otim_sat = first(primeira.sat))
-  
-  df2<- dados %>% 
-    filter(!(satisfacao %in% sat_otim)) %>%
-    group_by(!! quo_crit) %>% 
-    count(primeira.insat) %>% 
-    arrange(desc(n)) %>%
-    summarise(otim_insat = first(primeira.insat))
-  
-  df3 <- dados %>% 
-    filter(satisfacao %in% insat_pessim) %>%
-    group_by(!! quo_crit) %>% 
-    count(primeira.insat) %>% 
-    arrange(desc(n)) %>%
-    summarise(pess_insat = first(primeira.insat))
-  
-  df4 <- dados %>% 
-    filter(!(satisfacao %in% insat_pessim)) %>%
-    group_by(!! quo_crit) %>% 
-    count(primeira.sat) %>% 
-    arrange(desc(n)) %>%
-    summarise(pess_sat = first(primeira.sat))
-  
-  resumo <- df1 %>%
-    left_join(df2) %>%
-    left_join(df3) %>%
-    left_join(df4)
-  
-  return(resumo)
-}
-
-sumario("tempo_tesouro")
-sumario("ascender")
-sumario("genero")
-sumario("subsec")
-
-
 dados %>% filter(satisfacao %in% insat_pessim) %>%
   ggplot(aes(x = genero, fill = primeira.insat)) + geom_bar(position = "dodge")
 
@@ -308,6 +257,58 @@ ggplot(dados %>% count(funcao), aes(y = reorder(funcao, n), x = n)) +
 # dados <- dados_raw %>% 
 #   select(1:12) %>% 
 #   bind_cols(grid)
+
+
+# principais razoes satisfacao / insatisfacao -----------------------------
+
+# aqui sim, resultados sumarizados para comparar com vis
+
+sat_otim <- c("Sim", "Basicamente sim", "Sinto-me indiferente")
+insat_pessim <- c("Não", "Possivelmente não", "Sinto-me indiferente")
+
+sumario <- function(criterio) {
+  quo_crit <- sym(criterio) # transforma "criterio", que é string, num símbolo
+  
+  df1 <- dados %>% 
+    filter(satisfacao %in% sat_otim) %>%
+    group_by(!! quo_crit) %>% 
+    count(primeira.sat) %>% 
+    arrange(desc(n)) %>%
+    summarise(otim_sat = first(primeira.sat))
+  
+  df2<- dados %>% 
+    filter(!(satisfacao %in% sat_otim)) %>%
+    group_by(!! quo_crit) %>% 
+    count(primeira.insat) %>% 
+    arrange(desc(n)) %>%
+    summarise(otim_insat = first(primeira.insat))
+  
+  df3 <- dados %>% 
+    filter(satisfacao %in% insat_pessim) %>%
+    group_by(!! quo_crit) %>% 
+    count(primeira.insat) %>% 
+    arrange(desc(n)) %>%
+    summarise(pess_insat = first(primeira.insat))
+  
+  df4 <- dados %>% 
+    filter(!(satisfacao %in% insat_pessim)) %>%
+    group_by(!! quo_crit) %>% 
+    count(primeira.sat) %>% 
+    arrange(desc(n)) %>%
+    summarise(pess_sat = first(primeira.sat))
+  
+  resumo <- df1 %>%
+    left_join(df2) %>%
+    left_join(df3) %>%
+    left_join(df4)
+  
+  return(resumo)
+}
+
+sumario("tempo_tesouro")
+sumario("ascender")
+sumario("genero")
+sumario("subsec")
 
 
 
