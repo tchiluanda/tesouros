@@ -191,6 +191,7 @@ function monitora_botoes() {
   
   botoes.on("click", function() {
     let opcao = this.id;
+    config.estado.opcao_variavel = opcao;
     botoes.classed("selected", false);
     d3.select(this).classed("selected", true);
     config.estado.iniciado = false;
@@ -207,9 +208,8 @@ function monitora_opcao_otim_pessi() {
     config.estado.iniciado = true;
     desloca_barras(config.estado.opcao_visao);
     muda_cor_indiferente(config.estado.opcao_visao);
+    console.log("Dropdown", config.estado.opcao_variavel, config.estado.opcao_visao);
     desenha_labels(config.estado.opcao_variavel, config.estado.opcao_visao)
-    
-    console.log(config.estado.opcao_visao);
   })
 }
 
@@ -636,6 +636,8 @@ function desenha_labels(variavel, visao) {
 
   let mini_data = config.dados.categorias[variavel];
 
+  console.log("mini", mini_data)
+
   let x = d3.scaleLinear()
     .range(config.escalas.x.range)
     .domain(config.escalas.x.domain);
@@ -650,7 +652,7 @@ function desenha_labels(variavel, visao) {
   };
 
   // primeiro remove os labels anteriores
-  envelope.selectAll("p.labels-insat,p.labels-sat").remove();
+  //envelope.selectAll("p.labels-insat,p.labels-sat").remove();
 
   // acrescenta labels insat sem posicioná-los ainda : serão posicionados mais abaixo de acordo com a posição das barras
 
@@ -662,8 +664,10 @@ function desenha_labels(variavel, visao) {
       .style("text-align", "right")
       .style("color", config.parametros_visuais.colors[0]);
   
+  console.log("Exit selection ", labels_insat.exit());
+
   labels_insat
-      .append("em")
+      .join("em")
       .text(d => "(" + d.principal_insat[visao].principal_razao + ") " + formataPct(1 - d.pct_sat[visao]));
 
   // acrescenta labels sat sem posicioná-los ainda : serão posicionados mais abaixo de acordo com a posição das barras
@@ -677,7 +681,7 @@ function desenha_labels(variavel, visao) {
       .style("color", config.parametros_visuais.colors[4]);
   
   labels_sat
-      .append("em")
+      .join("em")
       .text(d => formataPct(d.pct_sat[visao]) + " (" + d.principal_sat[visao].principal_razao + ") ");
 
   // agora sim, vamos posicioná-los de acordo com as posições da barra
@@ -708,7 +712,7 @@ function desenha_labels(variavel, visao) {
       .style("top", (posicao_top_barra - label_sat_dim.height - pad.bottom) + "px")
       .style("left", (config.parametros_visuais.margens.left + x(config.dados.max_desloc) + pad.lateral) + "px");
 
-    console.log(posicao_top_barra, label_insat_dim, label_sat_dim);
+    //console.log(posicao_top_barra, label_insat_dim, label_sat_dim);
   });
 }
 
