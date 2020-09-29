@@ -668,7 +668,12 @@ function desenha_labels(variavel, visao) {
 
   labels_insat
       .join("em")
-      .text(d => "(" + d.principal_insat[visao].principal_razao + ") " + formataPct(1 - d.pct_sat[visao]));
+      .text(d => 
+        "(" + 
+        (d.principal_insat[visao].principal_razao == "NA" ?
+        "Nenhuma" : d.principal_insat[visao].principal_razao) + 
+        ") " + 
+        formataPct(1 - d.pct_sat[visao]));
 
   // acrescenta labels sat sem posicioná-los ainda : serão posicionados mais abaixo de acordo com a posição das barras
 
@@ -682,7 +687,12 @@ function desenha_labels(variavel, visao) {
   
   labels_sat
       .join("em")
-      .text(d => formataPct(d.pct_sat[visao]) + " (" + d.principal_sat[visao].principal_razao + ") ");
+      .text(d => 
+        formataPct(d.pct_sat[visao]) + 
+        " (" + 
+        (d.principal_sat[visao].principal_razao == "NA" ?
+        "Nenhuma" : d.principal_sat[visao].principal_razao) + 
+        ") ");
 
   // agora sim, vamos posicioná-los de acordo com as posições da barra
 
