@@ -93,7 +93,7 @@ article {
 
 /* info de continuar */
 
-div.continuar {
+.slide div.continuar {
     background-color: transparent;
     z-index: 2;
     position: absolute;
@@ -106,11 +106,11 @@ div.continuar {
     opacity: 0;
 }
 
-div.continuar > img {
+.slide div.continuar > img {
     width: 2.5rem;
 }
 
-div.continuar > p {
+.slide div.continuar > p {
     font-size: 1rem;
     margin-bottom: 0;
 }
@@ -127,7 +127,7 @@ div.introducao div > p {
     margin-bottom: 1rem;
     font-size: 1.2rem;
     font-family: "Merriweather Sans";
-    font-weight: ligther;
+    font-weight: lighter;
 }
 
 
