@@ -166,6 +166,8 @@ function sumariza_dados(dados, criterio, ordena = false, vetor_ordem) {
       .filter((v, i, a) => a.indexOf(v) === i);
     }
 
+    console.log(criterio, categorias_unicas)
+
     for (cat of categorias_unicas) {
         const cont = dados
           .filter(d => d[criterio] === cat)
@@ -333,7 +335,7 @@ function acrescenta_rotulos(mini_dados, deslocados, quanto) {
 
     $rotulos
       .style("left", function(d) {
-        console.log("To aqui dentro", mini_dados.parametros.posicoes_iniciais[d.categoria]);
+        //console.log("To aqui dentro", mini_dados.parametros.posicoes_iniciais[d.categoria]);
         return (mini_dados.parametros.posicoes_iniciais[d.categoria] + margem_inicial_principal - mini_dados.parametros.raio + "px")}
         )
       .style("top",  function(d) {
@@ -373,6 +375,12 @@ function acrescenta_rotulos(mini_dados, deslocados, quanto) {
 }
 
 d3.csv("./web/dados/data.csv").then(function(grid) {
+
+    config.dados["grid_data"] = grid; // para os stacks
+    console.log(grid.columns);
+    //console.table(grid)
+    
+    init(); // os stacks
     
     let margin = w < 580 ? 15 : 25;
 
@@ -498,10 +506,10 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
                 break;    
             case 8 :
               desenha_detalhe_satisfacao();
-
-
-                
-                break;                        
+              break;   
+              case 9 :
+                desenha_mudar();
+                break;                         
         }
     }
 
@@ -665,7 +673,27 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
       vetor_cor = ["#b2182b","#ef8a62","silver","#67a9cf","#2166ac"]);
   }
 
+  function desenha_mudar(direcao) {
+    desenha_dados(
+      dados = grid, 
+      criterio = "mudar", 
+      ordena = true, 
+      vetor_ordem = false,
+      raio, 
+      margin,
+      rotulos_a_deslocar = false,//[1,2],
+      deslocamento = 0)//{1:80, 2:40}
+  }
+
   function desenha_detalhe_satisfacao() {
+
+    d3.selectAll("div.rotulos *")
+      .transition(duracao/2)
+      .style("opacity", 0)
+      .remove();
+
+    d3.selectAll("line.rotulos").remove();
+
     d3.selectAll("circle.pontos")
       .transition()
       .duration(duracao)

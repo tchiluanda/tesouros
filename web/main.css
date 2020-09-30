@@ -167,6 +167,11 @@ div.introducao div > p {
 
 /***************** stacked bar charts */
 
+div#slide08 {
+    padding-top: 30px;
+    padding-left: 15px;
+}
+
 div.controle-stacked {
     display: flex;
     margin: 1em 0;

@@ -88,14 +88,14 @@ let config = {
 
   }
 };
-
+/*
 d3.csv("./dados/data.csv").then(function(grid) {
     console.log(grid.columns);
     config.dados["grid_data"] = grid;
 
     init();
 
-});
+});*/
 
 function init() {
 
@@ -144,8 +144,8 @@ function init() {
 }
 
 function dimensiona() {
-  let envelope = d3.select(config.parametros.envelope);
-  let svg = d3.select(config.parametros.svg);
+  const envelope = d3.select(config.parametros.envelope);
+  const svg_satisf = d3.select(config.parametros.svg);
 
   let width = envelope.node().getBoundingClientRect().width;
   let height = envelope.node().getBoundingClientRect().height;
@@ -216,7 +216,7 @@ function monitora_opcao_otim_pessi() {
 function desenha_stack(selecao, grid) {
   let categorias = config.dados.categorias[selecao];
   
-  console.log({categorias})
+  //console.log({categorias})
 
   let max_desloc = get_max_desloc(categorias);
 
@@ -229,7 +229,7 @@ function desenha_stack(selecao, grid) {
       categorias[i]["desloc_pessimista"] = deslocs_pessimista[i];
   })
 
-  console.log("MAX", get_max_desloc(categorias));
+  //console.log("MAX", get_max_desloc(categorias));
 
   //console.log(categorias_Tempo);
 
@@ -282,7 +282,7 @@ function computa_principal_sat_insat(dados_filtrados_categoria, satisfacao, visa
 
   let contagem_ordenada = contagem_principal_satisfacao.sort((a,b) => b.count - a.count)
 
-  console.log("Computando principais insat", dados_desejados.map(d => ({"satisfacao" : d.satisfacao, "primeira insat" : d["primeira.insat"], "primeira sat" : d["primeira.sat"]})), contagem_ordenada);
+  //console.log("Computando principais insat", dados_desejados.map(d => ({"satisfacao" : d.satisfacao, "primeira insat" : d["primeira.insat"], "primeira sat" : d["primeira.sat"]})), contagem_ordenada);
 
   let principal_razao = contagem_ordenada[0];
 
@@ -398,12 +398,12 @@ function get_max_desloc(objeto) {
 function get_overall_max_desloc(...categorias) {
   let overall_max = 0;
 
-  console.log(categorias);
+  //console.log(categorias);
 
   for (categoria of categorias) {
-    console.log(config.dados.categorias[categoria]);
+    //console.log(config.dados.categorias[categoria]);
     let current_max = get_max_desloc(config.dados.categorias[categoria]);
-    console.log("overall", categoria, current_max)
+    //console.log("overall", categoria, current_max)
     overall_max = Math.max(current_max, overall_max);
   }
 
@@ -434,7 +434,7 @@ function draw_bars(cat) {
       .range(config.escalas.x.range)
       .domain(config.escalas.x.domain);
 
-    let bars = d3.select("svg")
+    let bars = d3.select("svg.svg-satisfacao")
       .selectAll("g")
       .data(mini_data, d => d.label)
       .join("g")
@@ -485,7 +485,7 @@ function muda_cor_indiferente(visao) {
     //altera cor para corresponder à seleção
     let rects = d3.selectAll("rect.indiferente");
 
-    console.log(config.parametros_visuais.color_indif[visao])
+    //console.log(config.parametros_visuais.color_indif[visao])
 
     rects
       .transition()
@@ -496,7 +496,7 @@ function muda_cor_indiferente(visao) {
 }
 
 function desloca_barras(otimista_pessimista) {
-    let bars = d3.select("svg").selectAll("g.stacked-bars");
+    let bars = d3.select("svg.svg-satisfacao").selectAll("g.stacked-bars");
 
     let x = d3.scaleLinear()
       .range(config.escalas.x.range)
@@ -558,7 +558,7 @@ function desenha_linha_referencia() {
     .range(config.escalas.x.range)
     .domain(config.escalas.x.domain);
 
-  d3.select("svg")
+  d3.select("svg.svg-satisfacao")
     .append("line")
     .attr("y1", 0)
     .attr("y2", config.parametros_visuais.dimensoes_svg.height)
@@ -597,7 +597,7 @@ function desenha_titulo() {
 
   for (entry of mini_dados) {
 
-    console.log(entry);
+    //console.log(entry);
 
     envelope
       .append("p")
@@ -636,7 +636,7 @@ function desenha_labels(variavel, visao) {
 
   let mini_data = config.dados.categorias[variavel];
 
-  console.log("mini", mini_data)
+  //console.log("mini", mini_data)
 
   let x = d3.scaleLinear()
     .range(config.escalas.x.range)
@@ -664,7 +664,7 @@ function desenha_labels(variavel, visao) {
       .style("text-align", "right")
       .style("color", config.parametros_visuais.colors[0]);
   
-  console.log("Exit selection ", labels_insat.exit());
+  //console.log("Exit selection ", labels_insat.exit());
 
   labels_insat
       .join("em")
@@ -702,7 +702,7 @@ function desenha_labels(variavel, visao) {
     let barra_atual = d3.select(this).node();
 
     let posicao_top_barra = barra_atual.getBoundingClientRect().top - posicao_svg;
-    console.log();
+    //console.log();
 
     let label_insat_dim = labels_insat.nodes()[i].getBoundingClientRect();
     
