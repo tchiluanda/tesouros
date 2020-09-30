@@ -1,17 +1,20 @@
 let frases = [
-    "A amizade é um amor que nunca morre.",
-    "Tão bom morrer de amor! E continuar vivendo...",
-    "Há 2 espécies de chatos: os chatos propriamente ditos e os amigos, que são os nossos chatos prediletos.",
-    "A saudade é o que faz as coisas pararem no Tempo.",
-    "A preguiça é a mãe do progresso. Se o homem não tivesse preguiça de caminhar, não teria inventado a roda."
+  {texto: "Tesouro tem dificuldade em reter seus talentos;", tipo: "azul"},
+  {texto: "Somos ótimos técnicos e o trabalho é motivador", tipo: "laranja"},
+  {texto: "Tesouro é mais importante do que pensa ser;", tipo: "azul"},
+  {texto: "Esperamos clareza nas 'regras do jogo'", tipo: "laranja"},
+  {texto: "Mobilidade e alocação podiam melhorar;", tipo: "azul"},
+  {texto: "Queremos jornada de trabalho flexível!", tipo: "laranja"},
+  {texto: "Perderemos relevância e valorização no futuro?", tipo: "azul"},
+  {texto: "Precisamos de competência gerencial e de comunicação", tipo: "laranja"}
 ];
 
-let $cont_svg = d3.select("div.container-svg");
-let $svg = d3.select("svg");
-let $titulo = d3.select(".titulo > h1");
+const $cont_svg = d3.select("div.container-svg");
+const $svg = d3.select("svg.canvas");
+const $titulo = d3.select(".titulo > h1");
 const $steps = d3.selectAll(".slide");
 let flag = false;
-let t; //, $frases;
+//let t; //, $frases;
 
 // para detectar área do título, em que não podem ser inseridas as frases
 let h0_titulo = $titulo.node().getBoundingClientRect().top;
@@ -31,7 +34,7 @@ let margin = 20;
 console.log(h,w);
 
 let altura_frase, largura_frase;
-let duracao = 2000;
+let duracao = 3000;
 let tempo_total = (duracao * (frases.length - 1)) + (duracao * 2);
 //let $frases;
 
@@ -44,7 +47,8 @@ function insere_frases() {
         .classed("frases", true)
         .style("opacity", 0)
         .append("span")
-        .html(texto => '&ldquo;' + texto + '&rdquo;');
+        .style("background-color", frase => "var(--" + frase.tipo + ")")
+        .html(frase => '&ldquo;' + frase.texto + '&rdquo;');
         //.text(texto => "●" + ' "' + texto + '"');
 
     //$frases = $cont_svg.selectAll("p.frases");
@@ -108,6 +112,8 @@ function anima_frase() {
         .delay((d,i) => i * duracao + duracao)
         .duration(duracao)
         .style("opacity", 0);
+
+    d3.select(".container-geral");
 }
 
 function sumariza_dados(dados, criterio, ordena = false, vetor_ordem) {
@@ -309,7 +315,7 @@ function acrescenta_rotulos(mini_dados, deslocados, quanto) {
 
                 let altura_rotulo = +d3.select(this).style("height").slice(0,-2);
 
-                d3.select("svg")
+                $svg
                   .append("line")
                   .classed("rotulos", true)
                   .attr("x1", left_atual)
@@ -400,32 +406,53 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
 
     insere_frases();
 
+    function aparece_continuar(step, delay = duracao) {
+      d3.select("#" + step + " .continuar")
+      .transition()
+      .delay(delay)
+      .duration(duracao/2)
+      .style("opacity", 1);
+    }
+
+    function desaparece_continuar(step) {
+      d3.select("#" + step + " .continuar").style("opacity", 0);
+    }
+
+
+
+
     function desenha(step, direcao) {
         switch (step) {
-            case 1 :
-                desenha_step1(direcao);
+            case "slide01" :
+                desenha_step1(direcao, step);
                 break;
-            case 2 :
+            case "slide_introducao" :
+                console.log("Hi. Step é ", step);
+                desaparece_continuar(step)
+                desenha_step1a(step);
+                break;
+            case "slide02" :
                 desenha_step2(direcao);
                 d3.select("h2.subtitulo").transition().duration(duracao*3).style("opacity", 1);
                 break;
-            case 3 :
+            case "slide03" :
                 desenha_step3(direcao);
                 break;   
-            case 4 :
+            case "slide04" :
               desenha_step4(direcao);
               break;  
-            case 5 :
+            case "slide05" :
               desenha_step5(direcao);
               break; 
-            case 6 :
+            case "slide06" :
               desenha_step6(direcao);
               break;                            
         }
     }
 
-    function desenha_step1(direcao) {
+    function desenha_step1(direcao, step) {
         if (direcao == "descendo") {
+
         } 
         else {
             $titulo
@@ -445,31 +472,51 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
         }
 
         anima_frase();
-        t = d3.interval(function(elapsed) {
+        aparece_continuar(step, delay = duracao * frases.length)
+        /*t = d3.interval(function(elapsed) {
             console.log(elapsed);
             anima_frase();
-            if (elapsed > 60000) t.stop();
-        }, tempo_total, 0)
+            if (elapsed > (duracao * (frases.length + 1))) t.stop();
+        }, tempo_total, 0)*/
+
+        /*d3.select("#slide1 .continuar")
+          .transition()
+          .delay(duracao * (frases.length + 1))
+          .duration(duracao/2)
+          .style("opacity", 1);*/
     
         flag = false;
+
+        d3.select(".titulo-geral")
+          .style("opacity", 0)
+          .transition()
+          .delay(duracao)
+          .duration(duracao*2)
+          .style("opacity", 1);
+    }
+
+    function desenha_step1a(step) {
+
+      d3.selectAll("p.frases")
+      .transition()
+      .duration(duracao)
+      .style("opacity", 0);
+
+      d3.selectAll("h1")
+        .transition()
+        .duration(duracao/2)
+        .style("opacity", 0);  
+
+      aparece_continuar(step);
+        
     }
 
     function desenha_step2(direcao) {
         if (direcao == "descendo") {
             if (!flag) {
-                t.stop();
+                //t.stop();
                 flag = true;
-            }
-    
-            d3.selectAll("p.frases")
-              .transition()
-              .duration(duracao)
-              .style("opacity", 0);
-    
-            d3.selectAll("h1")
-              .transition()
-              .duration(duracao/2)
-              .style("opacity", 0);       
+            }    
     
             pontos.transition()
               .duration(d => Math.random() * duracao/2)
@@ -557,7 +604,7 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
         offset: 0.5,
         enter: function(el) {
 
-            let step = +el.id.slice(-2);
+            let step = el.id//+el.id.slice(-2);
             // aqui não preciso me preocupar com direção, pq ele só "enter" na descida.
             steps.push(step);
             console.log(steps);
@@ -568,7 +615,7 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
 
         exit: function(el) {
 
-            let step = +el.id.slice(-2) - 1;
+            let step = el.id//+el.id.slice(-2) - 1;
             // pois aqui tb não preciso me preocupar com direção, pq aparentemente só "exit" na subida 
             steps.push(step);
             console.log(steps);

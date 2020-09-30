@@ -11,15 +11,33 @@
 <body>
     <div class="container-geral"> 
         <div class="container-svg">
-            <svg></svg>
+            <svg class="canvas"></svg>
         </div>  
         <article>
             <div class="titulo slide" id="slide01">
-                <h1>Vozes do Tesouro</h1>
+                <h1 class="titulo-geral">Vozes do Tesouro</h1>
+                <div class="continuar">
+                    <p>Role a tela para continuar...</p>
+                    <img src="./img/chevron-down-sm.svg" id="chevron-down">
+                </div>
+            </div> 
+            <div class="slide introducao" id="slide_introducao">
+                <!--<h2 class="titulo">383 pessoas responderam à Pesquisa de Expectativas e Interesses dos Servidores.</h2>-->
+                <div>
+                    <p>Em maio deste ano, o Tesouro fez uma Pesquisa de Expectativas dos Servidores, no âmbito do projeto "Diálogos Estratégicos" &mdash; projeto que promoveu uma discussão a respeito de como se preparar para as transformações pelas quais tem passado a administração pública.</p>
+                    <p>Em plena Pandemia, nada menos que <strong>383 pessoas</strong> responderam o questionário, uma participação extraordinária.
+                    <p>Quem são elas? O que elas querem dizer?</p>
+                    <p>Aqui tentamos mostrar algumas das principais informações coletadas.</p>
+
+                </div>
+
+                <div class="continuar">
+                    <p>Role a tela para continuar...</p>
+                    <img src="./img/chevron-down-sm.svg" id="chevron-down">
+                </div>
             </div> 
             <div class="slide" id="slide02">
                 <!--<h2 class="titulo">383 pessoas responderam à Pesquisa de Expectativas e Interesses dos Servidores.</h2>-->
-                <h2 class="titulo subtitulo">383 pessoas responderam o questionário. </br> Quem são elas? O que elas querem dizer?</h2>
             </div> 
             <div class="slide" id="slide03">
                 <h2><span>1. Idades dos respondentes</span></h2>
@@ -35,7 +53,6 @@
             </div>             
 
         </article>
-
     </div>
     <script src="web/external_scripts/intersection-observer.js"></script>
     <script src="web/external_scripts/enter-view.js"></script>

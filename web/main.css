@@ -5,6 +5,8 @@
     --altura-frase: 2rem;
     --w-mobile: 580px;
     --cor-texto: #222;
+    --azul: #13376D;
+    --laranja: #F25F0F;
     font-family: "Merriweather"
 }
 
@@ -34,25 +36,20 @@ article {
     width: 100vw;
     height: 100vh;
     scroll-snap-align: start;
+    position: relative;
 
 }
 
 .slide > h2 {
     padding-top: 2rem;
     padding-left: 2rem;
-    font-family: "Esteban";
+    /*font-family: "Esteban";*/
     /*font-size: 1.5rem;*/
 }
 
 .slide > h2.titulo {
     /*width: 100%;*/
     text-align: center;
-}
-
-.slide > h2.subtitulo {
-    opacity: 0;
-    max-width: 50%;
-    margin: 0 auto;
 }
 
 .slide > h2 > span {
@@ -70,7 +67,7 @@ article {
 .titulo h1 {
     text-align: center;
     font-size: 5.5rem;
-    font-family: 'Esteban';
+    /*font-family: 'Esteban';*/
 }
 
 .background {
@@ -94,20 +91,60 @@ article {
 
 }
 
+/* info de continuar */
+
+div.continuar {
+    background-color: transparent;
+    z-index: 2;
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    opacity: 0;
+}
+
+div.continuar > img {
+    width: 2.5rem;
+}
+
+div.continuar > p {
+    font-size: 1rem;
+    margin-bottom: 0;
+}
+
+/* slide com texto introdutório */
+
+div.introducao div {
+    max-width: 420px;
+    margin: 0 auto;
+    padding-top: 15vh;
+}
+
+div.introducao div > p {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    font-family: "Merriweather Sans";
+    font-weight: ligther;
+}
+
 
 /******************** vis */
 
 
 .container-svg p.frases {
-    font-family: 'Esteban';
+    /*font-family: 'Esteban';*/
     font-size: 1.25rem;
     position: absolute;
     max-width: 50vw;
 }
 
 .container-svg p.frases span {
-    background-color: ghostwhite;
-    color: var(--cor-texto);
+    color: ghostwhite;
+    padding: .5rem;
+    line-height: 1.5;
 }
 
 /*.container-svg p.frases span::before,
