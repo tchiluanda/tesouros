@@ -34,9 +34,48 @@ let margin = 20;
 console.log(h,w);
 
 let altura_frase, largura_frase;
-let duracao = 3000;
+let duracao = 100;//3000;
 let tempo_total = (duracao * (frases.length - 1)) + (duracao * 2);
 //let $frases;
+
+function calcula_modura(w, h, n) {
+  w = w-15;
+  h = h-15;
+  let taxa = (2*w + 2*h)/n;
+
+  let pos = [];
+
+  for (let x = 0; x <= w; x = x+taxa) {
+
+    pos.push({
+      x_mol : x,
+      y_mol : 5
+    });
+
+    pos.push({
+      x_mol : x,
+      y_mol : h-5
+    })
+  }
+
+  for (let y = 0; y <= h; y = y+taxa) {
+
+    pos.push({
+      x_mol : 5,
+      y_mol : y
+    });
+
+    pos.push({
+      x_mol : w-5,
+      y_mol : y
+    })
+  }
+
+  return pos
+}
+
+let pos = calcula_modura(w, h, 383).slice(0,383);
+console.log(pos)
 
 function insere_frases() {
 
@@ -184,6 +223,8 @@ function prepara_dados(dados, criterio, ordena = false, vetor_ordem, raio, marge
               "categoria" : d[criterio], // que é próprio cat
               "x_ini" : d["x_ini"],
               "y_ini" : d["y_ini"],
+              "x_mol" : d["x_mol"],
+              "y_mol" : d["y_mol"],
               "x" : d.x,
               "y" : d.y,
               "value" : d.value,
@@ -361,10 +402,14 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
         "h" : (h - h_necessario)/2
     };
 
-    grid.forEach(d => {
-        d["x_ini"] = Math.random()*(w-2*margin) + margin;
-        d["y_ini"] = Math.random()*(h-2*margin) + margin;
+    grid.forEach((d,i) => {
+        grid[i]["x_ini"] = Math.random()*(w-2*margin) + margin;
+        grid[i]["y_ini"] = Math.random()*(h-2*margin) + margin;
+        grid[i]["x_mol"] = pos[i].x_mol;
+        grid[i]["y_mol"] = pos[i].y_mol;
     });
+
+    console.log(grid);
 
     let cor_texto = d3.select(":root").style("--cor-texto");
 
@@ -450,7 +495,13 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
                 break; 
             case 7 :
                 desenha_step6(direcao);
-                break;                            
+                break;    
+            case 8 :
+              desenha_detalhe_satisfacao();
+
+
+                
+                break;                        
         }
     }
 
@@ -612,6 +663,17 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
       rotulos_a_deslocar = [1,2],
       deslocamento = {1:80, 2:40},
       vetor_cor = ["#b2182b","#ef8a62","silver","#67a9cf","#2166ac"]);
+  }
+
+  function desenha_detalhe_satisfacao() {
+    d3.selectAll("circle.pontos")
+      .transition()
+      .duration(duracao)
+      .attr("cx", d => d.x_mol)
+      .attr("cy", d => d.y_mol)
+      .attr("fill", "#c3c3c3");
+
+
   }
 
     // setup
