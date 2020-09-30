@@ -224,7 +224,7 @@ function desenha_dados(dados, criterio, ordena, vetor_ordem, raio, margin, rotul
     let altura_total = mini_dados.parametros.largura_eixo_secundario_total;
 
     let margem_inicial_principal = (w - largura_total)/2;
-    let margem_inicial_secundario = (h - altura_total)/2;
+    let margem_inicial_secundario = (h - altura_total)*2.5/4;
 
     let cor = d3.scaleOrdinal()
       .domain(mini_dados.parametros.resumo.map(d => d.categoria))
@@ -237,6 +237,7 @@ function desenha_dados(dados, criterio, ordena, vetor_ordem, raio, margin, rotul
     pontos
       .transition()
       .duration(duracao)
+      .ease(d3.easeExp)
       .attr("cx", d => d.eixo_principal + margem_inicial_principal + mini_dados.parametros.posicoes_iniciais[d.categoria])
       .attr("cy", d => d.eixo_secundario + margem_inicial_secundario)
       .attr("fill", d => cor(d.categoria)); 
@@ -255,7 +256,7 @@ function desenha_dados(dados, criterio, ordena, vetor_ordem, raio, margin, rotul
 function acrescenta_rotulos(mini_dados, deslocados, quanto) {
 
     //remove rótulos pré-existentes.
-    d3.selectAll("div.rotulos")
+    d3.selectAll("div.rotulos *")
       .transition(duracao/2)
       .style("opacity", 0)
       .remove();
@@ -286,7 +287,7 @@ function acrescenta_rotulos(mini_dados, deslocados, quanto) {
     let largura_total = mini_dados.parametros.largura_eixo_principal_total;
     let altura_total = mini_dados.parametros.largura_eixo_secundario_total;
 
-    let margem_inicial_secundario = (h - altura_total)/2;
+    let margem_inicial_secundario = (h - altura_total)*2.5/4;
     let margem_inicial_principal = (w - largura_total)/2;
 
     $rotulos
@@ -420,56 +421,40 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
 
 
 
-
     function desenha(step, direcao) {
+      console.log(step, direcao)
+
+      let slide = "slide" + ("" + step).padStart(2, "0");
+
         switch (step) {
-            case "slide01" :
-                desenha_step1(direcao, step);
+            case 1 :
+                desenha_abertura(direcao, slide);
                 break;
-            case "slide_introducao" :
-                console.log("Hi. Step é ", step);
-                desaparece_continuar(step)
-                desenha_step1a(step);
+            case 2 :
+                console.log("Hi. Step é ", slide);
+                desaparece_continuar(slide)
+                desenha_introducao(direcao, slide);
                 break;
-            case "slide02" :
-                desenha_step2(direcao);
-                d3.select("h2.subtitulo").transition().duration(duracao*3).style("opacity", 1);
+            case 3 :
+                desenha_logo(direcao);
+                //d3.select("h2.subtitulo").transition().duration(duracao*3).style("opacity", 1);
                 break;
-            case "slide03" :
-                desenha_step3(direcao);
+            case 4 :
+                desenha_idade(direcao);
                 break;   
-            case "slide04" :
-              desenha_step4(direcao);
-              break;  
-            case "slide05" :
-              desenha_step5(direcao);
-              break; 
-            case "slide06" :
-              desenha_step6(direcao);
-              break;                            
+            case 5 :
+                desenha_genero(direcao);
+                break;  
+            case 6 :
+                desenha_step5(direcao);
+                break; 
+            case 7 :
+                desenha_step6(direcao);
+                break;                            
         }
     }
 
-    function desenha_step1(direcao, step) {
-        if (direcao == "descendo") {
-
-        } 
-        else {
-            $titulo
-              .transition()
-              .duration(duracao)
-              .style("opacity", 1);
-
-            pontos.transition()
-              .duration(duracao/2)
-              .attr("cx", d => d.x_ini)
-              .attr("cy", d => d.y_ini);
-
-            pontos.transition()
-              .delay(duracao/2)
-              .duration(duracao)
-              .attr("opacity", 0);          
-        }
+    function desenha_abertura(direcao, step) {
 
         anima_frase();
         aparece_continuar(step, delay = duracao * frases.length)
@@ -495,7 +480,27 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
           .style("opacity", 1);
     }
 
-    function desenha_step1a(step) {
+    function desenha_introducao(direcao, step) {
+
+      if (direcao == "descendo") {
+
+      } 
+      else {
+          $titulo
+            .transition()
+            .duration(duracao)
+            .style("opacity", 1);
+
+          pontos.transition()
+            .duration(duracao/2)
+            .attr("cx", d => d.x_ini)
+            .attr("cy", d => d.y_ini);
+
+          pontos.transition()
+            .delay(duracao/2)
+            .duration(duracao)
+            .attr("opacity", 0);          
+      }
 
       d3.selectAll("p.frases")
       .transition()
@@ -511,7 +516,7 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
         
     }
 
-    function desenha_step2(direcao) {
+    function desenha_logo(direcao) {
         if (direcao == "descendo") {
             if (!flag) {
                 //t.stop();
@@ -530,8 +535,19 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
               .attr("cy", d => y(d.y));
 
         } else {
+
+
+          pontos.transition()
+            .duration(duracao/2)
+            .attr("cx", d => d.x_ini)
+            .attr("cy", d => d.y_ini);
+
+          pontos.transition()
+            .delay(duracao/2)
+            .duration(duracao/2)
+            .attr("opacity", 0);   
             
-            pontos.transition()
+          pontos.transition()
                 .duration(duracao)
                 .attr("fill", d => cor_inicial(d.value))
                 .attr("cx", d => x(d.x))
@@ -540,12 +556,13 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
             d3.selectAll(".rotulos")
                 .transition()
                 .duration(duracao)
-                .style("opacity", 0);
+                .style("opacity", 0)
+                .remove();
         }       
 
     }
 
-    function desenha_step3(direcao) {
+    function desenha_idade(direcao) {
 
         desenha_dados(
           dados = grid, 
@@ -559,7 +576,7 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
 
     }
 
-    function desenha_step4(direcao) {
+    function desenha_genero(direcao) {
       desenha_dados(
         dados = grid, 
         criterio = "genero", 
@@ -604,7 +621,7 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
         offset: 0.5,
         enter: function(el) {
 
-            let step = el.id//+el.id.slice(-2);
+            let step = +el.id.slice(-2);
             // aqui não preciso me preocupar com direção, pq ele só "enter" na descida.
             steps.push(step);
             console.log(steps);
@@ -615,7 +632,7 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
 
         exit: function(el) {
 
-            let step = el.id//+el.id.slice(-2) - 1;
+            let step = +el.id.slice(-2) - 1;
             // pois aqui tb não preciso me preocupar com direção, pq aparentemente só "exit" na subida 
             steps.push(step);
             console.log(steps);
