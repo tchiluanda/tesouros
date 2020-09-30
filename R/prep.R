@@ -30,26 +30,9 @@ tab_unidades <- data.frame(
 )
 
 
-# tratamento das colunas de satisfação ------------------------------------
+# código para processar opcoes multiplas ----------------------------------
 
-colunas_sat <- c(
-  "1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Chefia]", 
-  "1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Tipo de trabalho]", 
-  "1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Salário]", 
-  "1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Ambiente]", 
-  "1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Colegas]", 
-  "1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Outros]")
-
-colunas_insat <- c(
-  "1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Chefia]", 
-  "1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Tipo de trabalho]", 
-  "1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Salário]", 
-  "1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Ambiente]", 
-  "1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Colegas]", 
-  "1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Outros]"
-)
-
-processa_sat_insat <- function(colunas) {
+processa_respostas_multiplas <- function(colunas) {
   #colunas <- colunas_sat
   
   posicoes_ini <- str_locate(colunas, "\\[")[, "end"]
@@ -93,11 +76,107 @@ processa_sat_insat <- function(colunas) {
   return(dados_sat_insat)
 }
 
-dados_sat <- processa_sat_insat(colunas_sat)
-dados_insat <- processa_sat_insat(colunas_insat)
+
+# tratamento das colunas de satisfação ------------------------------------
+
+colunas_sat <- c(
+  "1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Chefia]", 
+  "1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Tipo de trabalho]", 
+  "1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Salário]", 
+  "1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Ambiente]", 
+  "1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Colegas]", 
+  "1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Outros]")
+
+colunas_insat <- c(
+  "1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Chefia]", 
+  "1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Tipo de trabalho]", 
+  "1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Salário]", 
+  "1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Ambiente]", 
+  "1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Colegas]", 
+  "1.2 Se você está insatisfeito, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Outros]"
+)
+
+dados_sat <- processa_respostas_multiplas(colunas_sat)
+dados_insat <- processa_respostas_multiplas(colunas_insat)
 
 #ggplot(t, aes(x = n, y = sat, fill = rnk)) + geom_col(position = position_dodge())
 
+
+#  tratamento das colunas de mudar para -----------------------------------
+
+colunas_mudar_para <- c(
+  "4. Se você considera sair do Tesouro, para onde priorizaria se mudar? Escolha até três opções e priorize. [Para outra área do Ministério da Economia]"                                            ,
+  "4. Se você considera sair do Tesouro, para onde priorizaria se mudar? Escolha até três opções e priorize. [Para outra área do Governo Federal]"                                                   ,
+  "4. Se você considera sair do Tesouro, para onde priorizaria se mudar? Escolha até três opções e priorize. [Para o governo do GDF ou de outros estados e municípios]"                              ,
+  "4. Se você considera sair do Tesouro, para onde priorizaria se mudar? Escolha até três opções e priorize. [Para o setor privado]"                                                                 ,
+  "4. Se você considera sair do Tesouro, para onde priorizaria se mudar? Escolha até três opções e priorize. [Para o terceiro setor]"                                                                ,
+  "4. Se você considera sair do Tesouro, para onde priorizaria se mudar? Escolha até três opções e priorize. [Para organismos internacionais]"                                                       ,
+  "4. Se você considera sair do Tesouro, para onde priorizaria se mudar? Escolha até três opções e priorize. [Para algum lugar que ofereça teletrabalho ou horário mais flexível]"                   ,
+  "4. Se você considera sair do Tesouro, para onde priorizaria se mudar? Escolha até três opções e priorize. [Outros]"                                      
+)
+
+dados_mudar_para <- processa_respostas_multiplas(colunas_mudar_para) %>%
+  select(id, mudar_para = primeira)
+
+
+# tratamento das colunas de apoio -----------------------------------------
+
+colunas_apoio <- c(
+  "5. Que tipo de apoio o Tesouro pode proporcionar a você em dez anos que ele não oferece hoje e que você considera prioritário? Escolha até três opções e priorize. [Desenvolvimento profissional]",
+  "5. Que tipo de apoio o Tesouro pode proporcionar a você em dez anos que ele não oferece hoje e que você considera prioritário? Escolha até três opções e priorize. [Organização do trabalho]"     ,
+  "5. Que tipo de apoio o Tesouro pode proporcionar a você em dez anos que ele não oferece hoje e que você considera prioritário? Escolha até três opções e priorize. [Supervisão]"                  ,
+  "5. Que tipo de apoio o Tesouro pode proporcionar a você em dez anos que ele não oferece hoje e que você considera prioritário? Escolha até três opções e priorize. [Capacitação]"                 ,
+  "5. Que tipo de apoio o Tesouro pode proporcionar a você em dez anos que ele não oferece hoje e que você considera prioritário? Escolha até três opções e priorize. [Coaching]"                    ,
+  "5. Que tipo de apoio o Tesouro pode proporcionar a você em dez anos que ele não oferece hoje e que você considera prioritário? Escolha até três opções e priorize. [Outros]"
+)
+
+dados_apoio <- processa_respostas_multiplas(colunas_apoio) %>%
+  select(id, apoio = primeira)
+
+
+# tratamento das colunas de maior temor -----------------------------------
+
+colunas_temor <- c(
+  "7. Qual seu maior temor em relação ao Tesouro nos próximos dez anos? Escolha até três opções e hierarquize.  [Chefia]"                                                                            ,
+  "7. Qual seu maior temor em relação ao Tesouro nos próximos dez anos? Escolha até três opções e hierarquize.  [Trabalho]"                                                                          ,
+  "7. Qual seu maior temor em relação ao Tesouro nos próximos dez anos? Escolha até três opções e hierarquize.  [Cargo]"                                                                             ,
+  "7. Qual seu maior temor em relação ao Tesouro nos próximos dez anos? Escolha até três opções e hierarquize.  [Remuneração]"                                                                       ,
+  "7. Qual seu maior temor em relação ao Tesouro nos próximos dez anos? Escolha até três opções e hierarquize.  [Ambiente]"                                                                          ,
+  "7. Qual seu maior temor em relação ao Tesouro nos próximos dez anos? Escolha até três opções e hierarquize.  [Outros]"
+)
+
+dados_temor <- processa_respostas_multiplas(colunas_temor) %>%
+  select(id, temor = primeira)
+
+
+# tratamento das colunas de diferente em dez anos -------------------------
+
+colunas_diferente_lp <- c(
+  "2. Daqui a dez anos, o que você gostaria que fosse diferente no Tesouro?  Escolha até três e priorize.  [Organização do trabalho]"                                                                ,
+  "2. Daqui a dez anos, o que você gostaria que fosse diferente no Tesouro?  Escolha até três e priorize.  [Processo decisório]"                                                                     ,
+  "2. Daqui a dez anos, o que você gostaria que fosse diferente no Tesouro?  Escolha até três e priorize.  [Estrutura]"                                                                              ,
+  "2. Daqui a dez anos, o que você gostaria que fosse diferente no Tesouro?  Escolha até três e priorize.  [Liderança]"                                                                              ,
+  "2. Daqui a dez anos, o que você gostaria que fosse diferente no Tesouro?  Escolha até três e priorize.  [Estrutura de incentivos]"                                                                ,
+  "2. Daqui a dez anos, o que você gostaria que fosse diferente no Tesouro?  Escolha até três e priorize.  [Outros]"
+)
+
+dados_diferente_lp <- processa_respostas_multiplas(colunas_diferente_lp) %>%
+  select(id, diferente_lp = primeira)
+
+
+# tratamento das colunas de mudancas lp -----------------------------------
+
+colunas_mudancas_lp <- c(
+  "3. Qual das mudanças listadas você imagina ver implantadas em dez anos? Escolha até três e priorize. [Supressão de níveis hierárquicos]"                                                          ,
+  "3. Qual das mudanças listadas você imagina ver implantadas em dez anos? Escolha até três e priorize. [Diminuição do número de servidores]"                                                        ,
+  "3. Qual das mudanças listadas você imagina ver implantadas em dez anos? Escolha até três e priorize. [Teletrabalho]"                                                                              ,
+  "3. Qual das mudanças listadas você imagina ver implantadas em dez anos? Escolha até três e priorize. [Automação da maioria das ocupações atuais]"                                                 ,
+  "3. Qual das mudanças listadas você imagina ver implantadas em dez anos? Escolha até três e priorize. [Eliminação de processos no papel]"                                                          ,
+  "3. Qual das mudanças listadas você imagina ver implantadas em dez anos? Escolha até três e priorize. [Outros]"
+)
+
+dados_mudancas_lp <- processa_respostas_multiplas(colunas_mudancas_lp) %>%
+  select(id, mudancas_lp = primeira)
 
 # prepara tabela principal ------------------------------------------------
 
@@ -114,6 +193,15 @@ dados <- dados_raw %>%
     "funcao" = `10. Qual a sua função atual?`,
     "satisfacao" = `1. Você está satisfeito com a sua situação atual no Tesouro?`,
     "ascender" = `2. Você pretende ou espera ascender dentro do Tesouro?`,
+    "mudar" = `3. O que você acha mais importante mudar hoje no seu trabalho?`,
+    "desafio" = `1. Na sua opinião, qual(is) o(s) principal(is)  desafio(s) imediato(s) que o Tesouro enfrenta?`,
+    "ponto_forte" = `2. Qual(is) o(s) principal(is) ponto(s) forte(s) do Tesouro?`,
+    "ameaca" = `3. Qual(is) a(s) principal(is) ameaça(s) ao Tesouro?`,
+    "limitador" = `4. Na sua opinião, qual(is) o(s) principal(is) limitador(es) do Tesouro hoje?`,
+    "dez_anos" = `1. Você se vê daqui a dez anos:`,
+    "onde_se_ve" = `2. Onde você se vê em dez anos?`,
+    "aposentando" = `6. Você se vê aposentando no Tesouro?`,
+    "motivacao_lp" = `9. Qual sua principal motivação no Tesouro no longo prazo?`
     # "razoes_sat_chefia" = `1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Chefia]`, 
     # "razoes_sat_tipo_trabalho" = `1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Tipo de trabalho]`, 
     # "razoes_sat_salario" = `1.1 Se você está satisfeito ou indiferente, qual(is) a(s) principal(is) razão(ões) para essa percepção? Escolha até três opções e priorize. [Salário]`,
@@ -135,10 +223,17 @@ dados <- dados_raw %>%
   left_join(tab_unidades) %>%
   left_join(dados_sat) %>%
   left_join(dados_insat, by = "id", suffix = c(".sat", ".insat")) %>%
+  left_join(dados_mudar_para) %>%
+  left_join(dados_apoio) %>%
+  left_join(dados_temor) %>%
+  left_join(dados_diferente_lp) %>%
+  left_join(dados_mudancas_lp) %>%
   bind_cols(grid)
 
 
 # explorações -------------------------------------------------------------
+
+ggplot(dados, aes(y = mudar_para)) + geom_bar()
 
 dados %>% filter(insatisfeita) %>% group_by(genero) %>% count(primeira.insat)
 
