@@ -178,6 +178,14 @@ colunas_mudancas_lp <- c(
 dados_mudancas_lp <- processa_respostas_multiplas(colunas_mudancas_lp) %>%
   select(id, mudancas_lp = primeira)
 
+# mudancas
+principais_mudancas <- dados %>% 
+  count(mudar) %>% 
+  arrange(desc(n)) %>% 
+  .$mudar %>% 
+  unlist() %>% 
+  .[1:6]
+
 # prepara tabela principal ------------------------------------------------
 
 grid <- read_rds("./R/dados/grid.rds")
@@ -219,7 +227,8 @@ dados <- dados_raw %>%
     tempo_tesouro = factor(tempo_tesouro, levels = c("Até 5 anos", "De 6 a 10 anos", "De 11 a 20 anos", "De 21 a 30 anos", 
                            "Mais de 30 anos"), ordered = TRUE),
     satisfacao = factor(satisfacao, levels = rev(c("Não", "Possivelmente não", "Sinto-me indiferente", "Basicamente sim", "Sim")), ordered = T),
-    insatisfeita = satisfacao %in% c("Não", "Possivelmente não")) %>%
+    insatisfeita = satisfacao %in% c("Não", "Possivelmente não"),
+    mudar = ifelse(mudar %in% principais_mudancas, mudar, "Outros")) %>%
   left_join(tab_unidades) %>%
   left_join(dados_sat) %>%
   left_join(dados_insat, by = "id", suffix = c(".sat", ".insat")) %>%
