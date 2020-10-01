@@ -34,7 +34,7 @@ let margin = 20;
 console.log(h,w);
 
 let altura_frase, largura_frase;
-let duracao = 100;//3000;
+let duracao = 1000;//3000;
 let tempo_total = (duracao * (frases.length - 1)) + (duracao * 2);
 //let $frases;
 
@@ -142,14 +142,14 @@ function anima_frase() {
 
     $frases
         .transition()
-        .delay((d,i) => i * duracao)
-        .duration(duracao)
+        .delay((d,i) => i * duracao*3)
+        .duration(duracao*3)
         .style("opacity", 1);
     
     $frases
         .transition()
-        .delay((d,i) => i * duracao + duracao)
-        .duration(duracao)
+        .delay((d,i) => i * duracao*3 + duracao*3)
+        .duration(duracao*3)
         .style("opacity", 0);
 
     d3.select(".container-geral");
