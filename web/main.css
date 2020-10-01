@@ -125,7 +125,8 @@ article {
 div.introducao div {
     max-width: 420px;
     margin: 0 auto;
-    padding-top: 15vh;
+    padding: 15vh 1rem 1rem 1rem;
+
 }
 
 div.introducao div > p {
@@ -169,6 +170,16 @@ div.introducao div > p {
 .container-svg div.rotulos p {
     font-size: .7rem;
 }
+
+/* sumarios */
+
+div.chart-sumario {
+    margin: 1rem;
+    margin-left: 6vw;
+    position: relative;
+}
+
+
 
 /***************** stacked bar charts */
 

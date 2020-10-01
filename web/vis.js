@@ -374,7 +374,13 @@ function acrescenta_rotulos(mini_dados, deslocados, quanto) {
     }
 }
 
-d3.csv("./web/dados/data.csv").then(function(grid) {
+Promise.all([
+  d3.csv("./web/dados/data.csv"),
+  d3.csv("./web/dados/contagens.csv")
+]).then(function(files) {
+
+    const grid = files[0];
+    const contagens = files[1];
 
     config.dados["grid_data"] = grid; // para os stacks
     console.log(grid.columns);
@@ -512,7 +518,10 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
               break;    
             case 10 :
               desenha_mudar_para();
-              break;                          
+              break;     
+              case 11 :
+                desenha_desafio();
+                break;                       
         }
     }
 
@@ -699,6 +708,26 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
       rotulos_a_deslocar = [1,2,3],
       deslocamento = {1:120, 2:90, 3:60})
   }
+
+  function desenha_desafio() {
+
+    d3.selectAll("div.rotulos *")
+      .transition(duracao/2)
+      .style("opacity", 0)
+      .remove();
+
+    d3.selectAll("line.rotulos").remove();
+
+    d3.selectAll("circle.pontos")
+      .transition()
+      .duration(duracao)
+      .attr("cx", d => d.x_mol)
+      .attr("cy", d => d.y_mol)
+      .attr("fill", "#c3c3c3");
+
+    sumarios(contagens, "desafio", "laranja")
+  }
+
 
   function desenha_detalhe_satisfacao() {
 
