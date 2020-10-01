@@ -269,6 +269,10 @@ sumariza_multiplas <- function(...) {
     filter(!is.na(opcao)) %>%
     count(opcao)
   
+  variavel <- paste0(...)
+  
+  result$variavel <- variavel
+
   return(result)
 }
 
