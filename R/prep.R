@@ -118,6 +118,13 @@ colunas_mudar_para <- c(
 dados_mudar_para <- processa_respostas_multiplas(colunas_mudar_para) %>%
   select(id, mudar_para = primeira)
 
+# mudancas
+principais_mudancas_para <- dados %>% 
+  count(mudar_para) %>% 
+  arrange(desc(n)) %>% 
+  .$mudar_para %>% 
+  unlist() %>% 
+  .[1:6]
 
 # tratamento das colunas de apoio -----------------------------------------
 
@@ -237,7 +244,11 @@ dados <- dados_raw %>%
   left_join(dados_temor) %>%
   left_join(dados_diferente_lp) %>%
   left_join(dados_mudancas_lp) %>%
-  bind_cols(grid)
+  bind_cols(grid) %>%
+  mutate(mudar_para = case_when(
+    is.na(mudar_para) ~ "Não considera sair", 
+    mudar_para %in% principais_mudancas_para ~ mudar_para,
+    TRUE ~ "Outros"))
 
 
 # explorações -------------------------------------------------------------
