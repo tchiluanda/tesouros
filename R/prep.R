@@ -276,11 +276,16 @@ sumariza_multiplas <- function(...) {
   return(result)
 }
 
-des <- sumariza_multiplas("desafio")
+variaveis <- c("desafio", "ponto_forte", "ameaca", "limitador")
 
+contagens <- map(variaveis, sumariza_multiplas) %>%
+  bind_rows()
 
-
-
+contagens_resumida <- contagens %>%
+  mutate(opcao = ifelse(n < 2, "Outros", opcao)) %>%
+  group_by(variavel, opcao) %>%
+  summarise(n = sum(n)) %>%
+  ungroup()
 
 # explorações -------------------------------------------------------------
 
@@ -461,6 +466,7 @@ sumario("subsec")
 # exporta os dados --------------------------------------------------------
 
 dados %>% write.csv(file = "./web/dados/data.csv", fileEncoding = "UTF-8")
+contagens_resumida %>% write.csv(file = "./web/dados/contagens.csv", fileEncoding = "UTF-8")
 
 
 # misc --------------------------------------------------------------------
