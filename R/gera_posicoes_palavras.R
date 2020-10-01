@@ -3,6 +3,7 @@ library(readxl)
 library(jsonlite)
 
 grid <- read_excel("./R/dados/grid_letras.xlsx", sheet = "logo_tesouro")
+grid <- read_excel("./R/dados/grid_letras.xlsx", sheet = "coracao")
 
 new_grid <- as.data.frame(grid[,-1])
 
@@ -47,7 +48,7 @@ ggplot(exportar, aes(x = x, y = y, color = factor(value))) +
   scale_y_reverse() +
   
 write.csv(exportar, file = "web/dados/logo.csv")
-write_rds(exportar, "./R/dados/grid.rds")
+write_rds(exportar, "./R/dados/coracao.rds")
 
 ## experimentos
 
