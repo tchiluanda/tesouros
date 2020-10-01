@@ -186,13 +186,29 @@ colunas_mudancas_lp <- c(
 dados_mudancas_lp <- processa_respostas_multiplas(colunas_mudancas_lp) %>%
   select(id, mudancas_lp = primeira)
 
-# mudancas
+
+# simplificando algumas opcoes --------------------------------------------
+
 principais_mudancas <- dados %>% 
   count(mudar) %>% 
   arrange(desc(n)) %>% 
   .$mudar %>% 
   unlist() %>% 
   .[1:6]
+
+principais_onde_se_ve <- dados_raw %>% 
+  count(`2. Onde você se vê em dez anos?`) %>% 
+  arrange(desc(n)) %>% 
+  filter(n>30) %>%
+  .[,1] %>%
+  unlist()
+
+principais_motivacao_lp <- dados_raw %>% 
+  count(`9. Qual sua principal motivação no Tesouro no longo prazo?`) %>% 
+  arrange(desc(n)) %>% 
+  filter(n>20) %>%
+  .[,1] %>%
+  unlist()
 
 # prepara tabela principal ------------------------------------------------
 
@@ -236,7 +252,9 @@ dados <- dados_raw %>%
                            "Mais de 30 anos"), ordered = TRUE),
     satisfacao = factor(satisfacao, levels = rev(c("Não", "Possivelmente não", "Sinto-me indiferente", "Basicamente sim", "Sim")), ordered = T),
     insatisfeita = satisfacao %in% c("Não", "Possivelmente não"),
-    mudar = ifelse(mudar %in% principais_mudancas, mudar, "Outros")) %>%
+    mudar = ifelse(mudar %in% principais_mudancas, mudar, "Outros"),
+    onde_se_ve = ifelse(onde_se_ve %in% principais_onde_se_ve, onde_se_ve, "Outros"),
+    motivacao_lp = ifelse(motivacao_lp %in% principais_motivacao_lp, motivacao_lp, "Outros")) %>%
   left_join(tab_unidades) %>%
   left_join(dados_sat) %>%
   left_join(dados_insat, by = "id", suffix = c(".sat", ".insat")) %>%
@@ -246,10 +264,17 @@ dados <- dados_raw %>%
   left_join(dados_diferente_lp) %>%
   left_join(dados_mudancas_lp) %>%
   bind_cols(grid) %>%
-  mutate(mudar_para = case_when(
-    is.na(mudar_para) ~ "Não considera sair", 
-    mudar_para %in% principais_mudancas_para ~ mudar_para,
-    TRUE ~ "Outros"))
+  mutate(
+    mudar_para = case_when(
+      is.na(mudar_para) ~ "Não considera sair", 
+      mudar_para %in% principais_mudancas_para ~ mudar_para,
+      TRUE ~ "Outros"),
+    apoio = ifelse(is.na(apoio), "Nenhum", apoio),
+    temor = ifelse(is.na(temor), "Nenhum", temor),
+    diferente_lp = ifelse(is.na(diferente_lp), "Nenhum", diferente_lp),
+    mudancas_lp = ifelse(is.na(mudancas_lp), "Nenhum", mudancas_lp),
+    aposentando = ifelse(aposentando == "no governo federal, não necessariamente no Tesouro",
+                         "No Governo, mas não no Tesouro", aposentando))
 
 
 
@@ -471,6 +496,8 @@ contagens_resumida %>% write.csv(file = "./web/dados/contagens.csv", fileEncodin
 
 # misc --------------------------------------------------------------------
 
+dados %>% count(temor)
+dados %>% count(mudancas_lp)
 dput(unique(dados_raw$`1. Idade`))
 dput(unique(dados_raw$`3. Escolaridade`))
 dput(unique(dados_raw$`1. Você está satisfeito com a sua situação atual no Tesouro?`))
