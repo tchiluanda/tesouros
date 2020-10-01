@@ -520,18 +520,61 @@ Promise.all([
               desenha_mudar_para();
               break;     
             case 11 :
-              desenha_desafio();
+              desenha_moldura();
+              sumarios(contagens, "desafio", "azul");
               break;    
             case 12 :
-              sumarios(contagens, "ponto_forte", "laranja")
+              sumarios(contagens, "ponto_forte", "laranja");
               break;   
             case 13 :
-              sumarios(contagens, "ameaca", "azul")
+              sumarios(contagens, "ameaca", "azul");
               break;    
             case 14 :
-              sumarios(contagens, "limitador", "azul")
-              break;     
+              desenha_moldura();
+              sumarios(contagens, "limitador", "azul");
+              break;  
+            case 15 :
+              desenha_dez_anos();
+              break;    
+            case 16 :
+              desenha_onde_se_ve();
+              break;   
+            case 17 :
+              desenha_apoio();
+              break;  
+            case 18 :
+              desenha_aposentando();
+              break; 
+            case 19 :
+              desenha_temor();
+              break;   
+            case 20 :
+              desenha_motivacao_lp();
+              break;    
+            case 21 :
+              desenha_diferente_lp();
+              break;   
+            case 22 :
+              desenha_mudancas_lp();
+              break;   
         }
+    }
+
+    function desenha_moldura() {
+
+      d3.selectAll("div.rotulos *")
+      .transition(duracao/2)
+      .style("opacity", 0)
+      .remove();
+
+      d3.selectAll("line.rotulos").remove();
+
+      d3.selectAll("circle.pontos")
+        .transition()
+        .duration(duracao)
+        .attr("cx", d => d.x_mol)
+        .attr("cy", d => d.y_mol)
+        .attr("fill", "#c3c3c3");
     }
 
     function desenha_abertura(direcao, step) {
@@ -718,23 +761,100 @@ Promise.all([
       deslocamento = {1:120, 2:90, 3:60})
   }
 
-  function desenha_desafio() {
+  function desenha_dez_anos() {
+    desenha_dados(
+      dados = grid, 
+      criterio = "dez_anos", 
+      ordena = true, 
+      vetor_ordem = false,
+      raio, 
+      margin,
+      rotulos_a_deslocar = [0,1,2,3],
+      deslocamento = {0:120, 1:90, 2:60, 3:30})
+  }
 
-    d3.selectAll("div.rotulos *")
-      .transition(duracao/2)
-      .style("opacity", 0)
-      .remove();
+  function desenha_onde_se_ve() {
+    desenha_dados(
+      dados = grid, 
+      criterio = "onde_se_ve", 
+      ordena = true, 
+      vetor_ordem = false,
+      raio, 
+      margin,
+      rotulos_a_deslocar = [1,2],
+      deslocamento = {1:70, 2:35})
+  }
 
-    d3.selectAll("line.rotulos").remove();
+  function desenha_apoio() {
+    desenha_dados(
+      dados = grid, 
+      criterio = "apoio", 
+      ordena = true, 
+      vetor_ordem = false,
+      raio, 
+      margin,
+      rotulos_a_deslocar = [1],
+      deslocamento = 35)
+  }
 
-    d3.selectAll("circle.pontos")
-      .transition()
-      .duration(duracao)
-      .attr("cx", d => d.x_mol)
-      .attr("cy", d => d.y_mol)
-      .attr("fill", "#c3c3c3");
+  function desenha_aposentando() {
+    desenha_dados(
+      dados = grid, 
+      criterio = "aposentando", 
+      ordena = true, 
+      vetor_ordem = false,
+      raio, 
+      margin,
+      rotulos_a_deslocar = [2],
+      deslocamento = 35)
+  }
 
-    sumarios(contagens, "desafio", "azul")
+  function desenha_temor() {
+    desenha_dados(
+      dados = grid, 
+      criterio = "temor", 
+      ordena = true, 
+      vetor_ordem = false,
+      raio, 
+      margin,
+      rotulos_a_deslocar = false,
+      deslocamento = 0)
+  }
+
+  function desenha_motivacao_lp() {
+    desenha_dados(
+      dados = grid, 
+      criterio = "motivacao_lp", 
+      ordena = true, 
+      vetor_ordem = false,
+      raio, 
+      margin,
+      rotulos_a_deslocar = [3],
+      deslocamento = 60)
+  }
+
+  function desenha_diferente_lp() {
+    desenha_dados(
+      dados = grid, 
+      criterio = "diferente_lp", 
+      ordena = true, 
+      vetor_ordem = false,
+      raio, 
+      margin,
+      rotulos_a_deslocar = [1,4],
+      deslocamento = {1:60, 4:60})
+  }
+
+  function desenha_mudancas_lp() {
+    desenha_dados(
+      dados = grid, 
+      criterio = "mudancas_lp", 
+      ordena = true, 
+      vetor_ordem = false,
+      raio, 
+      margin,
+      rotulos_a_deslocar = [1,2,3,4],
+      deslocamento = {1:120, 2:90, 3:60, 4:30})
   }
 
 
