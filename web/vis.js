@@ -227,6 +227,8 @@ function prepara_dados(dados, criterio, ordena = false, vetor_ordem, raio, marge
               "y_ini" : d["y_ini"],
               "x_mol" : d["x_mol"],
               "y_mol" : d["y_mol"],
+              "x_S3"  : d["x_S3"],
+              "y_S3"  : d["y_S3"],
               "x" : d.x,
               "y" : d.y,
               "value" : d.value,
@@ -556,8 +558,23 @@ Promise.all([
               break;   
             case 22 :
               desenha_mudancas_lp();
-              break;   
+              break;  
+            case 23 :
+              desenha_moldura();
+              break;               
+            case 24 :
+              desenha_coracao();
+              break;  
         }
+    }
+
+    function desenha_coracao() {
+      pontos.transition()
+        .delay(duracao/2)
+        .duration(duracao)
+        .attr("cx", d => x(d.x_S3))
+        .attr("cy", d => y(d.y_S3))
+        .attr("fill", "tomato");
     }
 
     function desenha_moldura() {
