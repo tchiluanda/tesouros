@@ -179,6 +179,11 @@ div.chart-sumario {
     position: relative;
 }
 
+div.chart-sumario > p {
+    position: absolute;
+    font-size: 12px;
+    font-family: "Merriweather Sans";
+}
 
 
 /***************** stacked bar charts */

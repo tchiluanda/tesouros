@@ -40,7 +40,7 @@ function sumarios(contagens, variavel, cor) {
         const margin = 10;
     
         const altura_barra = 20;
-        const altura_categoria = 45;
+        const altura_categoria = 50;
         const qde_categorias = mini_dados.length;
         const altura_necessaria = altura_categoria * (qde_categorias + 2); // +2 para o padding outer 
     
@@ -67,8 +67,23 @@ function sumarios(contagens, variavel, cor) {
           .attr("x", margin)
           .attr("y", d => y(d.opcao))
           .attr("height", altura_barra)
+          .attr("width", 0)
+          .attr("fill", "var(--" + cor + ")")
+          .transition()
+          .duration(1000)
           .attr("width", d => size(d.n))
-          .attr("fill", "var(--" + cor + ")");
+
+        // faz os rotulos
+
+        let rotulos = envelope
+          .selectAll("p.rotulos-" + variavel)
+          .data(mini_dados)
+          .join("p")
+          .classed("rotulos-" + variavel, true)
+          .style("left", margin + "px")
+          .style("top", d => (y(d.opcao) - 17) + "px")
+          .html(d => d.opcao + " <strong style='color:var(--" + cor + ");'>" + d.n + "<strong>");
+
     
     }
 
