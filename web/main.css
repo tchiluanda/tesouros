@@ -52,12 +52,17 @@ article {
     font-style: italic;
 }
 
-.slide > h2.titulo {
+.slide > p.disclaimer {
     /*width: 100%;*/
+    padding-top: 2rem;
     text-align: center;
 }
 
-.slide > h2 > span {
+.slide > h2::after {
+    content: "";
+    display: block;
+    margin-top: 0rem;
+    width: 20vw;
     padding-bottom: .5rem;
     border-bottom: 5px solid var(--cor-texto);
 }
@@ -123,7 +128,7 @@ article {
 /* slide com texto introdutório */
 
 div.introducao div {
-    max-width: 420px;
+    max-width: 460px;
     margin: 0 auto;
     padding: 15vh 1rem 1rem 1rem;
 
@@ -131,8 +136,9 @@ div.introducao div {
 
 div.introducao div > p {
     margin-bottom: 1rem;
-    font-size: 1.2rem;
-    font-family: "Merriweather Sans";
+    font-size: 1.1rem;
+    line-height: 1.4;
+    font-family: "Merriweather";
     font-weight: lighter;
 }
 
