@@ -213,6 +213,8 @@ principais_motivacao_lp <- dados_raw %>%
 # prepara tabela principal ------------------------------------------------
 
 grid <- read_rds("./R/dados/grid.rds")
+coracao <- read_rds("./R/dados/coracao.rds") %>%
+  select(x_S3 = x, y_S3 = y)
 
 dados <- dados_raw %>%
   select(
@@ -264,6 +266,7 @@ dados <- dados_raw %>%
   left_join(dados_diferente_lp) %>%
   left_join(dados_mudancas_lp) %>%
   bind_cols(grid) %>%
+  bind_cols(coracao) %>%
   mutate(
     mudar_para = case_when(
       is.na(mudar_para) ~ "Não considera sair", 
