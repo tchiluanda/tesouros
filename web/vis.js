@@ -681,8 +681,8 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
       vetor_ordem = false,
       raio, 
       margin,
-      rotulos_a_deslocar = false,//[1,2],
-      deslocamento = 0)//{1:80, 2:40}
+      rotulos_a_deslocar = [3,4,5],
+      deslocamento = {3:120, 4:80, 5:40})
   }
 
   function desenha_detalhe_satisfacao() {
