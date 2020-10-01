@@ -126,6 +126,7 @@ principais_mudancas_para <- dados %>%
   unlist() %>% 
   .[1:6]
 
+
 # tratamento das colunas de apoio -----------------------------------------
 
 colunas_apoio <- c(
@@ -249,6 +250,32 @@ dados <- dados_raw %>%
     is.na(mudar_para) ~ "Não considera sair", 
     mudar_para %in% principais_mudancas_para ~ mudar_para,
     TRUE ~ "Outros"))
+
+
+
+# multiplas escolhas ------------------------------------------------------
+
+sumariza_multiplas <- function(...) {
+  qde <- dados %>% 
+    select(...) %>% 
+    unlist() %>% 
+    str_count(";") %>% 
+    max()
+  
+  result <- dados %>%
+    select(...) %>%
+    separate(..., into = letters[1:qde], sep = ";") %>%
+    gather(key = "nao_interessa", value = "opcao") %>%
+    filter(!is.na(opcao)) %>%
+    count(opcao)
+  
+  return(result)
+}
+
+des <- sumariza_multiplas("desafio")
+
+
+
 
 
 # explorações -------------------------------------------------------------
