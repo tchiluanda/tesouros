@@ -267,7 +267,7 @@ function desenha_dados(dados, criterio, ordena, vetor_ordem, raio, margin, rotul
     let altura_total = mini_dados.parametros.largura_eixo_secundario_total;
 
     let margem_inicial_principal = (w - largura_total)/2;
-    let margem_inicial_secundario = (h - altura_total)*2.5/4;
+    let margem_inicial_secundario = (h - altura_total)*3/4;
 
     let cor = d3.scaleOrdinal()
       .domain(mini_dados.parametros.resumo.map(d => d.categoria))
@@ -330,7 +330,7 @@ function acrescenta_rotulos(mini_dados, deslocados, quanto) {
     let largura_total = mini_dados.parametros.largura_eixo_principal_total;
     let altura_total = mini_dados.parametros.largura_eixo_secundario_total;
 
-    let margem_inicial_secundario = (h - altura_total)*2.5/4;
+    let margem_inicial_secundario = (h - altura_total)*3/4;
     let margem_inicial_principal = (w - largura_total)/2;
 
     $rotulos
@@ -507,9 +507,12 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
             case 8 :
               desenha_detalhe_satisfacao();
               break;   
-              case 9 :
-                desenha_mudar();
-                break;                         
+            case 9 :
+              desenha_mudar();
+              break;    
+            case 10 :
+              desenha_mudar_para();
+              break;                          
         }
     }
 
@@ -685,6 +688,18 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
       deslocamento = {3:120, 4:80, 5:40})
   }
 
+  function desenha_mudar_para() {
+    desenha_dados(
+      dados = grid, 
+      criterio = "mudar_para", 
+      ordena = true, 
+      vetor_ordem = false,
+      raio, 
+      margin,
+      rotulos_a_deslocar = [1,2,3],
+      deslocamento = {1:120, 2:90, 3:60})
+  }
+
   function desenha_detalhe_satisfacao() {
 
     d3.selectAll("div.rotulos *")
@@ -700,9 +715,9 @@ d3.csv("./web/dados/data.csv").then(function(grid) {
       .attr("cx", d => d.x_mol)
       .attr("cy", d => d.y_mol)
       .attr("fill", "#c3c3c3");
-
-
   }
+
+  
 
     // setup
     let steps = [];

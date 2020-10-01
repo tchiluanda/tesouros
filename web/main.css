@@ -40,11 +40,16 @@ article {
 
 }
 
-.slide > h2 {
+.slide > h2,
+.slide > h2 + p {
     padding-top: 2rem;
     padding-left: 2rem;
     /*font-family: "Esteban";*/
     /*font-size: 1.5rem;*/
+}
+
+.slide > h2 + p {
+    font-style: italic;
 }
 
 .slide > h2.titulo {
