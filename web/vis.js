@@ -597,7 +597,7 @@ Promise.all([
     function desenha_abertura(direcao, step) {
 
         anima_frase();
-        aparece_continuar(step, delay = duracao * frases.length)
+        aparece_continuar(step, delay = duracao * 3 * frases.length)
         /*t = d3.interval(function(elapsed) {
             console.log(elapsed);
             anima_frase();
@@ -615,7 +615,7 @@ Promise.all([
         d3.select(".titulo-geral")
           .style("opacity", 0)
           .transition()
-          .delay(duracao)
+          .delay(duracao*3)
           .duration(duracao*2)
           .style("opacity", 1);
     }
