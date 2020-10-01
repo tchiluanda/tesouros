@@ -183,6 +183,11 @@ div.chart-sumario > p {
     position: absolute;
     font-size: 12px;
     font-family: "Merriweather Sans";
+    font-weight: 100;
+}
+
+div.chart-sumario > p > strong {
+    padding-left: 2px;
 }
 
 

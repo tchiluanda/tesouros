@@ -519,9 +519,18 @@ Promise.all([
             case 10 :
               desenha_mudar_para();
               break;     
-              case 11 :
-                desenha_desafio();
-                break;                       
+            case 11 :
+              desenha_desafio();
+              break;    
+            case 12 :
+              sumarios(contagens, "ponto_forte", "laranja")
+              break;   
+            case 13 :
+              sumarios(contagens, "ameaca", "azul")
+              break;    
+            case 14 :
+              sumarios(contagens, "limitador", "azul")
+              break;     
         }
     }
 
@@ -725,7 +734,7 @@ Promise.all([
       .attr("cy", d => d.y_mol)
       .attr("fill", "#c3c3c3");
 
-    sumarios(contagens, "desafio", "laranja")
+    sumarios(contagens, "desafio", "azul")
   }
 
 
