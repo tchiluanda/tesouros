@@ -497,7 +497,7 @@ Promise.all([
                 desenha_introducao(direcao, slide);
                 break;
             case 3 :
-                desenha_logo(direcao);
+                desenha_logo(direcao, slide);
                 //d3.select("h2.subtitulo").transition().duration(duracao*3).style("opacity", 1);
                 break;
             case 4 :
@@ -561,6 +561,7 @@ Promise.all([
               break;  
             case 23 :
               desenha_moldura();
+              aparece_continuar(slide);
               break;               
             case 24 :
               desenha_coracao();
@@ -656,7 +657,7 @@ Promise.all([
         
     }
 
-    function desenha_logo(direcao) {
+    function desenha_logo(direcao, step) {
         if (direcao == "descendo") {
             if (!flag) {
                 //t.stop();
@@ -698,7 +699,8 @@ Promise.all([
                 .duration(duracao)
                 .style("opacity", 0)
                 .remove();
-        }       
+        }      
+        aparece_continuar(step); 
 
     }
 
