@@ -802,8 +802,8 @@ Promise.all([
       vetor_ordem = false,
       raio, 
       margin,
-      rotulos_a_deslocar = [1,2,3],
-      deslocamento = {1:120, 2:90, 3:60})
+      rotulos_a_deslocar = [1,2,3,4],
+      deslocamento = {1:140, 2:105, 3:70, 4:35})
   }
 
   function desenha_dez_anos() {
