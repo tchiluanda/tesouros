@@ -619,6 +619,13 @@ Promise.all([
           .delay(duracao*3)
           .duration(duracao*2)
           .style("opacity", 1);
+        
+        if (direcao == "voltando") {
+          pontos.attr("opacity", 0);
+          d3.selectAll("div.rotulos *")
+            .remove();
+          d3.selectAll("line.rotulos").remove();
+        }
     }
 
     function desenha_introducao(direcao, step) {
@@ -658,49 +665,51 @@ Promise.all([
     }
 
     function desenha_logo(direcao, step) {
-        if (direcao == "descendo") {
-            if (!flag) {
-                //t.stop();
-                flag = true;
-            }    
-    
-            pontos.transition()
-              .duration(d => Math.random() * duracao/2)
-              .attr("opacity", 1);
-             
-    
-            pontos.transition()
-              .delay(duracao/2)
-              .duration(duracao)
-              .attr("cx", d => x(d.x))
-              .attr("cy", d => y(d.y));
 
-        } else {
-
-
+      pontos.attr("fill", d => cor_inicial(d.value)) //para garantir a cor
+      if (direcao == "descendo") {
+          if (!flag) {
+              //t.stop();
+              flag = true;
+          }    
+  
           pontos.transition()
-            .duration(duracao/2)
-            .attr("cx", d => d.x_ini)
-            .attr("cy", d => d.y_ini);
-
+            .duration(d => Math.random() * duracao/2)
+            .attr("opacity", 1);
+            
+  
           pontos.transition()
             .delay(duracao/2)
-            .duration(duracao/2)
-            .attr("opacity", 0);   
-            
-          pontos.transition()
-                .duration(duracao)
-                .attr("fill", d => cor_inicial(d.value))
-                .attr("cx", d => x(d.x))
-                .attr("cy", d => y(d.y));
+            .duration(duracao)
+            .attr("cx", d => x(d.x))
+            .attr("cy", d => y(d.y));
 
-            d3.selectAll(".rotulos")
-                .transition()
-                .duration(duracao)
-                .style("opacity", 0)
-                .remove();
-        }      
-        aparece_continuar(step); 
+      } else {
+
+
+        pontos.transition()
+          .duration(duracao/2)
+          .attr("cx", d => d.x_ini)
+          .attr("cy", d => d.y_ini);
+
+        pontos.transition()
+          .delay(duracao/2)
+          .duration(duracao/2)
+          .attr("opacity", 0);   
+          
+        pontos
+          .transition()
+          .duration(duracao)
+          .attr("cx", d => x(d.x))
+          .attr("cy", d => y(d.y));
+
+          d3.selectAll(".rotulos")
+              .transition()
+              .duration(duracao)
+              .style("opacity", 0)
+              .remove();
+      }      
+      aparece_continuar(step); 
 
     }
 
