@@ -39,37 +39,40 @@ let tempo_total = (duracao * (frases.length - 1)) + (duracao * 2);
 //let $frases;
 
 function calcula_modura(w, h, n) {
-  w = w-15;
-  h = h-15;
-  let taxa = (2*w + 2*h)/n;
+  r = 3;
+  w = w-15-r; // 15 por causa da barra de rolagem, 3 para caber a bolinha
+  h = h-15-r;
+  let taxa = (2*w + 2*h - 4*r)/n;
 
   let pos = [];
 
-  for (let x = 0; x <= w; x = x+taxa) {
+  for (let x = r; x <= w ; x = x+taxa) {
 
     pos.push({
-      x_mol : x,
-      y_mol : 5
+      x_mol : x > w ? w : x,
+      y_mol : r
     });
 
     pos.push({
-      x_mol : x,
-      y_mol : h-5
+      x_mol : x > w ? w : x,
+      y_mol : h
     })
   }
 
-  for (let y = 0; y <= h; y = y+taxa) {
+  for (let y = r+taxa; y <= h; y = y+taxa) {
 
     pos.push({
-      x_mol : 5,
-      y_mol : y
+      x_mol : r,
+      y_mol : y > h ? h : y
     });
 
     pos.push({
-      x_mol : w-5,
-      y_mol : y
+      x_mol : w,
+      y_mol : y > h ? h : y
     })
   }
+
+  console.log("qde:", pos.length)
 
   return pos
 }
@@ -285,6 +288,7 @@ function desenha_dados(dados, criterio, ordena, vetor_ordem, raio, margin, rotul
       .ease(d3.easeExp)
       .attr("cx", d => d.eixo_principal + margem_inicial_principal + mini_dados.parametros.posicoes_iniciais[d.categoria])
       .attr("cy", d => d.eixo_secundario + margem_inicial_secundario)
+      .attr("r", raio)
       .attr("fill", d => cor(d.categoria)); 
       
     acrescenta_rotulos(mini_dados, rotulos_a_deslocar, deslocamento);
@@ -480,7 +484,7 @@ Promise.all([
       d3.select("#" + step + " .continuar").style("opacity", 0);
     }
 
-
+/* controle das funções chamadas em cada step */
 
     function desenha(step, direcao) {
       console.log(step, direcao)
@@ -489,30 +493,31 @@ Promise.all([
 
         switch (step) {
             case 1 :
-                desenha_abertura(direcao, slide);
-                break;
+              desenha_abertura(direcao, slide);
+              break;
             case 2 :
-                console.log("Hi. Step é ", slide);
-                desaparece_continuar(slide)
-                desenha_introducao(direcao, slide);
-                break;
+              console.log("Hi. Step é ", slide);
+              desaparece_continuar(slide)
+              desenha_introducao(direcao, slide);
+              break;
             case 3 :
-                desenha_logo(direcao, slide);
-                //d3.select("h2.subtitulo").transition().duration(duracao*3).style("opacity", 1);
-                break;
+              desenha_logo(direcao, slide);
+              //d3.select("h2.subtitulo").transition().duration(duracao*3).style("opacity", 1);
+              break;
             case 4 :
-                desenha_idade(direcao);
-                break;   
+              desenha_idade(direcao);
+              break;   
             case 5 :
-                desenha_genero(direcao);
-                break;  
+              desenha_genero(direcao);
+              break;  
             case 6 :
-                desenha_step5(direcao);
-                break; 
+              desenha_step5(direcao);
+              break; 
             case 7 :
-                desenha_step6(direcao);
-                break;    
+              desenha_step6(direcao);
+              break;    
             case 8 :
+              desenha_moldura();
               desenha_detalhe_satisfacao();
               break;   
             case 9 :
@@ -569,6 +574,8 @@ Promise.all([
         }
     }
 
+/* funções de desenho dos steps */
+
     function desenha_coracao() {
       pontos.transition()
         .delay(duracao/2)
@@ -581,9 +588,9 @@ Promise.all([
     function desenha_moldura() {
 
       d3.selectAll("div.rotulos *")
-      .transition(duracao/2)
-      .style("opacity", 0)
-      .remove();
+        .transition(duracao/2)
+        .style("opacity", 0)
+        .remove();
 
       d3.selectAll("line.rotulos").remove();
 
@@ -592,6 +599,7 @@ Promise.all([
         .duration(duracao)
         .attr("cx", d => d.x_mol)
         .attr("cy", d => d.y_mol)
+        .attr("r", 2)
         .attr("fill", "#c3c3c3");
     }
 
@@ -895,15 +903,15 @@ Promise.all([
 
     d3.selectAll("line.rotulos").remove();
 
-    d3.selectAll("circle.pontos")
+    /*d3.selectAll("circle.pontos")
       .transition()
       .duration(duracao)
       .attr("cx", d => d.x_mol)
       .attr("cy", d => d.y_mol)
-      .attr("fill", "#c3c3c3");
+      .attr("fill", "#c3c3c3");*/
   }
 
-  
+/* controle do scroller */
 
     // setup
     let steps = [];
