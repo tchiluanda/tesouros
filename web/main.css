@@ -167,15 +167,17 @@ div.introducao div > p {
 
 .container-svg div.rotulos {
     position: absolute;
-    font-family: 'Fira Code';
+    font-family: 'Fira Sans Extra Condensed';
 }
 
 .container-svg div.rotulos h2 {
     font-size: 0.8rem;
+    font-weight: 400;
 }
 
 .container-svg div.rotulos p {
     font-size: .7rem;
+    font-weight: 300;
 }
 
 /* sumarios */
