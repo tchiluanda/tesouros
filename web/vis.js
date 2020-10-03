@@ -177,7 +177,8 @@ function sumariza_dados(dados, criterio, ordena = false, vetor_ordem) {
           .length;
 
         sumario.push({"categoria" : cat,
-                      "contagem"  : cont});                 
+                      "contagem"  : cont,
+                      "criterio"  : criterio});                 
     }
 
     if (ordena) sumario.sort((a,b) => b.contagem - a.contagem);
@@ -305,16 +306,19 @@ function desenha_dados(dados, criterio, ordena, vetor_ordem, raio, margin, rotul
 function acrescenta_rotulos(mini_dados, deslocados, quanto) {
 
     //remove rótulos pré-existentes.
-    d3.selectAll("div.rotulos *")
+    d3.select(".container-svg")
+      .selectAll("div.rotulos")
       .transition(duracao/2)
       .style("opacity", 0)
       .remove();
 
     d3.selectAll("line.rotulos").remove();
 
+    console.log("mini", mini_dados.parametros.resumo);
+
     let $rotulos = d3.select(".container-svg")
       .selectAll("div.rotulos")
-      .data(mini_dados.parametros.resumo, d => d.categoria)
+      .data(mini_dados.parametros.resumo, d => d.criterio + d.categoria)
       .join("div")
       .classed("rotulos", true)
       .style("opacity", 0);
@@ -354,7 +358,6 @@ function acrescenta_rotulos(mini_dados, deslocados, quanto) {
     if (deslocados) {
 
         $rotulos.each(function(d,i,nodes) {
-            //console.log(this, deslocados.includes(i))
             if (deslocados.includes(i)) {
               deslocamento = deslocados.length == 1 ? quanto : quanto[i]
                 let top_atual = +d3.select(this).style("top").slice(0,-2);
@@ -582,12 +585,13 @@ Promise.all([
         .duration(duracao)
         .attr("cx", d => x(d.x_S3))
         .attr("cy", d => y(d.y_S3))
+        .attr("r", raio)
         .attr("fill", "tomato");
     }
 
     function desenha_moldura() {
 
-      d3.selectAll("div.rotulos *")
+      d3.selectAll("div.rotulos")
         .transition(duracao/2)
         .style("opacity", 0)
         .remove();
@@ -630,7 +634,7 @@ Promise.all([
         
         if (direcao == "voltando") {
           pontos.attr("opacity", 0);
-          d3.selectAll("div.rotulos *")
+          d3.selectAll("div.rotulos")
             .remove();
           d3.selectAll("line.rotulos").remove();
         }
@@ -896,7 +900,7 @@ Promise.all([
 
   function desenha_detalhe_satisfacao() {
 
-    d3.selectAll("div.rotulos *")
+    d3.selectAll("div.rotulos")
       .transition(duracao/2)
       .style("opacity", 0)
       .remove();
