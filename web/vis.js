@@ -74,6 +74,11 @@ function calcula_modura(w, h, n) {
 
   console.log("qde:", pos.length)
 
+  while (pos.length < n) {
+    pos.push(pos[pos.length-1]);
+    console.log("Acrescentando... qde:", pos.length)
+  }
+
   return pos
 }
 
