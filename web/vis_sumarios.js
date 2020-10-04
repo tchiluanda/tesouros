@@ -75,13 +75,15 @@ function sumarios(contagens, variavel, cor) {
 
         // faz os rotulos
 
+        let desloc = w < 600 ? 25 : 17;
+
         let rotulos = envelope
           .selectAll("p.rotulos-" + variavel)
           .data(mini_dados)
           .join("p")
           .classed("rotulos-" + variavel, true)
           .style("left", margin + "px")
-          .style("top", d => (y(d.opcao) - 17) + "px")
+          .style("top", d => (y(d.opcao) - desloc) + "px")
           .html(d => d.opcao + " <strong style='color:var(--" + cor + ");'>" + d.n + "<strong>");
 
     

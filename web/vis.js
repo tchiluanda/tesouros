@@ -277,7 +277,9 @@ function desenha_dados(dados, criterio, ordena, vetor_ordem, raio, margin, rotul
     let largura_total = mini_dados.parametros.largura_eixo_principal_total;
     let altura_total = mini_dados.parametros.largura_eixo_secundario_total;
 
-    let margem_inicial_principal = (w - largura_total)/2;
+    let m = w <= 1020 ? 3 : 2;
+
+    let margem_inicial_principal = (w - largura_total)/m;
     let margem_inicial_secundario = (h - altura_total)*3/4;
 
     let cor = d3.scaleOrdinal()
@@ -345,8 +347,10 @@ function acrescenta_rotulos(mini_dados, deslocados, quanto) {
     let largura_total = mini_dados.parametros.largura_eixo_principal_total;
     let altura_total = mini_dados.parametros.largura_eixo_secundario_total;
 
+    let m = w <= 1020 ? 3 : 2;
+
     let margem_inicial_secundario = (h - altura_total)*3/4;
-    let margem_inicial_principal = (w - largura_total)/2;
+    let margem_inicial_principal = (w - largura_total)/m;
 
     $rotulos
       .style("left", function(d) {

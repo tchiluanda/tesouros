@@ -151,6 +151,18 @@ div.introducao div > p {
     font-weight: lighter;
 }
 
+@media (max-width: 620px) {
+    div.introducao div > p {
+        font-size: 1rem;
+    }
+
+    .slide div.continuar > p {
+        font-size: 0.8rem;
+        text-align: center;
+    }
+
+}
+
 
 /******************** vis */
 
@@ -223,6 +235,12 @@ div.chart-sumario > p > strong {
     }
 }
 
+@media (max-width: 620px) {
+    div.chart-sumario > p {
+        font-size: 9px;
+    }
+}
+
 
 /***************** stacked bar charts */
 
@@ -285,4 +303,18 @@ div.envelope-svg-satisfacao > p.titulos.segunda-linha,
 div.envelope-svg-satisfacao > p.labels-sat,
 div.envelope-svg-satisfacao > p.labels-insat {
     font-size : 0.6em
+}
+
+@media (max-width: 620px) {
+
+    .slide h3 {
+        font-size: 1rem;
+    }
+
+    div.controle-stacked button {
+        font-size: 0.6rem;
+    }
+
+
+
 }
