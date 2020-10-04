@@ -54,8 +54,13 @@ article {
 }
 
 @media (max-width: 1020px) {
+    .slide > h2 {
+        font-size: 1.25rem;
+        padding-left: 1.5rem;
+    }
     .slide > h2 + p {
         font-size: 0.9rem;
+        padding-left: 1.5rem;
     }
 }
 
@@ -176,8 +181,8 @@ div.introducao div > p {
 
 .container-svg p.frases span {
     color: ghostwhite;
-    padding: .5rem;
-    line-height: 1.5;
+    /*padding: .5rem;*/
+    line-height: 1.4; /*1.5*/
 }
 
 /*.container-svg p.frases span::before,
@@ -218,25 +223,28 @@ div.chart-sumario {
     position: relative;
 }
 
-div.chart-sumario > p {
+div.chart-sumario div {
     position: absolute;
     font-size: 12px;
     font-family: "Merriweather Sans";
     font-weight: 100;
+    display: flex;
+    align-items: flex-end;
+    height: 22px;
 }
 
-div.chart-sumario > p > strong {
+div.chart-sumario  p > strong {
     padding-left: 2px;
 }
 
 @media (max-width: 1020px) {
-    div.chart-sumario > p {
+    div.chart-sumario div {
         font-size: 10px;
     }
 }
 
 @media (max-width: 620px) {
-    div.chart-sumario > p {
+    div.chart-sumario div {
         font-size: 9px;
     }
 }
