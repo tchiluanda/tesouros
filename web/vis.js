@@ -412,7 +412,9 @@ Promise.all([
 
     let maior_qde = Math.max(qde_x, qde_y);
 
-    let raio = menor_dimensao / (2 * maior_qde);
+    let m = w <= 1020 ? 3 : 2;
+
+    let raio = menor_dimensao / (m * maior_qde);
 
     // console.log(sumariza_dados(grid, "1. Idade", false, 
     // vetor_ordem = 

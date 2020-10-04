@@ -42,8 +42,9 @@ article {
 
 .slide > h2,
 .slide > h2 + p {
-    padding-top: 2rem;
+    padding-top: 1rem;
     padding-left: 2rem;
+    padding-right: 1rem;;
     /*font-family: "Esteban";*/
     /*font-size: 1.5rem;*/
 }
@@ -51,6 +52,13 @@ article {
 .slide > h2 + p {
     font-style: italic;
 }
+
+@media (max-width: 1020px) {
+    .slide > h2 + p {
+        font-size: 0.9rem;
+    }
+}
+
 
 .slide > p.disclaimer {
     /*width: 100%;*/
@@ -171,13 +179,23 @@ div.introducao div > p {
 }
 
 .container-svg div.rotulos h2 {
-    font-size: 0.8rem;
     font-weight: 400;
 }
 
 .container-svg div.rotulos p {
-    font-size: .8rem;
     font-weight: 300;
+}
+
+.container-svg div.rotulos * {
+    font-size: .8rem;
+}
+
+@media (max-width: 1020px) {
+    .container-svg div.rotulos * {
+        font-size: 0.7rem;
+    }
+
+
 }
 
 /* sumarios */
@@ -197,6 +215,12 @@ div.chart-sumario > p {
 
 div.chart-sumario > p > strong {
     padding-left: 2px;
+}
+
+@media (max-width: 1020px) {
+    div.chart-sumario > p {
+        font-size: 10px;
+    }
 }
 
 
