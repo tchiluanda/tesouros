@@ -250,7 +250,13 @@ div.chart-sumario div {
     font-weight: 100;
     display: flex;
     align-items: flex-end;
-    height: 22px;
+}
+
+@media (max-width: 620px) {
+    div.chart-sumario div {
+        height: 22px;
+    }
+
 }
 
 div.chart-sumario  p > strong {
