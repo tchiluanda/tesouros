@@ -279,8 +279,22 @@ function desenha_dados(dados, criterio, ordena, vetor_ordem, raio, margin, rotul
 
     let m = w <= 1020 ? 3 : 2;
 
-    let margem_inicial_principal = (w - largura_total)/m;
-    let margem_inicial_secundario = (h - altura_total)*3/4;
+    let margem_inicial_principal, margem_inicial_secundario;
+
+    if (w <= 620) {
+      x = "cy";
+      y = "cx";
+      margem_inicial_principal = (h - largura_total)/1.3;
+      margem_inicial_secundario = (w - altura_total)*4/5;
+
+    } else {
+      x = "cx";
+      y = "cy";
+      margem_inicial_principal = (w - largura_total)/m;
+      margem_inicial_secundario = (h - altura_total)*3/4;
+    }
+
+
 
     let cor = d3.scaleOrdinal()
       .domain(mini_dados.parametros.resumo.map(d => d.categoria))
@@ -290,12 +304,14 @@ function desenha_dados(dados, criterio, ordena, vetor_ordem, raio, margin, rotul
     pontos = pontos
       .data(mini_dados.dados, d => d.nome);
 
+
+
     pontos
       .transition()
       .duration(duracao)
       .ease(d3.easeExp)
-      .attr("cx", d => d.eixo_principal + margem_inicial_principal + mini_dados.parametros.posicoes_iniciais[d.categoria])
-      .attr("cy", d => d.eixo_secundario + margem_inicial_secundario)
+      .attr(x, d => d.eixo_principal + margem_inicial_principal + mini_dados.parametros.posicoes_iniciais[d.categoria])
+      .attr(y, d => d.eixo_secundario + margem_inicial_secundario)
       .attr("r", raio)
       .attr("fill", d => cor(d.categoria)); 
       
@@ -349,18 +365,43 @@ function acrescenta_rotulos(mini_dados, deslocados, quanto) {
 
     let m = w <= 1020 ? 3 : 2;
 
-    let margem_inicial_secundario = (h - altura_total)*3/4;
-    let margem_inicial_principal = (w - largura_total)/m;
+    if (w <= 620) {
+      x = "top";
+      y = "left";
+      margem_inicial_principal = (h - largura_total)/1.3;
+      margem_inicial_secundario = (w - altura_total)*4/5;
+      deslocados = false;
+
+    } else {
+      x = "left";
+      y = "top";
+      margem_inicial_principal = (w - largura_total)/m;
+      margem_inicial_secundario = (h - altura_total)*3/4;
+    }
 
     $rotulos
-      .style("left", function(d) {
+      .style(x, function(d) {
         //console.log("To aqui dentro", mini_dados.parametros.posicoes_iniciais[d.categoria]);
-        return (mini_dados.parametros.posicoes_iniciais[d.categoria] + margem_inicial_principal - mini_dados.parametros.raio + "px")}
-        )
-      .style("top",  function(d) {
-        let altura_rotulo = +d3.select(this).style("height").slice(0,-2);
-        return ((margem_inicial_secundario - altura_rotulo - margin) + "px");
+        return (
+          mini_dados.parametros.posicoes_iniciais[d.categoria] + 
+          margem_inicial_principal - 
+          mini_dados.parametros.raio * ( w <= 620 ? 2 : 1 ) + 
+          "px")
+        })
+      .style(y,  function(d) {
+        if (w <= 620) {
+          //let largura_rotulo = +d3.select(this).style("width").slice(0,-2);
+          //return ((margem_inicial_secundario - largura_rotulo - margin) + "px");
+          return 0
+        } else {
+          let altura_rotulo = +d3.select(this).style("height").slice(0,-2);
+          return ((margem_inicial_secundario - altura_rotulo - margin) + "px");
+        }
       });
+
+    if (w <= 620) {
+      $rotulos.style("width", (margem_inicial_secundario - margin) + "px");
+    }
 
     // código para deslocar algum rótulo, se for necessário
 
@@ -416,7 +457,7 @@ Promise.all([
 
     let maior_qde = Math.max(qde_x, qde_y);
 
-    let m = w <= 1020 ? 3 : 2;
+    let m = (w > 620 & w <= 1020) ? 3 : 2;
 
     let raio = menor_dimensao / (m * maior_qde);
 

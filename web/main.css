@@ -32,6 +32,8 @@ article {
     overflow: scroll;
 }
 
+/* slides */
+
 .slide {
     width: 100vw;
     height: 100vh;
@@ -61,6 +63,19 @@ article {
     .slide > h2 + p {
         font-size: 0.9rem;
         padding-left: 1.5rem;
+    }
+}
+
+@media (max-width: 620px) {
+    #slide17 > h2, 
+    #slide21 > h2 {
+        font-size: 1rem;
+    }
+
+    #slide17 > h2 + p, 
+    #slide21 > h2 + p {
+        font-size: .7rem;
+        padding-top: .4rem;
     }
 }
 
@@ -211,7 +226,12 @@ div.introducao div > p {
     .container-svg div.rotulos * {
         font-size: 0.7rem;
     }
+}
 
+@media (max-width: 620px) {
+    .container-svg div.rotulos * {
+        text-align: right;
+    }
 
 }
 
