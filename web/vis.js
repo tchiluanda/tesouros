@@ -1,10 +1,9 @@
 let frases = [
-  {texto: "Tesouro tem dificuldade em reter seus talentos;", tipo: "azul"},
+  {texto: "Tesouro tem dificuldade em reter seus talentos", tipo: "azul"},
   {texto: "Somos ótimos técnicos e o trabalho é motivador", tipo: "laranja"},
-  {texto: "Tesouro é mais importante do que pensa ser;", tipo: "azul"},
-  {texto: "Esperamos clareza nas 'regras do jogo'", tipo: "laranja"},
-  {texto: "Mobilidade e alocação podiam melhorar;", tipo: "azul"},
-  {texto: "Queremos jornada de trabalho flexível!", tipo: "laranja"},
+  {texto: "Tesouro é mais importante do que pensa ser", tipo: "azul"},
+  {texto: "Mobilidade e alocação podiam melhorar", tipo: "azul"},
+  {texto: "Queremos jornada de trabalho flexível", tipo: "laranja"},
   {texto: "Perderemos relevância e valorização no futuro?", tipo: "azul"},
   {texto: "Precisamos de competência gerencial e de comunicação", tipo: "laranja"}
 ];
