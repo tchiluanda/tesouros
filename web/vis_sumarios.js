@@ -47,15 +47,15 @@ function sumarios(contagens, variavel, cor) {
         // escalas
         const size = d3.scaleLinear()
           .domain([0,d3.max(mini_dados, d => +d.n)])
-          .range([0, width-margin-margin]);
+          .range([0, width-margin]);
     
         const y = d3.scaleBand()
           .domain(mini_dados.map(d => d.opcao))
           .rangeRound([margin, margin + altura_necessaria])
           .paddingOuter(1);
 
-        console.log("band_width", y.bandwidth())
-        console.log("maximo", size.range(), size.domain())
+        //console.log("band_width", y.bandwidth())
+        //console.log("maximo", size.range(), size.domain())
     
         // faz as barras
     
@@ -64,7 +64,7 @@ function sumarios(contagens, variavel, cor) {
           .data(mini_dados)
           .join("rect")
           .classed(variavel, true)
-          .attr("x", margin)
+          .attr("x", 0)//margin)
           .attr("y", d => y(d.opcao))
           .attr("height", altura_barra)
           .attr("width", 0)
@@ -75,13 +75,22 @@ function sumarios(contagens, variavel, cor) {
 
         // faz os rotulos
 
+        let desloc = w < 600 ? 25 : 17;
+
         let rotulos = envelope
-          .selectAll("p.rotulos-" + variavel)
-          .data(mini_dados)
-          .join("p")
+          .selectAll("div.rotulos-" + variavel)
+          .data(mini_dados, d => d.variavel + d.opcao)
+          .join("div")
           .classed("rotulos-" + variavel, true)
-          .style("left", margin + "px")
-          .style("top", d => (y(d.opcao) - 17) + "px")
+          .style("left", 0)//margin + "px")
+          .style("top", d => (y(d.opcao) - desloc) + "px");
+
+        rotulos
+          .selectAll("p")
+          .remove();
+
+        rotulos
+          .append("p")
           .html(d => d.opcao + " <strong style='color:var(--" + cor + ");'>" + d.n + "<strong>");
 
     
