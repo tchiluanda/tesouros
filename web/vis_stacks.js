@@ -26,6 +26,7 @@ let config = {
     },
     label_indiferente: "Sinto-me indiferente",
     ordens_variaveis : {
+      "idade" : ["De 20 a 29 anos", "De 30 a 39 anos", "De 40 a 49 anos", "De 50 a 60 anos", "+ de 60"],
       "ascender" : ["Sim", "Provavelmente sim", "Não sei", "Provavelmente não", "Não"],
       "tempo_tesouro" : ["Até 5 anos", "De 6 a 10 anos", "De 11 a 20 anos", "De 21 a 30 anos", "Mais de 30 anos"]
     },
