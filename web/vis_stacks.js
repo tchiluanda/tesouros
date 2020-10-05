@@ -669,12 +669,17 @@ function desenha_labels(variavel, visao) {
 
   labels_insat
       .join("em")
-      .text(d => 
-        "(" + 
+      .text(d => {
+        if (d.principal_insat[visao].principal_razao == "" )
+          return "";
+        else
+          return ("(" + 
         (d.principal_insat[visao].principal_razao == "NA" ?
         "Nenhuma" : d.principal_insat[visao].principal_razao) + 
         ") " + 
         formataPct(1 - d.pct_sat[visao]));
+      });
+
 
   // acrescenta labels sat sem posicioná-los ainda : serão posicionados mais abaixo de acordo com a posição das barras
 
