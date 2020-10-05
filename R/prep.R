@@ -119,12 +119,12 @@ dados_mudar_para <- processa_respostas_multiplas(colunas_mudar_para) %>%
   select(id, mudar_para = primeira)
 
 # mudancas
-principais_mudancas_para <- dados %>% 
+principais_mudancas_para <- dados_mudar_para %>% 
   count(mudar_para) %>% 
   arrange(desc(n)) %>% 
   .$mudar_para %>% 
   unlist() %>% 
-  .[1:6]
+  .[1:5]
 
 
 # tratamento das colunas de apoio -----------------------------------------
@@ -186,13 +186,37 @@ colunas_mudancas_lp <- c(
 dados_mudancas_lp <- processa_respostas_multiplas(colunas_mudancas_lp) %>%
   select(id, mudancas_lp = primeira)
 
+# resumindo os nomes
+#dput(unique(dados_mudancas_lp$mudancas_lp))
+
+mud_lp_resum <- data.frame(
+  mudancas_lp = c(
+    "Teletrabalho", 
+    "Diminuição do número de servidores", 
+    "Automação da maioria das ocupações atuais", 
+    "Eliminação de processos no papel", 
+    "Supressão de níveis hierárquicos", 
+    "Outros"),
+  mudancas_lp_resum = c(
+    "Teletrabalho",
+    "Dimin. núm. de servidores",
+    "Autom. maioria das ocupações atuais",
+    "Elim. processos no papel",
+    "Supress. níveis hierárq.",
+    "Outros")
+  )
+  
+dados_mudancas_lp <- dados_mudancas_lp %>%
+  left_join(mud_lp_resum) %>%
+  select(id, mudancas_lp = mudancas_lp_resum)
+
 
 # simplificando algumas opcoes --------------------------------------------
 
-principais_mudancas <- dados %>% 
-  count(mudar) %>% 
+principais_mudancas <- dados_raw %>% 
+  count(`3. O que você acha mais importante mudar hoje no seu trabalho?`) %>% 
   arrange(desc(n)) %>% 
-  .$mudar %>% 
+  .[,1] %>% 
   unlist() %>% 
   .[1:6]
 
@@ -280,7 +304,6 @@ dados <- dados_raw %>%
                          "No Governo, mas não no Tesouro", aposentando))
 
 
-
 # multiplas escolhas ------------------------------------------------------
 
 sumariza_multiplas <- function(...) {
@@ -314,6 +337,13 @@ contagens_resumida <- contagens %>%
   group_by(variavel, opcao) %>%
   summarise(n = sum(n)) %>%
   ungroup()
+
+# exporta os dados --------------------------------------------------------
+
+dados %>% write.csv(file = "./web/dados/data.csv", fileEncoding = "UTF-8")
+contagens_resumida %>% write.csv(file = "./web/dados/contagens.csv", fileEncoding = "UTF-8")
+
+
 
 # explorações -------------------------------------------------------------
 
@@ -489,12 +519,6 @@ sumario("ascender")
 sumario("genero")
 sumario("subsec")
 
-
-
-# exporta os dados --------------------------------------------------------
-
-dados %>% write.csv(file = "./web/dados/data.csv", fileEncoding = "UTF-8")
-contagens_resumida %>% write.csv(file = "./web/dados/contagens.csv", fileEncoding = "UTF-8")
 
 
 # misc --------------------------------------------------------------------
