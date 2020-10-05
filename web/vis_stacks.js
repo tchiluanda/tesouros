@@ -18,7 +18,7 @@ let config = {
 
   parametros : {
 
-    variaveis_interesse : ["subsec", "genero", "tempo_tesouro", "ascender"],
+    variaveis_interesse : ["idade", "genero", "tempo_tesouro", "ascender"],
     ordem_satisfacao : ["Não", "Possivelmente não", "Sinto-me indiferente", "Basicamente sim", "Sim"],
     categorias_satisfacao : {
       "otimista" : ["Sinto-me indiferente", "Basicamente sim", "Sim"],
@@ -83,7 +83,7 @@ let config = {
   estado : {
 
     opcao_visao : "desloc_otimista",
-    opcao_variavel : "subsec",
+    opcao_variavel : "idade",
     iniciado : false
 
   }
