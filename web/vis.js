@@ -122,7 +122,7 @@ function anima_frase() {
             }
 
             // verifica se cabe no viewport
-            if (posicao_top < h - altura_frase - margin - 20) {
+            if (posicao_top < h - altura_frase - margin - 30) {
 
                 // detecção de colisão com o título    
                 if (colisao_com_titulo(posicao_top)) {
@@ -133,7 +133,7 @@ function anima_frase() {
                     posicao_top = posicao_top;
                 }
             } else {
-                posicao_top = h - altura_frase - margin -20;
+                posicao_top = h - altura_frase - margin - 30;
             };
 
             return posicao_top + "px";

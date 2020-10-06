@@ -143,6 +143,7 @@ article {
     align-items: center;
     flex-direction: column;
     opacity: 0;
+    padding-bottom: 1rem;
 }
 
 .slide div.continuar > img {
@@ -156,7 +157,7 @@ article {
 
 /* slide com texto introdutório */
 
-div.introducao div {
+div.introducao div.texto {
     max-width: 460px;
     margin: 0 auto;
     padding: 15vh 1rem 1rem 1rem;
