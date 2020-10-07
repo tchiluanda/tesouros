@@ -146,6 +146,10 @@ article {
     padding-bottom: 1rem;
 }
 
+#slide01 div.continuar {
+    bottom: 4rem;
+}
+
 .slide div.continuar > img {
     width: 2.5rem;
 }
