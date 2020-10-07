@@ -20,7 +20,7 @@ let flag = false;
 let h0_titulo = $titulo.node().getBoundingClientRect().top;
 let h1_titulo = $titulo.node().getBoundingClientRect().bottom;
 
-console.log("h0, h1", h0_titulo, h1_titulo);
+//console.log("h0, h1", h0_titulo, h1_titulo);
 
 
 let h = $cont_svg.style("height");
@@ -31,7 +31,7 @@ w = +w.slice(0, w.length-2);
 
 let margin = 20;
 
-console.log(h,w);
+//console.log(h,w);
 
 let altura_frase, largura_frase;
 let duracao = 1000;//3000;
@@ -83,7 +83,7 @@ function calcula_modura(w, h, n) {
 }
 
 let pos = calcula_modura(w, h, 383).slice(0,383);
-console.log(pos)
+//console.log(pos)
 
 function insere_frases() {
 
@@ -146,7 +146,7 @@ function anima_frase() {
             return posicao_left + "px";
         });
 
-    console.log("fui chamada");
+    //console.log("fui chamada");
 
     $frases
         .transition()
@@ -174,7 +174,7 @@ function sumariza_dados(dados, criterio, ordena = false, vetor_ordem) {
       .filter((v, i, a) => a.indexOf(v) === i);
     }
 
-    console.log(criterio, categorias_unicas)
+    //console.log(criterio, categorias_unicas)
 
     for (cat of categorias_unicas) {
         const cont = dados
@@ -259,7 +259,7 @@ function prepara_dados(dados, criterio, ordena = false, vetor_ordem, raio, marge
         "raio" : raio
     };
 
-    console.log("Mini dados", mini_dados);
+    //console.log("Mini dados", mini_dados);
 
     return(mini_dados);
 }
@@ -331,13 +331,13 @@ function acrescenta_rotulos(mini_dados, deslocados, quanto) {
     //remove rótulos pré-existentes.
     d3.select(".container-svg")
       .selectAll("div.rotulos")
-      .transition(duracao/2)
+      //.transition(duracao/2)
       .style("opacity", 0)
       .remove();
 
     d3.selectAll("line.rotulos").remove();
 
-    console.log("mini", mini_dados.parametros.resumo);
+    //console.log("mini", mini_dados.parametros.resumo);
 
     let $rotulos = d3.select(".container-svg")
       .selectAll("div.rotulos")
@@ -484,7 +484,7 @@ Promise.all([
         grid[i]["y_mol"] = pos[i].y_mol;
     });
 
-    console.log(grid);
+    //console.log(grid);
 
     let cor_texto = d3.select(":root").style("--cor-texto");
 
@@ -953,7 +953,7 @@ Promise.all([
   function desenha_detalhe_satisfacao() {
 
     d3.selectAll("div.rotulos")
-      .transition(duracao/2)
+      //.transition(duracao/2)
       .style("opacity", 0)
       .remove();
 

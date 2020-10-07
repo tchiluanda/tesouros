@@ -209,7 +209,7 @@ function monitora_opcao_otim_pessi() {
     config.estado.iniciado = true;
     desloca_barras(config.estado.opcao_visao);
     muda_cor_indiferente(config.estado.opcao_visao);
-    console.log("Dropdown", config.estado.opcao_variavel, config.estado.opcao_visao);
+    //console.log("Dropdown", config.estado.opcao_variavel, config.estado.opcao_visao);
     desenha_labels(config.estado.opcao_variavel, config.estado.opcao_visao)
   })
 }
@@ -503,7 +503,7 @@ function desloca_barras(otimista_pessimista) {
       .range(config.escalas.x.range)
       .domain(config.escalas.x.domain);
 
-    console.log({otimista_pessimista})
+    //console.log({otimista_pessimista})
 
     bars.each(function(d,i,nodes) {
 
@@ -538,7 +538,7 @@ function desloca_barras(otimista_pessimista) {
 function desenha_labels_eixo(mini_data) {
   let envelope = d3.select(config.parametros.envelope);
 
-  console.log(mini_data);
+  //console.log(mini_data);
 
   let labels = envelope
     .selectAll("p.labels-eixo-y")
@@ -708,8 +708,7 @@ function desenha_labels(variavel, visao) {
     let barra_atual = d3.select(this).node();
 
     let posicao_top_barra = barra_atual.getBoundingClientRect().top - posicao_svg;
-    //console.log();
-
+    
     let label_insat_dim = labels_insat.nodes()[i].getBoundingClientRect();
     
     let label_sat_dim   = labels_sat.nodes()[i].getBoundingClientRect();
