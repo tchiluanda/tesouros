@@ -3,7 +3,7 @@ let frases = [
   {texto: "Somos ótimos técnicos e o trabalho é motivador", tipo: "laranja"},
   {texto: "Tesouro é mais importante do que pensa ser", tipo: "azul"},
   {texto: "Esperamos clareza nas seleções, capacitações e mobilidade", tipo: "laranja"},
-  {texto: "Mobilidade e alocação podiam melhorar", tipo: "azul"},
+  {texto: "Mobilidade e alocação poderiam melhorar", tipo: "azul"},
   {texto: "Queremos jornada de trabalho flexível", tipo: "laranja"},
   {texto: "Perderemos relevância e valorização no futuro?", tipo: "azul"},
   {texto: "Precisamos de competência gerencial e de comunicação", tipo: "laranja"}
