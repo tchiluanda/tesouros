@@ -662,7 +662,7 @@ Promise.all([
     function desenha_abertura(direcao, step) {
 
         anima_frase();
-        aparece_continuar(step, delay = duracao * 3 * frases.length)
+        aparece_continuar(step, delay = duracao * 2 * frases.length)
         /*t = d3.interval(function(elapsed) {
             console.log(elapsed);
             anima_frase();
