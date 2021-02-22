@@ -284,7 +284,7 @@ function desenha_dados(dados, criterio, ordena, vetor_ordem, raio, margin, rotul
     if (w <= 620) {
       x = "cy";
       y = "cx";
-      margem_inicial_principal = (h - largura_total)/1.3;
+      margem_inicial_principal = (h - largura_total)/2;
       margem_inicial_secundario = (w - altura_total)*4/5;
 
     } else {
@@ -368,7 +368,7 @@ function acrescenta_rotulos(mini_dados, deslocados, quanto) {
     if (w <= 620) {
       x = "top";
       y = "left";
-      margem_inicial_principal = (h - largura_total)/1.3;
+      margem_inicial_principal = (h - largura_total)/2;
       margem_inicial_secundario = (w - altura_total)*4/5;
       deslocados = false;
 
