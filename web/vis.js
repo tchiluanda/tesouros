@@ -293,7 +293,7 @@ function pega_posicao_inferior_cabecalho(slide){
 
 function desenha_dados(dados, criterio, ordena, vetor_ordem, raio, margin, rotulos_a_deslocar, deslocamento, vetor_cor, slide) {
 
-  console.log(slide);
+  console.log(vetor_cor, slide);
 
     let mini_dados = prepara_dados(
       dados, 
@@ -824,7 +824,8 @@ Promise.all([
           margin,
           rotulos_a_deslocar = [0],
           deslocamento = 60,
-          slide = ""+slide);
+          vetor_cor = null,
+          slide = slide);
 
     }
 
@@ -838,6 +839,7 @@ Promise.all([
         margin,
         rotulos_a_deslocar = false,
         deslocamento = 0,
+        vetor_cor = null,
         slide = slide);
     }
 
@@ -851,7 +853,9 @@ Promise.all([
       raio, 
       margin,
       rotulos_a_deslocar = [0],
-      deslocamento = 60);
+      deslocamento = 60,
+      vetor_cor = null,
+      slide = slide);
   }
 
   function desenha_step6(direcao, slide) {
@@ -878,6 +882,7 @@ Promise.all([
       margin,
       rotulos_a_deslocar = [3,4,5],
       deslocamento = {3:120, 4:80, 5:40},
+      vetor_cor = null,
       slide = slide)
   }
 
@@ -891,6 +896,7 @@ Promise.all([
       margin,
       rotulos_a_deslocar = [1,2,3,4],
       deslocamento = {1:140, 2:105, 3:70, 4:35},
+      vetor_cor = null,
       slide = slide)
   }
 
@@ -904,6 +910,7 @@ Promise.all([
       margin,
       rotulos_a_deslocar = [0,1,2,3],
       deslocamento = {0:120, 1:90, 2:60, 3:30}, 
+      vetor_cor = null,
       slide = slide)
   }
 
@@ -917,7 +924,8 @@ Promise.all([
       margin,
       rotulos_a_deslocar = [1,2],
       deslocamento = {1:70, 2:35},
-      slide)
+      vetor_cor = null,
+      slide = slide)
   }
 
   function desenha_apoio(slide) {
@@ -930,6 +938,7 @@ Promise.all([
       margin,
       rotulos_a_deslocar = [1],
       deslocamento = 35,
+      vetor_cor = null,
       slide = slide)
   }
 
@@ -943,6 +952,7 @@ Promise.all([
       margin,
       rotulos_a_deslocar = [2],
       deslocamento = 35,
+      vetor_cor = null,
       slide = slide)
   }
 
@@ -956,6 +966,7 @@ Promise.all([
       margin,
       rotulos_a_deslocar = false,
       deslocamento = 0,
+      vetor_cor = null,
       slide = slide)
   }
 
@@ -969,6 +980,7 @@ Promise.all([
       margin,
       rotulos_a_deslocar = [3],
       deslocamento = 60,
+      vetor_cor = null,
       slide = slide)
   }
 
@@ -982,6 +994,7 @@ Promise.all([
       margin,
       rotulos_a_deslocar = [1,4],
       deslocamento = {1:60, 4:60},
+      vetor_cor = null,
       slide = slide)
   }
 
@@ -995,6 +1008,7 @@ Promise.all([
       margin,
       rotulos_a_deslocar = [1,2,3,4],
       deslocamento = {1:120, 2:90, 3:60, 4:30},
+      vetor_cor = null,
       slide = slide)
   }
 
