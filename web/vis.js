@@ -313,7 +313,7 @@ function desenha_dados(dados, criterio, ordena, vetor_ordem, raio, margin, rotul
       x = "cy";
       y = "cx";
       console.log(slide);
-      margem_inicial_principal = pega_posicao_inferior_cabecalho(slide) + 10;//(h - largura_total)/2;
+      margem_inicial_principal = pega_posicao_inferior_cabecalho(slide) + 30;//(h - largura_total)/2;
       margem_inicial_secundario = (w - altura_total)*4/5;
 
     } else {
@@ -401,7 +401,7 @@ function acrescenta_rotulos(mini_dados, deslocados, quanto, slide) {
     if (w <= 620) {
       x = "top";
       y = "left";
-      margem_inicial_principal = pega_posicao_inferior_cabecalho(slide) + 10;//(h - largura_total)/2;
+      margem_inicial_principal = pega_posicao_inferior_cabecalho(slide) + 30;//(h - largura_total)/2;
       margem_inicial_secundario = (w - altura_total)*4/5;
       deslocados = false;
 
@@ -609,7 +609,7 @@ Promise.all([
               desenha_detalhe_satisfacao();
               break;   
             case 9 :
-              desenha_mudar(slide = slide);
+              desenha_mudar(direcao, slide);
               break;    
             case 10 :
               desenha_mudar_para(slide);
