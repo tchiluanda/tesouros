@@ -264,7 +264,35 @@ function prepara_dados(dados, criterio, ordena = false, vetor_ordem, raio, marge
     return(mini_dados);
 }
 
-function desenha_dados(dados, criterio, ordena, vetor_ordem, raio, margin, rotulos_a_deslocar, deslocamento, vetor_cor) {
+function pega_posicao_inferior_cabecalho(slide){
+
+  const slide_atual = d3.select("#" + slide);
+
+  console.log("#" + slide);
+
+  let altura_cabecalho = slide_atual.select("h2").node().getBoundingClientRect().height;
+
+  // tem parágrafo?
+  if (slide_atual.select("p").empty()) {
+
+    console.log("Nao tem paragrafo, só h2");
+
+  } else {
+
+    altura_cabecalho += slide_atual.select("p").node().getBoundingClientRect().height;
+    console.log("Tem paragrafo")
+
+  }
+
+  console.log(altura_cabecalho);
+
+  return altura_cabecalho;
+
+}
+
+function desenha_dados(dados, criterio, ordena, vetor_ordem, raio, margin, rotulos_a_deslocar, deslocamento, vetor_cor, slide) {
+
+  console.log(vetor_cor, slide);
 
     let mini_dados = prepara_dados(
       dados, 
@@ -284,7 +312,8 @@ function desenha_dados(dados, criterio, ordena, vetor_ordem, raio, margin, rotul
     if (w <= 620) {
       x = "cy";
       y = "cx";
-      margem_inicial_principal = (h - largura_total)/1.6;
+      console.log(slide);
+      margem_inicial_principal = pega_posicao_inferior_cabecalho(slide) + 30;//(h - largura_total)/2;
       margem_inicial_secundario = (w - altura_total)*4/5;
 
     } else {
@@ -293,6 +322,8 @@ function desenha_dados(dados, criterio, ordena, vetor_ordem, raio, margin, rotul
       margem_inicial_principal = (w - largura_total)/m;
       margem_inicial_secundario = (h - altura_total)*3/4;
     }
+
+    console.log(h, largura_total, margem_inicial_principal);
 
 
 
@@ -315,7 +346,7 @@ function desenha_dados(dados, criterio, ordena, vetor_ordem, raio, margin, rotul
       .attr("r", raio)
       .attr("fill", d => cor(d.categoria)); 
       
-    acrescenta_rotulos(mini_dados, rotulos_a_deslocar, deslocamento);
+    acrescenta_rotulos(mini_dados, rotulos_a_deslocar, deslocamento, slide);
 
     let qde_rotulos = d3.selectAll(".rotulos").nodes().length
     d3.selectAll(".rotulos")
@@ -326,7 +357,7 @@ function desenha_dados(dados, criterio, ordena, vetor_ordem, raio, margin, rotul
 
 }
 
-function acrescenta_rotulos(mini_dados, deslocados, quanto) {
+function acrescenta_rotulos(mini_dados, deslocados, quanto, slide) {
 
     //remove rótulos pré-existentes.
     d3.select(".container-svg")
@@ -360,6 +391,8 @@ function acrescenta_rotulos(mini_dados, deslocados, quanto) {
       .selectAll("p")
       .text(d => d3.format(".000%")(d.contagem / mini_dados.dados.length));
 
+    // reduntante, melhorar depois
+
     let largura_total = mini_dados.parametros.largura_eixo_principal_total;
     let altura_total = mini_dados.parametros.largura_eixo_secundario_total;
 
@@ -368,7 +401,7 @@ function acrescenta_rotulos(mini_dados, deslocados, quanto) {
     if (w <= 620) {
       x = "top";
       y = "left";
-      margem_inicial_principal = (h - largura_total)/1.6;
+      margem_inicial_principal = pega_posicao_inferior_cabecalho(slide) + 30;//(h - largura_total)/2;
       margem_inicial_secundario = (w - altura_total)*4/5;
       deslocados = false;
 
@@ -560,26 +593,26 @@ Promise.all([
               //d3.select("h2.subtitulo").transition().duration(duracao*3).style("opacity", 1);
               break;
             case 4 :
-              desenha_idade(direcao);
+              desenha_idade(direcao, slide);
               break;   
             case 5 :
-              desenha_genero(direcao);
+              desenha_genero(direcao, slide);
               break;  
             case 6 :
-              desenha_step5(direcao);
+              desenha_step5(direcao, slide);
               break; 
             case 7 :
-              desenha_step6(direcao);
+              desenha_step6(direcao, slide);
               break;    
             case 8 :
               desenha_moldura();
               desenha_detalhe_satisfacao();
               break;   
             case 9 :
-              desenha_mudar();
+              desenha_mudar(direcao, slide);
               break;    
             case 10 :
-              desenha_mudar_para();
+              desenha_mudar_para(slide);
               break;     
             case 11 :
               desenha_moldura();
@@ -596,28 +629,28 @@ Promise.all([
               sumarios(contagens, "limitador", "azul");
               break;  
             case 15 :
-              desenha_dez_anos();
+              desenha_dez_anos(slide);
               break;    
             case 16 :
-              desenha_onde_se_ve();
+              desenha_onde_se_ve(slide);
               break;   
             case 17 :
-              desenha_apoio();
+              desenha_apoio(slide);
               break;  
             case 18 :
-              desenha_aposentando();
+              desenha_aposentando(slide);
               break; 
             case 19 :
-              desenha_temor();
+              desenha_temor(slide);
               break;   
             case 20 :
-              desenha_motivacao_lp();
+              desenha_motivacao_lp(slide);
               break;    
             case 21 :
-              desenha_diferente_lp();
+              desenha_diferente_lp(slide);
               break;   
             case 22 :
-              desenha_mudancas_lp();
+              desenha_mudancas_lp(slide);
               break;  
             case 23 :
               desenha_moldura();
@@ -777,7 +810,9 @@ Promise.all([
 
     }
 
-    function desenha_idade(direcao) {
+    function desenha_idade(direcao, slide) {
+
+      console.log(slide);
 
         desenha_dados(
           dados = grid, 
@@ -787,11 +822,13 @@ Promise.all([
           raio, 
           margin,
           rotulos_a_deslocar = [0],
-          deslocamento = 60);
+          deslocamento = 60,
+          vetor_cor = null,
+          slide = slide);
 
     }
 
-    function desenha_genero(direcao) {
+    function desenha_genero(direcao, slide) {
       desenha_dados(
         dados = grid, 
         criterio = "genero", 
@@ -800,10 +837,12 @@ Promise.all([
         raio, 
         margin,
         rotulos_a_deslocar = false,
-        deslocamento = 0);
+        deslocamento = 0,
+        vetor_cor = null,
+        slide = slide);
     }
 
-  function desenha_step5(direcao) {
+  function desenha_step5(direcao, slide) {
     desenha_dados(
       dados = grid, 
       criterio = "escolaridade", 
@@ -813,10 +852,12 @@ Promise.all([
       raio, 
       margin,
       rotulos_a_deslocar = [0],
-      deslocamento = 60);
+      deslocamento = 60,
+      vetor_cor = null,
+      slide = slide);
   }
 
-  function desenha_step6(direcao) {
+  function desenha_step6(direcao, slide) {
     desenha_dados(
       dados = grid, 
       criterio = "satisfacao", 
@@ -826,10 +867,11 @@ Promise.all([
       margin,
       rotulos_a_deslocar = [1,2],
       deslocamento = {1:80, 2:40},
-      vetor_cor = ["#b2182b","#ef8a62","silver","#67a9cf","#2166ac"]);
+      vetor_cor = ["#b2182b","#ef8a62","silver","#67a9cf","#2166ac"],
+      slide = slide);
   }
 
-  function desenha_mudar(direcao) {
+  function desenha_mudar(direcao, slide) {
     desenha_dados(
       dados = grid, 
       criterio = "mudar", 
@@ -838,10 +880,12 @@ Promise.all([
       raio, 
       margin,
       rotulos_a_deslocar = [3,4,5],
-      deslocamento = {3:120, 4:80, 5:40})
+      deslocamento = {3:120, 4:80, 5:40},
+      vetor_cor = null,
+      slide = slide)
   }
 
-  function desenha_mudar_para() {
+  function desenha_mudar_para(slide) {
     desenha_dados(
       dados = grid, 
       criterio = "mudar_para", 
@@ -850,10 +894,12 @@ Promise.all([
       raio, 
       margin,
       rotulos_a_deslocar = [1,2,3,4],
-      deslocamento = {1:140, 2:105, 3:70, 4:35})
+      deslocamento = {1:140, 2:105, 3:70, 4:35},
+      vetor_cor = null,
+      slide = slide)
   }
 
-  function desenha_dez_anos() {
+  function desenha_dez_anos(slide) {
     desenha_dados(
       dados = grid, 
       criterio = "dez_anos", 
@@ -862,10 +908,12 @@ Promise.all([
       raio, 
       margin,
       rotulos_a_deslocar = [0,1,2,3],
-      deslocamento = {0:120, 1:90, 2:60, 3:30})
+      deslocamento = {0:120, 1:90, 2:60, 3:30}, 
+      vetor_cor = null,
+      slide = slide)
   }
 
-  function desenha_onde_se_ve() {
+  function desenha_onde_se_ve(slide) {
     desenha_dados(
       dados = grid, 
       criterio = "onde_se_ve", 
@@ -874,10 +922,12 @@ Promise.all([
       raio, 
       margin,
       rotulos_a_deslocar = [1,2],
-      deslocamento = {1:70, 2:35})
+      deslocamento = {1:70, 2:35},
+      vetor_cor = null,
+      slide = slide)
   }
 
-  function desenha_apoio() {
+  function desenha_apoio(slide) {
     desenha_dados(
       dados = grid, 
       criterio = "apoio", 
@@ -886,10 +936,12 @@ Promise.all([
       raio, 
       margin,
       rotulos_a_deslocar = [1],
-      deslocamento = 35)
+      deslocamento = 35,
+      vetor_cor = null,
+      slide = slide)
   }
 
-  function desenha_aposentando() {
+  function desenha_aposentando(slide) {
     desenha_dados(
       dados = grid, 
       criterio = "aposentando", 
@@ -898,10 +950,12 @@ Promise.all([
       raio, 
       margin,
       rotulos_a_deslocar = [2],
-      deslocamento = 35)
+      deslocamento = 35,
+      vetor_cor = null,
+      slide = slide)
   }
 
-  function desenha_temor() {
+  function desenha_temor(slide) {
     desenha_dados(
       dados = grid, 
       criterio = "temor", 
@@ -910,10 +964,12 @@ Promise.all([
       raio, 
       margin,
       rotulos_a_deslocar = false,
-      deslocamento = 0)
+      deslocamento = 0,
+      vetor_cor = null,
+      slide = slide)
   }
 
-  function desenha_motivacao_lp() {
+  function desenha_motivacao_lp(slide) {
     desenha_dados(
       dados = grid, 
       criterio = "motivacao_lp", 
@@ -922,10 +978,12 @@ Promise.all([
       raio, 
       margin,
       rotulos_a_deslocar = [3],
-      deslocamento = 60)
+      deslocamento = 60,
+      vetor_cor = null,
+      slide = slide)
   }
 
-  function desenha_diferente_lp() {
+  function desenha_diferente_lp(slide) {
     desenha_dados(
       dados = grid, 
       criterio = "diferente_lp", 
@@ -934,10 +992,12 @@ Promise.all([
       raio, 
       margin,
       rotulos_a_deslocar = [1,4],
-      deslocamento = {1:60, 4:60})
+      deslocamento = {1:60, 4:60},
+      vetor_cor = null,
+      slide = slide)
   }
 
-  function desenha_mudancas_lp() {
+  function desenha_mudancas_lp(slide) {
     desenha_dados(
       dados = grid, 
       criterio = "mudancas_lp", 
@@ -946,7 +1006,9 @@ Promise.all([
       raio, 
       margin,
       rotulos_a_deslocar = [1,2,3,4],
-      deslocamento = {1:120, 2:90, 3:60, 4:30})
+      deslocamento = {1:120, 2:90, 3:60, 4:30},
+      vetor_cor = null,
+      slide = slide)
   }
 
 
