@@ -268,23 +268,23 @@ function pega_posicao_inferior_cabecalho(slide){
 
   const slide_atual = d3.select("#" + slide);
 
-  console.log("#" + slide);
+  //console.log("#" + slide);
 
   let altura_cabecalho = slide_atual.select("h2").node().getBoundingClientRect().height;
 
   // tem parágrafo?
   if (slide_atual.select("p").empty()) {
 
-    console.log("Nao tem paragrafo, só h2");
+    //console.log("Nao tem paragrafo, só h2");
 
   } else {
 
     altura_cabecalho += slide_atual.select("p").node().getBoundingClientRect().height;
-    console.log("Tem paragrafo")
+    //console.log("Tem paragrafo")
 
   }
 
-  console.log(altura_cabecalho);
+  //console.log(altura_cabecalho);
 
   return altura_cabecalho;
 
@@ -292,7 +292,7 @@ function pega_posicao_inferior_cabecalho(slide){
 
 function desenha_dados(dados, criterio, ordena, vetor_ordem, raio, margin, rotulos_a_deslocar, deslocamento, vetor_cor, slide) {
 
-  console.log(vetor_cor, slide);
+  //console.log(vetor_cor, slide);
 
     let mini_dados = prepara_dados(
       dados, 
@@ -312,7 +312,7 @@ function desenha_dados(dados, criterio, ordena, vetor_ordem, raio, margin, rotul
     if (w <= 620) {
       x = "cy";
       y = "cx";
-      console.log(slide);
+      //console.log(slide);
       margem_inicial_principal = pega_posicao_inferior_cabecalho(slide) + 30;//(h - largura_total)/2;
       margem_inicial_secundario = (w - altura_total)*4/5;
 
@@ -323,7 +323,7 @@ function desenha_dados(dados, criterio, ordena, vetor_ordem, raio, margin, rotul
       margem_inicial_secundario = (h - altura_total)*3/4;
     }
 
-    console.log(h, largura_total, margem_inicial_principal);
+    //console.log(h, largura_total, margem_inicial_principal);
 
 
 
@@ -475,7 +475,7 @@ Promise.all([
     const contagens = files[1];
 
     config.dados["grid_data"] = grid; // para os stacks
-    console.log(grid.columns);
+    //console.log(grid.columns);
     //console.table(grid)
     
     init(); // os stacks
@@ -812,7 +812,7 @@ Promise.all([
 
     function desenha_idade(direcao, slide) {
 
-      console.log(slide);
+      //console.log(slide);
 
         desenha_dados(
           dados = grid, 
