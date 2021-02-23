@@ -270,24 +270,23 @@ function pega_posicao_inferior_cabecalho(slide){
 
   console.log("#" + slide);
 
-  let texto_inferior_cabecalho;
+  let altura_cabecalho = slide_atual.select("h2").node().getBoundingClientRect().height;
 
   // tem parágrafo?
   if (slide_atual.select("p").empty()) {
 
-    texto_inferior_cabecalho = slide_atual.select("h2").node();
     console.log("Nao tem paragrafo, só h2");
 
   } else {
 
-    texto_inferior_cabecalho = slide_atual.select("p").node();
+    altura_cabecalho = slide_atual.select("p").node().getBoundingClientRect().height;
     console.log("Tem paragrafo")
 
   }
 
-  console.log(texto_inferior_cabecalho.getBoundingClientRect().bottom)
+  console.log(altura_cabecalho);
 
-  return texto_inferior_cabecalho.getBoundingClientRect().bottom;
+  return altura_cabecalho;
 
 }
 
