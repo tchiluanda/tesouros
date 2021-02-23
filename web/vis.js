@@ -279,7 +279,7 @@ function pega_posicao_inferior_cabecalho(slide){
 
   } else {
 
-    altura_cabecalho = slide_atual.select("p").node().getBoundingClientRect().height;
+    altura_cabecalho += slide_atual.select("p").node().getBoundingClientRect().height;
     console.log("Tem paragrafo")
 
   }
